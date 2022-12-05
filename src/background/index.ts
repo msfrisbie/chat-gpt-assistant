@@ -1,6 +1,7 @@
 import { createParser } from "eventsource-parser";
 import ExpiryMap from "expiry-map";
 import { v4 as uuidv4 } from "uuid";
+import { CHAT_GPT_HISTORY_KEY } from "../consts";
 
 export async function fetchSSE(resource, options) {
   const { onMessage, ...fetchOptions } = options;
@@ -104,5 +105,48 @@ chrome.runtime.onConnect.addListener((port) => {
 chrome.runtime.onInstalled.addListener((reason) => {
   if (reason === chrome.runtime.OnInstalledReason.INSTALL) {
     chrome.runtime.openOptionsPage();
+  }
+});
+
+chrome.omnibox.onInputEntered.addListener((text: string) => {
+  // @ts-ignore
+  const url = chrome.runtime.getManifest().options_ui.page;
+
+  chrome.tabs.create({
+    url: chrome.runtime.getURL(`${url}?q=${text}`),
+  });
+});
+
+chrome.omnibox.onInputChanged.addListener(async (text, suggest) => {
+  const normalizedText = text.trim().toLowerCase();
+
+  const history = await chrome.storage.local.get(CHAT_GPT_HISTORY_KEY);
+
+  console.log({ history });
+
+  if (history[CHAT_GPT_HISTORY_KEY]) {
+    suggest(
+      history[CHAT_GPT_HISTORY_KEY].filter((historyItem: string) =>
+        historyItem.trim().toLowerCase().includes(normalizedText)
+      ).map((historyItem: string) => {
+        let title = historyItem;
+
+        const titleStartIdx = title.toLowerCase().indexOf(normalizedText);
+        if (titleStartIdx >= 0) {
+          const titleEndIdx = titleStartIdx + normalizedText.length;
+          title =
+            title.slice(0, titleStartIdx) +
+            "<match>" +
+            title.slice(titleStartIdx, titleEndIdx) +
+            "</match>" +
+            title.slice(titleEndIdx);
+        }
+
+        return {
+          content: historyItem,
+          description: `${title}`,
+        };
+      })
+    );
   }
 });

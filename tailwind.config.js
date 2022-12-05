@@ -1,6 +1,6 @@
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}", "./public/**/*.html"],
-  darkMode: 'media',
+  darkMode: "media",
   theme: {
     extend: {
       scale: {
@@ -10,4 +10,5 @@ module.exports = {
     },
   },
   plugins: [],
+  prefix: "tw-",
 };

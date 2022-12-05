@@ -1,0 +1,1 @@
+export const CHAT_GPT_HISTORY_KEY = "CHAT_GPT_HISTORY";

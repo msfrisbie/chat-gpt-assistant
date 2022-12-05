@@ -52,25 +52,17 @@ export default function GoogleCard(props: any) {
 
   return (
     <>
-      <Card>
+      <Card className="bg-dark tw-text-white">
         <Card.Body>
-          <div
-            className={
-              State.INITIAL
-                ? ""
-                : "rounded-lg border border-solid border-white p-6"
-            }
-          >
+          <div>
             {cardState === State.INITIAL && <></>}
             {cardState === State.LOADING && (
-              <div className="loading text-gray-300">
+              <div className="loading tw-text-gray-300">
                 Waiting for ChatGPT response...
               </div>
             )}
             {cardState === State.SUCCESS && (
               <div id="chatgpt-result">
-                <span className="font-bold">ChatGPT:</span>
-                {/* <pre className="mb-0 whitespace-pre-wrap">${msg.answer}</pre> */}
                 <ReactMarkdown>{msg.answer}</ReactMarkdown>
               </div>
             )}

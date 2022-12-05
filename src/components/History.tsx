@@ -1,4 +1,5 @@
 import React from "react";
+import Card from "react-bootstrap/Card";
 
 export default function History({
   history,
@@ -9,13 +10,20 @@ export default function History({
   inputValue: string;
   selectHistoryItem: (historyItem: string) => void;
 }) {
-  return history.map((x) => (
-    <div
-      onClick={() => selectHistoryItem(x)}
-      className="cursor-pointer opacity-80 hover:opacity-100"
-      key={x}
-    >
-      {x}
-    </div>
-  ));
+  return (
+    <>
+      {history.map((x) => (
+        <Card key={x} className="bg-dark tw-text-white">
+          <Card.Body>
+            <div
+              onClick={() => selectHistoryItem(x)}
+              className="tw-cursor-pointer tw-opacity-80 hover:tw-opacity-100"
+            >
+              {x}
+            </div>
+          </Card.Body>
+        </Card>
+      ))}
+    </>
+  );
 }
