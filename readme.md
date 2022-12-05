@@ -7,20 +7,25 @@ Browser Extension to integrate ChatGPT everywhere:
 - Extension popup
 - Dedicated extension tab
 
-<img src="static/popup.png" alt="Popup" width="500"/>
-Quickly access ChatGPT with the CMD + Shift + Y command
+|   <img src="static/popup.png" alt="Popup" width="500"/>   |
+| :-------------------------------------------------------: |
+| _Quickly access ChatGPT with the CMD + Shift + Y command_ |
 
-<img src="static/omnibox.png" alt="Omnibox" width="500"/>
-Send ChatGPT prompts from the omnibox
+| <img src="static/omnibox.png" alt="Popup" width="500"/> |
+| :-----------------------------------------------------: |
+| _Type 'gpt ' to send ChatGPT prompts from the omnibox_  |
 
-<img src="static/contextmenu.png" alt="Context Menu" width="500"/>
-Select text and right click to send it as a ChatGPT prompt
+| <img src="static/contextmenu.png" alt="Context Menu" width="500"/> |
+| :----------------------------------------------------------------: |
+|    _Select text and right click to send it as a ChatGPT prompt_    |
 
-<img src="static/google.png" alt="Google" width="500"/>
-Use ChatGPT in a dedicated extension tab
+| <img src="static/options.png" alt="Google" width="500"/> |
+| :------------------------------------------------------: |
+|        _Use ChatGPT in a dedicated extension tab_        |
 
-<img src="static/options.png" alt="Options" width="500"/>
-Automatically send search engine queries as prompts
+| <img src="static/google.png" alt="Options" width="500"/> |
+| :------------------------------------------------------: |
+|  _Automatically send search engine queries as prompts_   |
 
 ## Installation
 
