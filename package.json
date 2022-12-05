@@ -22,11 +22,18 @@
   },
   "dependencies": {
     "@types/chrome": "^0.0.203",
+    "bootstrap": "^5.2.3",
     "eventsource-parser": "^0.0.5",
     "expiry-map": "^2.0.0",
+    "lodash": "^4.17.21",
     "postcss-import": "15.0.1",
     "react": "18.2.0",
+    "react-autocomplete-hint": "^2.0.0",
+    "react-bootstrap": "^2.6.0",
+    "react-bootstrap-typeahead": "^6.0.0",
     "react-dom": "18.2.0",
+    "react-markdown": "^8.0.4",
+    "react-syntax-highlighter": "^15.5.0",
     "tailwindcss": "3.2.4",
     "uuid": "^9.0.0"
   }

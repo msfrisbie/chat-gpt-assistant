@@ -29,7 +29,7 @@
     {
       "matches": ["<all_urls>"],
       "js": ["content-script/index.ts"],
-      "css": ["styles/styles.scss"]
+      "css": ["styles/google-card.scss"]
     }
   ]
 }

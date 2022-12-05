@@ -1,0 +1,32 @@
+@import "common";
+
+#chat-gpt-container .loading {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+#chatgpt-result {
+  & pre,
+  & code,
+  & p {
+    white-space: pre-wrap;
+    margin-bottom: 1rem;
+  }
+
+  & p {
+    opacity: 0.7;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+#chat-gpt-container.sidebar-free {
+  height: fit-content;
+}

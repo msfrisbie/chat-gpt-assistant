@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
 
 enum State {
   INITIAL,
@@ -14,7 +15,6 @@ export default function GoogleCard(props: any) {
 
   let port = chrome.runtime.connect();
   port.onMessage.addListener((msg: any) => {
-    console.log(msg);
     if (msg.answer) {
       setMsg(msg);
       setCardState(State.SUCCESS);
@@ -28,10 +28,12 @@ export default function GoogleCard(props: any) {
   useEffect(() => {}, []);
 
   useEffect(() => {
-    if (props.query) {
+    console.log({ props });
+    if (props.query && props.query.length > 0) {
       port.postMessage({ question: props.query });
       setCardState(State.LOADING);
     } else {
+      setCardState(State.INITIAL);
     }
 
     // const searchInput = document.querySelector(
@@ -48,25 +50,32 @@ export default function GoogleCard(props: any) {
   }, [props.query]);
 
   return (
-    <div className="w-16 m-4">
+    <div
+      className={
+        State.INITIAL ? "" : "rounded-lg border border-solid border-white p-6"
+      }
+    >
       {cardState === State.INITIAL && <></>}
       {cardState === State.LOADING && (
-        <p className="loading">Waiting for ChatGPT response...</p>
+        <div className="loading text-gray-300">
+          Waiting for ChatGPT response...
+        </div>
       )}
       {cardState === State.SUCCESS && (
-        <p>
-          <span className="prefix">ChatGPT:</span>
-          <pre>${msg.answer}</pre>
-        </p>
+        <div id="chatgpt-result">
+          <span className="font-bold">ChatGPT:</span>
+          {/* <pre className="mb-0 whitespace-pre-wrap">${msg.answer}</pre> */}
+          <ReactMarkdown>{msg.answer}</ReactMarkdown>
+        </div>
       )}
       {cardState === State.UNAUTHORIZED && (
-        <p>
+        <div>
           Please login at{" "}
           <a href="https://chat.openai.com" target="_blank">
             chat.openai.com
           </a>{" "}
           first
-        </p>
+        </div>
       )}
       {cardState === State.ERROR && <p>Failed to load response from ChatGPT</p>}
     </div>

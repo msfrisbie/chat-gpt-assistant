@@ -1,6 +1,14 @@
+@import "tailwind-reset";
 @import "common";
+@import "google-card";
+@import "bootstrap";
 
 body {
   width: 600px;
   min-height: 600px;
+}
+
+#app {
+  width: 100vh;
+  height: 100vh;
 }
