@@ -8,14 +8,19 @@ Browser Extension to integrate ChatGPT everywhere:
 - Dedicated extension tab
 
 <img src="static/popup.png" alt="Popup" width="500"/>
+Quickly access ChatGPT with the CMD + Shift + Y command
 
 <img src="static/omnibox.png" alt="Omnibox" width="500"/>
+Send ChatGPT prompts from the omnibox
 
 <img src="static/contextmenu.png" alt="Context Menu" width="500"/>
+Select text and right click to send it as a ChatGPT prompt
 
 <img src="static/google.png" alt="Google" width="500"/>
+Use ChatGPT in a dedicated extension tab
 
 <img src="static/options.png" alt="Options" width="500"/>
+Automatically send search engine queries as prompts
 
 ## Installation
 
