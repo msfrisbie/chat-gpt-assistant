@@ -13,7 +13,7 @@ Browser Extension to integrate ChatGPT everywhere:
 
 | <img src="static/omnibox.png" alt="Popup" width="500"/> |
 | :-----------------------------------------------------: |
-| _Type 'gpt ' to send ChatGPT prompts from the omnibox_  |
+| _Type "gpt" + space in the omnibox to send ChatGPT prompts from the omnibox_  |
 
 | <img src="static/contextmenu.png" alt="Context Menu" width="500"/> |
 | :----------------------------------------------------------------: |
