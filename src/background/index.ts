@@ -150,3 +150,22 @@ chrome.omnibox.onInputChanged.addListener(async (text, suggest) => {
     );
   }
 });
+
+chrome.contextMenus.create({
+  id: "gpt-search",
+  title: "Use selected text as ChatGPT prompt",
+  contexts: ["selection"],
+});
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === "gpt-search") {
+    info.selectionText;
+
+    // @ts-ignore
+    const url = chrome.runtime.getManifest().options_ui.page;
+
+    chrome.tabs.create({
+      url: chrome.runtime.getURL(`${url}?q=${info.selectionText}`),
+    });
+  }
+});
