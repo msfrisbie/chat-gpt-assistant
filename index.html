@@ -11,11 +11,51 @@
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
       crossorigin="anonymous"
     ></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        font-family: "Roboto", sans-serif;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        prefix: "tw-",
+      };
+    </script>
   </head>
   <body>
-    <div class="container">
+    <div class="container tw-flex tw-flex-col tw-items-center">
       <h1>Hello world!</h1>
-      <div class="card" style="width: 18rem">
+
+      <div class="card">
+        <img src="./static/popup.png" class="card-img-top" />
+        <div class="card-body">
+          <h5 class="card-title">Card title</h5>
+          <p class="card-text">
+            Some quick example text to build on the card title and make up the
+            bulk of the card's content.
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="./static/omnibox.png" class="card-img-top" />
+        <div class="card-body">
+          <h5 class="card-title">Card title</h5>
+          <p class="card-text">
+            Some quick example text to build on the card title and make up the
+            bulk of the card's content.
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
         <img src="./static/contextmenu.png" class="card-img-top" />
         <div class="card-body">
           <h5 class="card-title">Card title</h5>
@@ -23,7 +63,28 @@
             Some quick example text to build on the card title and make up the
             bulk of the card's content.
           </p>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="./static/options.png" class="card-img-top" />
+        <div class="card-body">
+          <h5 class="card-title">Card title</h5>
+          <p class="card-text">
+            Some quick example text to build on the card title and make up the
+            bulk of the card's content.
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="./static/google.png" class="card-img-top" />
+        <div class="card-body">
+          <h5 class="card-title">Card title</h5>
+          <p class="card-text">
+            Some quick example text to build on the card title and make up the
+            bulk of the card's content.
+          </p>
         </div>
       </div>
     </div>
