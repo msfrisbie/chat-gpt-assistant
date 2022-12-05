@@ -7,6 +7,8 @@ Browser Extension to integrate ChatGPT everywhere:
 - Extension popup
 - Dedicated extension tab
 
+<img src="static/popup.png" alt="Popup" width="200"/>
+
 ![Popup](static/popup.png?raw=true =x250)
 
 ![Omnibox](static/omnibox.png?raw=true =x250)
