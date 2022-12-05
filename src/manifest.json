@@ -26,10 +26,10 @@
   "commands": {
     "_execute_action": {
       "suggested_key": {
-        "windows": "Ctrl+Shift+Y",
-        "mac": "Command+Shift+Y",
-        "chromeos": "Ctrl+Shift+U",
-        "linux": "Ctrl+Shift+J"
+        "windows": "Ctrl+Shift+D",
+        "mac": "Command+Shift+D",
+        "chromeos": "Ctrl+Shift+D",
+        "linux": "Ctrl+Shift+D"
       }
     }
   },

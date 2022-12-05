@@ -38,6 +38,8 @@ export default function Search() {
         setHistory(result[CHAT_GPT_HISTORY_KEY]);
       }
     });
+
+    inputRef.current.focus();
   }, []);
 
   const handleOnChange = (event: any) => {
