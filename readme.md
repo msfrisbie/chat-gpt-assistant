@@ -7,11 +7,11 @@ Browser Extension to integrate ChatGPT everywhere:
 - Extension popup
 - Dedicated extension tab
 
-![Screenshot](static/popup.png?raw=true)
-
-![Screenshot](static/omnibox.png?raw=true)
-
-![Screenshot](static/contextmenu.png?raw=true)
+![Screenshot](static/popup.png?raw=true =600x)
+![Screenshot](static/omnibox.png?raw=true =600x)
+![Screenshot](static/contextmenu.png?raw=true =600x)
+![Screenshot](static/google.png?raw=true =600x)
+![Screenshot](static/options.png?raw=true =600x)
 
 ## Installation
 
@@ -35,7 +35,3 @@ Browser Extension to integrate ChatGPT everywhere:
 ## Credit
 
 This project is inspired by [wong2/chat-gpt-google-extension](https://github.com/wong2/chat-gpt-google-extension)
-
-![Screenshot](static/google.png?raw=true)
-![Screenshot](static/options.png?raw=true)
-![Screenshot](static/popup.png?raw=true)
