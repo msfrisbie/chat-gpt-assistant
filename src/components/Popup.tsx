@@ -22,7 +22,7 @@ export default function Popup() {
 
   useEffect(() => {
     getCurrentTab().then((tab: chrome.tabs.Tab) => {
-      if (!tab.url) {
+      if (!tab?.url) {
         return;
       }
 
@@ -35,8 +35,8 @@ export default function Popup() {
     });
 
     chrome.storage.local.get(CHAT_GPT_HISTORY_KEY).then((result: any) => {
-      if (result.history) {
-        setHistory(result.history);
+      if (result[CHAT_GPT_HISTORY_KEY]) {
+        setHistory(result[CHAT_GPT_HISTORY_KEY]);
       }
     });
   }, []);

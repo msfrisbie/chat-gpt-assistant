@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Card from "react-bootstrap/Card";
 import ReactMarkdown from "react-markdown";
 
 enum State {
@@ -50,34 +51,44 @@ export default function GoogleCard(props: any) {
   }, [props.query]);
 
   return (
-    <div
-      className={
-        State.INITIAL ? "" : "rounded-lg border border-solid border-white p-6"
-      }
-    >
-      {cardState === State.INITIAL && <></>}
-      {cardState === State.LOADING && (
-        <div className="loading text-gray-300">
-          Waiting for ChatGPT response...
-        </div>
-      )}
-      {cardState === State.SUCCESS && (
-        <div id="chatgpt-result">
-          <span className="font-bold">ChatGPT:</span>
-          {/* <pre className="mb-0 whitespace-pre-wrap">${msg.answer}</pre> */}
-          <ReactMarkdown>{msg.answer}</ReactMarkdown>
-        </div>
-      )}
-      {cardState === State.UNAUTHORIZED && (
-        <div>
-          Please login at{" "}
-          <a href="https://chat.openai.com" target="_blank">
-            chat.openai.com
-          </a>{" "}
-          first
-        </div>
-      )}
-      {cardState === State.ERROR && <p>Failed to load response from ChatGPT</p>}
-    </div>
+    <>
+      <Card>
+        <Card.Body>
+          <div
+            className={
+              State.INITIAL
+                ? ""
+                : "rounded-lg border border-solid border-white p-6"
+            }
+          >
+            {cardState === State.INITIAL && <></>}
+            {cardState === State.LOADING && (
+              <div className="loading text-gray-300">
+                Waiting for ChatGPT response...
+              </div>
+            )}
+            {cardState === State.SUCCESS && (
+              <div id="chatgpt-result">
+                <span className="font-bold">ChatGPT:</span>
+                {/* <pre className="mb-0 whitespace-pre-wrap">${msg.answer}</pre> */}
+                <ReactMarkdown>{msg.answer}</ReactMarkdown>
+              </div>
+            )}
+            {cardState === State.UNAUTHORIZED && (
+              <div>
+                Please login at{" "}
+                <a href="https://chat.openai.com" target="_blank">
+                  chat.openai.com
+                </a>{" "}
+                first
+              </div>
+            )}
+            {cardState === State.ERROR && (
+              <p>Failed to load response from ChatGPT</p>
+            )}
+          </div>
+        </Card.Body>
+      </Card>
+    </>
   );
 }

@@ -13,6 +13,7 @@ export default function History({
     <div
       onClick={() => selectHistoryItem(x)}
       className="cursor-pointer opacity-80 hover:opacity-100"
+      key={x}
     >
       {x}
     </div>

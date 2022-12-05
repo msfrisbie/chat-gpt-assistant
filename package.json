@@ -11,6 +11,7 @@
   "devDependencies": {
     "@parcel/config-webextension": "^2.8.0",
     "@parcel/transformer-image": "2.8.0",
+    "@parcel/transformer-inline-string": "2.8.0",
     "@parcel/transformer-sass": "2.8.0",
     "@types/react": "18.0.26",
     "@types/react-dom": "18.0.9",
@@ -28,9 +29,7 @@
     "lodash": "^4.17.21",
     "postcss-import": "15.0.1",
     "react": "18.2.0",
-    "react-autocomplete-hint": "^2.0.0",
     "react-bootstrap": "^2.6.0",
-    "react-bootstrap-typeahead": "^6.0.0",
     "react-dom": "18.2.0",
     "react-markdown": "^8.0.4",
     "react-syntax-highlighter": "^15.5.0",
