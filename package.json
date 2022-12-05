@@ -4,7 +4,7 @@
   "description": "ChatGPT assistant",
   "scripts": {
     "start": "parcel watch src/manifest.json --host localhost --config @parcel/config-webextension",
-    "build": "parcel build src/manifest.json --config @parcel/config-webextension"
+    "build": "parcel build src/manifest.json --config @parcel/config-webextension --no-content-hash"
   },
   "author": "Matt Frisbie",
   "license": "MIT",

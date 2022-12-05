@@ -1,8 +1,8 @@
 import React from "react";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
+// import Container from "react-bootstrap/Container";
+// import Nav from "react-bootstrap/Nav";
+// import Navbar from "react-bootstrap/Navbar";
+// import NavDropdown from "react-bootstrap/NavDropdown";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 import Search from "./Search";
 
@@ -16,7 +16,7 @@ const router = createHashRouter([
 export default function Options() {
   return (
     <div className="tw-w-full tw-h-full tw-bg-neutral-900 tw-flex tw-flex-col tw-items-center">
-      <Navbar className="tw-w-full" variant="dark" bg="dark" expand="lg">
+      {/* <Navbar className="tw-w-full" variant="dark" bg="dark" expand="lg">
         <Container>
           <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -40,7 +40,7 @@ export default function Options() {
             </Nav>
           </Navbar.Collapse>
         </Container>
-      </Navbar>
+      </Navbar> */}
       <div
         style={{ maxWidth: "600px" }}
         className="tw-w-full tw-flex tw-flex-col tw-items-stretch"
