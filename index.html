@@ -32,24 +32,37 @@
   <body>
     <div class="container tw-flex tw-flex-col tw-items-center">
       <div
-        class="tw-flex tw-flex-col tw-items-stretch"
+        class="tw-flex tw-flex-col tw-items-stretch tw-gap-8 tw-text-center tw-m-16"
         style="max-width: 600px"
       >
-        <div class="tw-text-center tw-text-2xl tw-font-semibold"></div>
+        <div class="tw-text-6xl tw-font-extralight tw-text-blue-800">
           ChatGPT Assistant
         </div>
 
-        <div class="tw-text-center tw-text-2xl tw-text-gray-500">
-          Use ChatGPT <span class="tw-underline">everywhere</span>.
+        <div class="tw-text-center tw-text-2xl tw-text-gray-500 tw-font-thin">
+          Use ChatGPT
+          <span class="tw-font-normal tw-text-blue-600">everywhere</span>.
+        </div>
+
+        <div>
+          <!-- <a class="btn btn-primary" href="" role="button">INSTALL FOR CHROME</a> -->
+          <a
+            class="btn btn-primary"
+            href="https://github.com/msfrisbie/chat-gpt-assistant"
+            role="button"
+            target="_blank"
+            >SOURCE CODE</a
+          >
         </div>
 
         <div class="card">
           <img src="./static/popup.png" class="card-img-top" />
           <div class="card-body">
-            <h5 class="card-title">Card title</h5>
+            <h5 class="card-title tw-text-xl tw-font-semibold">
+              Send ChatGPT prompts from a popup
+            </h5>
             <p class="card-text">
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
+              Quickly access ChatGPT with the CMD + Shift + D command
             </p>
           </div>
         </div>
@@ -57,21 +70,21 @@
         <div class="card">
           <img src="./static/omnibox.png" class="card-img-top" />
           <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
-            </p>
+            <h5 class="card-title tw-text-xl tw-font-semibold">
+              Send ChatGPT prompts from the omnibox
+            </h5>
+            <p class="card-text">Type "gpt " to enter a prompt</p>
           </div>
         </div>
 
         <div class="card">
           <img src="./static/contextmenu.png" class="card-img-top" />
           <div class="card-body">
-            <h5 class="card-title">Card title</h5>
+            <h5 class="card-title tw-text-xl tw-font-semibold">
+              Use selected text as prompts
+            </h5>
             <p class="card-text">
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
+              Select text and right click to send it as a ChatGPT prompt.
             </p>
           </div>
         </div>
@@ -79,21 +92,21 @@
         <div class="card">
           <img src="./static/options.png" class="card-img-top" />
           <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
-            </p>
+            <h5 class="card-title tw-text-xl tw-font-semibold">
+              Dedicated ChatGPT tab
+            </h5>
+            <p class="card-text">Use ChatGPT in a dedicated extension tab.</p>
           </div>
         </div>
 
         <div class="card">
           <img src="./static/google.png" class="card-img-top" />
           <div class="card-body">
-            <h5 class="card-title">Card title</h5>
+            <h5 class="card-title tw-text-xl tw-font-semibold">
+              Search engine companion
+            </h5>
             <p class="card-text">
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
+              Automatically send search engine queries as prompts
             </p>
           </div>
         </div>
