@@ -38,10 +38,29 @@ export default function Settings() {
       <Form>
         <Form.Check
           type="switch"
+          label="Show ChatGPT Assistant when using search engines"
+          checked={localSettings[ChatGptSettingsKey.ENABLE_CONTENT_SCRIPT]}
+          onChange={(e) =>
+            updateSettingsKey(
+              ChatGptSettingsKey.ENABLE_CONTENT_SCRIPT,
+              e.target.checked
+            )
+          }
+        />
+        <Form.Check
+          type="switch"
           label="Automatically send prompt when using search engines"
           checked={localSettings[ChatGptSettingsKey.EAGER_SEARCH]}
           onChange={(e) =>
             updateSettingsKey(ChatGptSettingsKey.EAGER_SEARCH, e.target.checked)
+          }
+        />
+        <Form.Check
+          type="switch"
+          label="Show OpenAI chat interface in popup"
+          checked={localSettings[ChatGptSettingsKey.IFRAME_POPUP]}
+          onChange={(e) =>
+            updateSettingsKey(ChatGptSettingsKey.IFRAME_POPUP, e.target.checked)
           }
         />
       </Form>
