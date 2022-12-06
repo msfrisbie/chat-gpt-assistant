@@ -1,4 +1,4 @@
-#chat-gpt-container .loading {
+.loading {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
@@ -16,7 +16,13 @@
   }
 
   & p {
-    opacity: 0.7;
+    // opacity: 0.7;
+
+    & pre {
+      display: inline !important;
+      background: none !important;
+      padding: 0 !important;
+    }
   }
 }
 
@@ -30,6 +36,6 @@
   }
 }
 
-#chat-gpt-container.sidebar-free {
-  height: fit-content;
-}
+// #chat-gpt-container.sidebar-free {
+//   height: fit-content;
+// }

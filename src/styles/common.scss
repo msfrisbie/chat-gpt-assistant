@@ -1,2 +1,6 @@
-@import "tailwind";
-@import "bootstrap";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "~bootstrap/scss/bootstrap";
+@import "google-card";

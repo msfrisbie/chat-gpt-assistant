@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Card from "react-bootstrap/Card";
 import ReactMarkdown from "react-markdown";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { dark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 enum State {
   INITIAL,
@@ -26,61 +27,63 @@ export default function GoogleCard(props: any) {
     }
   });
 
-  useEffect(() => {}, []);
-
   useEffect(() => {
-    console.log({ props });
     if (props.query && props.query.length > 0) {
       port.postMessage({ question: props.query });
       setCardState(State.LOADING);
     } else {
       setCardState(State.INITIAL);
     }
-
-    // const searchInput = document.querySelector(
-    //   "[name='q']"
-    // ) as HTMLInputElement | null;
-    // if (searchInput && searchInput.value) {
-    //   // only run on first page
-    //   const startParam =
-    //     new URL(location.href).searchParams.get("start") || "0";
-    //   if (startParam === "0") {
-    //     port.postMessage({ question: searchInput.value });
-    //   }
-    // }
   }, [props.query]);
 
+  const components = {
+    code({ node, inline, className, children, ...props }) {
+      const match = /language-(\w+)/.exec(className || "");
+
+      return <SyntaxHighlighter style={dark} children={children} {...props} />;
+
+      // return !inline && match ? (
+      //   <SyntaxHighlighter
+      //     style={dark}
+      //     PreTag="div"
+      //     language={match[1]}
+      //     children={String(children).replace(/\n$/, "")}
+      //     {...props}
+      //   />
+      // ) : (
+      //   <code className={className ? className : ""} {...props}>
+      //     {children}
+      //   </code>
+      // );
+    },
+  };
+
   return (
-    <>
-      <Card className="bg-dark tw-text-white">
-        <Card.Body>
-          <div>
-            {cardState === State.INITIAL && <></>}
-            {cardState === State.LOADING && (
-              <div className="loading tw-text-gray-300">
-                Waiting for ChatGPT response...
-              </div>
-            )}
-            {cardState === State.SUCCESS && (
-              <div id="chatgpt-result">
-                <ReactMarkdown>{msg.answer}</ReactMarkdown>
-              </div>
-            )}
-            {cardState === State.UNAUTHORIZED && (
-              <div>
-                Please login at{" "}
-                <a href="https://chat.openai.com" target="_blank">
-                  chat.openai.com
-                </a>{" "}
-                first
-              </div>
-            )}
-            {cardState === State.ERROR && (
-              <p>Failed to load response from ChatGPT</p>
-            )}
-          </div>
-        </Card.Body>
-      </Card>
-    </>
+    <div>
+      {cardState === State.INITIAL && <></>}
+      {cardState === State.LOADING && (
+        <div className="loading tw-text-gray-300">
+          Waiting for ChatGPT response...
+        </div>
+      )}
+      {cardState === State.SUCCESS && (
+        <div id="chatgpt-result">
+          <ReactMarkdown
+            children={msg.answer}
+            components={components}
+          ></ReactMarkdown>
+        </div>
+      )}
+      {cardState === State.UNAUTHORIZED && (
+        <div>
+          Please login at{" "}
+          <a href="https://chat.openai.com" target="_blank">
+            chat.openai.com
+          </a>{" "}
+          first
+        </div>
+      )}
+      {cardState === State.ERROR && <p>Failed to load response from ChatGPT</p>}
+    </div>
   );
 }

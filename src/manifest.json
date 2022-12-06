@@ -44,10 +44,18 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://*/search*"],
-      "include_globs": ["*.google.*/*"],
+      "matches": [
+        "https://*.google.com/*",
+        "https://*.bing.com/*",
+        "https://*.brave.com/*"
+      ],
       "js": ["content-script/index.ts"],
       "css": []
+    },
+    {
+      "matches": ["https://msfrisbie.github.io/*"],
+      "js": [],
+      "css": ["styles/content-script.scss"]
     }
   ]
 }

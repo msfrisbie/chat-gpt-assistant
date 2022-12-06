@@ -15,7 +15,7 @@ const router = createHashRouter([
 
 export default function Options() {
   return (
-    <div className="tw-w-full tw-h-full tw-bg-neutral-900 tw-flex tw-flex-col tw-items-center">
+    <div className="tw-w-full tw-grow tw-bg-neutral-900 tw-flex tw-flex-col tw-items-center">
       {/* <Navbar className="tw-w-full" variant="dark" bg="dark" expand="lg">
         <Container>
           <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
