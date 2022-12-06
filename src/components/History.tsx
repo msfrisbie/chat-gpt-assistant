@@ -12,18 +12,20 @@ export default function History({
 }) {
   return (
     <>
-      {history.map((x) => (
-        <Card key={x} className="bg-dark tw-text-white">
-          <Card.Body>
-            <div
-              onClick={() => selectHistoryItem(x)}
-              className="tw-cursor-pointer tw-opacity-80 hover:tw-opacity-100"
-            >
-              {x}
-            </div>
-          </Card.Body>
-        </Card>
-      ))}
+      {history
+        .filter((x) => x.toLowerCase().includes(inputValue.toLowerCase()))
+        .map((x) => (
+          <Card key={x} className="bg-dark tw-text-white">
+            <Card.Body>
+              <div
+                onClick={() => selectHistoryItem(x)}
+                className="tw-cursor-pointer tw-opacity-80 hover:tw-opacity-100"
+              >
+                {x}
+              </div>
+            </Card.Body>
+          </Card>
+        ))}
     </>
   );
 }

@@ -18,9 +18,13 @@ export default function ContentScript() {
         <Card style={{ backgroundColor: "#111111" }} text="white">
           {query && (
             <Card.Body className="tw-border-b tw-border-solid tw-border-gray-700 tw-bg-neutral-800 tw-font-semibold tw-flex tw-flex-row tw-justify-between tw-items-center">
-              <span>{query}</span>
+              <span className="tw-text-white">{query}</span>
               {!showCard && (
-                <Button variant="info" onClick={() => setShowCard(true)}>
+                <Button
+                  size="sm"
+                  variant="primary"
+                  onClick={() => setShowCard(true)}
+                >
                   GO
                 </Button>
               )}

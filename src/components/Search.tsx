@@ -69,13 +69,13 @@ export default function Search() {
     const newHistory = [
       historyItem,
       ...history.filter((x) => x !== historyItem),
-    ];
+    ].slice(0, 100);
     setHistory(newHistory);
     chrome.storage.local.set({ [CHAT_GPT_HISTORY_KEY]: newHistory });
   };
 
   return (
-    <div className="tw-min-h-full tw-bg-neutral-900 tw-text-white tw-p-8 tw-flex tw-flex-col tw-items-stretch tw-gap-8">
+    <div className="tw-bg-neutral-900 tw-text-white tw-p-8 tw-flex tw-flex-col tw-items-stretch tw-gap-8">
       <InputGroup>
         <Form.Control
           value={inputValue}
