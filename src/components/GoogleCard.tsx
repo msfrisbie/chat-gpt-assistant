@@ -67,7 +67,7 @@ export default function GoogleCard(props: any) {
         </div>
       )}
       {cardState === State.UNAUTHORIZED && (
-        <div>
+        <div className="tw-text-white">
           Please login at{" "}
           <a href="https://chat.openai.com" target="_blank">
             chat.openai.com
