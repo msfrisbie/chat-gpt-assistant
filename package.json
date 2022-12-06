@@ -1,6 +1,6 @@
 {
   "name": "chat-gpt-assistant",
-  "version": "1.1.0",
+  "version": "0.2.0",
   "description": "ChatGPT assistant",
   "scripts": {
     "start": "parcel watch src/manifest.json --host localhost --config @parcel/config-webextension",
