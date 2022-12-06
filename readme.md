@@ -11,9 +11,9 @@ Browser Extension to integrate ChatGPT everywhere:
 | :-------------------------------------------------------: |
 | _Quickly access ChatGPT with the CMD + Shift + Y command_ |
 
-| <img src="static/omnibox.png" alt="Popup" width="500"/> |
-| :-----------------------------------------------------: |
-| _Type "gpt" + space in the omnibox to send ChatGPT prompts from the omnibox_  |
+|           <img src="static/omnibox.png" alt="Popup" width="500"/>            |
+| :--------------------------------------------------------------------------: |
+| _Type "gpt" + space in the omnibox to send ChatGPT prompts from the omnibox_ |
 
 | <img src="static/contextmenu.png" alt="Context Menu" width="500"/> |
 | :----------------------------------------------------------------: |
@@ -29,7 +29,9 @@ Browser Extension to integrate ChatGPT everywhere:
 
 ## Installation
 
-### Install to Chrome/Edge
+### Install to Chrome/EdgeInstall from Chrome Web Store
+
+https://chrome.google.com/webstore/detail/chatgpt-assistant/kldepdcdedfibmjnggmolhffdddbphjg?hl=en
 
 #### Local Install
 
@@ -45,7 +47,3 @@ Browser Extension to integrate ChatGPT everywhere:
 2. Install dependencies with `yarn`
 3. Run `npm run start`
 4. Load the `dist` directory to your browser
-
-## Credit
-
-This project is inspired by [wong2/chat-gpt-google-extension](https://github.com/wong2/chat-gpt-google-extension)
