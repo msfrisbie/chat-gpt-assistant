@@ -102,9 +102,14 @@ chrome.runtime.onConnect.addListener((port) => {
   });
 });
 
-chrome.runtime.onInstalled.addListener((reason) => {
-  if (reason === chrome.runtime.OnInstalledReason.INSTALL) {
-    chrome.runtime.openOptionsPage();
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
+    // @ts-ignore
+    const url = chrome.runtime.getManifest().options_ui.page;
+
+    chrome.tabs.create({
+      url: chrome.runtime.getURL(`${url}#/how-to-use`),
+    });
   }
 });
 

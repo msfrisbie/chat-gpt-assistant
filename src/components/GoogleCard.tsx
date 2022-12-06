@@ -43,20 +43,6 @@ export default function GoogleCard(props: any) {
       return (
         <SyntaxHighlighter style={vs2015} children={children} {...props} />
       );
-
-      // return !inline && match ? (
-      //   <SyntaxHighlighter
-      //     style={dark}
-      //     PreTag="div"
-      //     language={match[1]}
-      //     children={String(children).replace(/\n$/, "")}
-      //     {...props}
-      //   />
-      // ) : (
-      //   <code className={className ? className : ""} {...props}>
-      //     {children}
-      //   </code>
-      // );
     },
   };
 
@@ -69,7 +55,7 @@ export default function GoogleCard(props: any) {
         </div>
       )}
       {cardState === State.SUCCESS && (
-        <div id="chatgpt-result">
+        <div id="chatgpt-result tw-text-white" style={{ color: "white" }}>
           <ReactMarkdown
             children={msg.answer}
             components={components}

@@ -47,7 +47,7 @@
       "matches": [
         "https://*.google.com/*",
         "https://*.bing.com/*",
-        "https://*.brave.com/*",
+        "https://search.brave.com/*",
         "https://*.duckduckgo.com/*"
       ],
       "js": ["content-script/index.ts"],
