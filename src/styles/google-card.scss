@@ -15,7 +15,9 @@
     font-family: monospace !important;
   }
 
-  & p {
+  & p,
+  & ul,
+  & ol {
     // opacity: 0.7;
 
     & pre {
