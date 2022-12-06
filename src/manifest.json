@@ -50,12 +50,10 @@
         "https://search.brave.com/*",
         "https://*.duckduckgo.com/*"
       ],
-      "js": ["content-script/index.ts"],
-      "css": []
+      "js": ["content-script/index.ts"]
     },
     {
       "matches": ["https://msfrisbie.github.io/*"],
-      "js": [],
       "css": ["styles/content-script.scss"]
     }
   ]

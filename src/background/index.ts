@@ -181,7 +181,7 @@ try {
   chrome.contextMenus.create({
     id: "gpt-settings",
     title: "ChatGPT Assistant settings",
-    contexts: ["all"],
+    contexts: ["audio", "editable", "frame", "image", "link", "page", "video"],
   });
 
   chrome.contextMenus.onClicked.addListener((info, tab) => {
@@ -194,4 +194,6 @@ try {
       });
     }
   });
-} catch (e) {}
+} catch (e) {
+  console.log(e);
+}
