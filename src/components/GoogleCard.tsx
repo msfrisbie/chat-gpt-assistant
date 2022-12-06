@@ -55,7 +55,11 @@ export default function GoogleCard(props: any) {
         </div>
       )}
       {cardState === State.SUCCESS && (
-        <div id="chatgpt-result tw-text-white" style={{ color: "white" }}>
+        <div
+          id="chatgpt-result"
+          className="tw-text-white"
+          style={{ color: "white" }}
+        >
           <ReactMarkdown
             children={msg.answer}
             components={components}
