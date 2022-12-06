@@ -3,7 +3,7 @@ import { ChatGptSettingsKey, CHAT_GPT_SETTINGS_KEY } from "../consts";
 
 export const defaultSettings: ISettings = {
   [ChatGptSettingsKey.ENABLE_CONTENT_SCRIPT]: true,
-  [ChatGptSettingsKey.EAGER_SEARCH]: false,
+  [ChatGptSettingsKey.EAGER_SEARCH]: true,
   [ChatGptSettingsKey.IFRAME_POPUP]: false,
 };
 
