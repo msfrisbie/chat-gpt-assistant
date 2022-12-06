@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import SyntaxHighlighter from "react-syntax-highlighter";
-import { dark } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { vs2015 } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 enum State {
   INITIAL,
@@ -40,7 +40,9 @@ export default function GoogleCard(props: any) {
     code({ node, inline, className, children, ...props }) {
       const match = /language-(\w+)/.exec(className || "");
 
-      return <SyntaxHighlighter style={dark} children={children} {...props} />;
+      return (
+        <SyntaxHighlighter style={vs2015} children={children} {...props} />
+      );
 
       // return !inline && match ? (
       //   <SyntaxHighlighter
