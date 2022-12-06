@@ -33,7 +33,7 @@ export default function Options() {
             <Nav className="me-auto">
               <Nav.Link href="#/">Search</Nav.Link>
               <Nav.Link href="#/how-to-use">How to use</Nav.Link>
-              {/* <Nav.Link href="#/settings">Settings</Nav.Link> */}
+              <Nav.Link href="#/settings">Settings</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>

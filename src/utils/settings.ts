@@ -1,4 +1,11 @@
+import { ISettings } from "~interfaces/settings";
 import { ChatGptSettingsKey, CHAT_GPT_SETTINGS_KEY } from "../consts";
+
+export const defaultSettings: ISettings = {
+  [ChatGptSettingsKey.ENABLE_CONTENT_SCRIPT]: true,
+  [ChatGptSettingsKey.EAGER_SEARCH]: false,
+  [ChatGptSettingsKey.IFRAME_POPUP]: false,
+};
 
 export async function updateSetting(key: ChatGptSettingsKey, value: any) {
   const settings = await getAllSettings();
@@ -6,9 +13,20 @@ export async function updateSetting(key: ChatGptSettingsKey, value: any) {
   return chrome.storage.local.set(settings);
 }
 
-export async function getAllSettings() {
+export async function updateAllSettings(settings: ISettings) {
+  return chrome.storage.local.set({ [CHAT_GPT_SETTINGS_KEY]: settings });
+}
+
+export async function getAllSettings(): Promise<ISettings> {
   return chrome.storage.local.get(CHAT_GPT_SETTINGS_KEY).then((result) => {
-    return result[CHAT_GPT_SETTINGS_KEY] || {};
+    if (result[CHAT_GPT_SETTINGS_KEY]) {
+      return {
+        ...defaultSettings,
+        ...result[CHAT_GPT_SETTINGS_KEY],
+      };
+    } else {
+      return defaultSettings;
+    }
   });
 }
 

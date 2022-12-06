@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import { ChatGptSettingsKey, CHAT_GPT_SETTINGS_KEY } from "../consts";
+import { ChatGptSettingsKey } from "../consts";
+import { getSetting } from "../utils/settings";
 import GoogleCard from "./GoogleCard";
 
 export default function ContentScript() {
@@ -11,10 +12,8 @@ export default function ContentScript() {
   const [showCard, setShowCard] = useState(false);
 
   useEffect(() => {
-    chrome.storage.local.get(CHAT_GPT_SETTINGS_KEY).then((result) => {
-      if (result[CHAT_GPT_SETTINGS_KEY]) {
-        setShowCard(!!result[CHAT_GPT_SETTINGS_KEY][ChatGptSettingsKey.EAGER_SEARCH]);
-      }
+    getSetting(ChatGptSettingsKey.EAGER_SEARCH).then((setting) => {
+      setShowCard(!!setting);
     });
   }, []);
 

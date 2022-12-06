@@ -1,27 +1,48 @@
 import React, { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
-import { CHAT_GPT_SETTINGS_KEY } from "../consts";
+import { ISettings } from "~interfaces/settings";
+import { ChatGptSettingsKey } from "../consts";
+import {
+  defaultSettings,
+  getAllSettings,
+  updateAllSettings,
+} from "../utils/settings";
 
 export default function Settings() {
-  const [settings, setSettings] = useState({});
+  const [localSettings, setLocalSettings] = useState(defaultSettings);
 
   useEffect(() => {
-    chrome.storage.local.get(CHAT_GPT_SETTINGS_KEY).then((result) => {
-      if (result[CHAT_GPT_SETTINGS_KEY]) {
-      }
+    getAllSettings().then((result) => {
+      console.log({ result });
+      setLocalSettings(result);
     });
-  });
+  }, []);
 
-  const updateSettings = (key: string, value: any) => {};
+  useEffect(() => {
+    updateAllSettings(localSettings);
+  }, [localSettings]);
+
+  const updateSettingsKey = async (key: ChatGptSettingsKey, value: any) => {
+    const newSettings: ISettings = {
+      ...localSettings,
+      ...{
+        [key]: value,
+      },
+    };
+
+    setLocalSettings(newSettings);
+  };
 
   return (
     <div className="tw-text-white tw-p-8 tw-flex tw-flex-col tw-items-stretch tw-gap-8">
       <Form>
         <Form.Check
           type="switch"
-          id="custom-switch"
-          label="Check this switch"
-          onChange={(e) => updateSettings("key", e.target.value)}
+          label="Automatically send prompt when using search engines"
+          checked={localSettings[ChatGptSettingsKey.EAGER_SEARCH]}
+          onChange={(e) =>
+            updateSettingsKey(ChatGptSettingsKey.EAGER_SEARCH, e.target.checked)
+          }
         />
       </Form>
     </div>

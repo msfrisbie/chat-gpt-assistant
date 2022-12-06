@@ -176,3 +176,22 @@ try {
     }
   });
 } catch (e) {}
+
+try {
+  chrome.contextMenus.create({
+    id: "gpt-settings",
+    title: "ChatGPT Assistant settings",
+    contexts: ["all"],
+  });
+
+  chrome.contextMenus.onClicked.addListener((info, tab) => {
+    if (info.menuItemId === "gpt-settings") {
+      // @ts-ignore
+      const url = chrome.runtime.getManifest().options_ui.page;
+
+      chrome.tabs.create({
+        url: chrome.runtime.getURL(`${url}#/settings`),
+      });
+    }
+  });
+} catch (e) {}
