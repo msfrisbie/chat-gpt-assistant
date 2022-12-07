@@ -13,7 +13,6 @@ export default function Settings() {
 
   useEffect(() => {
     getAllSettings().then((result) => {
-      console.log({ result });
       setLocalSettings(result);
     });
   }, []);
@@ -61,6 +60,17 @@ export default function Settings() {
           checked={localSettings[ChatGptSettingsKey.IFRAME_POPUP]}
           onChange={(e) =>
             updateSettingsKey(ChatGptSettingsKey.IFRAME_POPUP, e.target.checked)
+          }
+        />
+        <Form.Check
+          type="switch"
+          label="Return a stub message (useful when ChatGPT is down)"
+          checked={localSettings[ChatGptSettingsKey.RETURN_STUB_MESSAGE]}
+          onChange={(e) =>
+            updateSettingsKey(
+              ChatGptSettingsKey.RETURN_STUB_MESSAGE,
+              e.target.checked
+            )
           }
         />
       </Form>

@@ -44,12 +44,7 @@
   },
   "content_scripts": [
     {
-      "matches": [
-        "https://*.google.com/*",
-        "https://*.bing.com/*",
-        "https://search.brave.com/*",
-        "https://*.duckduckgo.com/*"
-      ],
+      "matches": ["<all_urls>"],
       "js": ["content-script/index.ts"]
     },
     {

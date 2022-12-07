@@ -1,7 +1,7 @@
 import cssText from "bundle-text:../styles/content-script.scss";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import ContentScript from "../components/ContentScript";
+import ContentScriptApp from "../components/ContentScriptApp";
 
 console.log("ChatGPT Assistant content script loaded");
 
@@ -23,12 +23,6 @@ shadowHost.shadowRoot?.appendChild(style);
 
 document.body.appendChild(shadowHost);
 
-const query: string = new URL(window.location.href).searchParams.get("q") || "";
+ReactDOM.createRoot(container).render(React.createElement(ContentScriptApp));
 
-if (query) {
-  ReactDOM.createRoot(container).render(
-    React.createElement(ContentScript, {
-      query,
-    })
-  );
-}
+window.addEventListener("contextmenu", console.log);

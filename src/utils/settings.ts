@@ -5,6 +5,7 @@ export const defaultSettings: ISettings = {
   [ChatGptSettingsKey.ENABLE_CONTENT_SCRIPT]: true,
   [ChatGptSettingsKey.EAGER_SEARCH]: true,
   [ChatGptSettingsKey.IFRAME_POPUP]: false,
+  [ChatGptSettingsKey.RETURN_STUB_MESSAGE]: false,
 };
 
 export async function updateSetting(key: ChatGptSettingsKey, value: any) {

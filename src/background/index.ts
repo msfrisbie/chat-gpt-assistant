@@ -1,106 +1,15 @@
-import { createParser } from "eventsource-parser";
-import ExpiryMap from "expiry-map";
-import { v4 as uuidv4 } from "uuid";
-import { CHAT_GPT_HISTORY_KEY } from "../consts";
+import { CHAT_GPT_HISTORY_KEY, KEY_ACCESS_TOKEN, MessageType } from "../consts";
+import { IWrappedMessage } from "../interfaces/settings";
+import { cache, getAnswer } from "../utils/chatgpt";
+import { wrapMessage } from "../utils/messaging";
 
-export async function fetchSSE(resource, options) {
-  const { onMessage, ...fetchOptions } = options;
-  const resp = await fetch(resource, fetchOptions);
-  const parser = createParser((event) => {
-    if (event.type === "event") {
-      onMessage(event.data);
-    }
-  });
-  for await (const chunk of streamAsyncIterable(resp.body)) {
-    const str = new TextDecoder().decode(chunk);
-    parser.feed(str);
-  }
-}
+console.log("initialized background script");
 
-export async function* streamAsyncIterable(stream) {
-  const reader = stream.getReader();
-  try {
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) {
-        return;
-      }
-      yield value;
-    }
-  } finally {
-    reader.releaseLock();
-  }
-}
-
-const KEY_ACCESS_TOKEN = "accessToken";
-
-const cache = new ExpiryMap(10 * 1000);
-
-async function getAccessToken() {
-  if (cache.get(KEY_ACCESS_TOKEN)) {
-    return cache.get(KEY_ACCESS_TOKEN);
-  }
-  const resp = await fetch("https://chat.openai.com/api/auth/session")
-    .then((r) => r.json())
-    .catch(() => ({}));
-  if (!resp.accessToken) {
-    throw new Error("UNAUTHORIZED");
-  }
-  cache.set(KEY_ACCESS_TOKEN, resp.accessToken);
-  return resp.accessToken;
-}
-
-async function getAnswer(question, callback) {
-  const accessToken = await getAccessToken();
-  await fetchSSE("https://chat.openai.com/backend-api/conversation", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    },
-    body: JSON.stringify({
-      action: "next",
-      messages: [
-        {
-          id: uuidv4(),
-          role: "user",
-          content: {
-            content_type: "text",
-            parts: [question],
-          },
-        },
-      ],
-      model: "text-davinci-002-render",
-      parent_message_id: uuidv4(),
-    }),
-    onMessage(message) {
-      console.debug("sse message", message);
-      if (message === "[DONE]") {
-        return;
-      }
-      const data = JSON.parse(message);
-      const text = data.message?.content?.parts?.[0];
-      if (text) {
-        callback(text);
-      }
-    },
-  });
-}
-
-chrome.runtime.onConnect.addListener((port) => {
-  port.onMessage.addListener(async (msg) => {
-    console.debug("received msg", msg);
-    try {
-      await getAnswer(msg.question, (answer) => {
-        port.postMessage({ answer });
-      });
-    } catch (err) {
-      console.error(err);
-      port.postMessage({ error: err.message });
-      cache.delete(KEY_ACCESS_TOKEN);
-    }
-  });
-});
+/**
+ * For unknown reasons, these handlers cannot be moved into
+ * helper functions in different files. Likely to do with
+ * Parcel compilation
+ */
 
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
@@ -112,6 +21,49 @@ chrome.runtime.onInstalled.addListener((details) => {
     });
   }
 });
+
+chrome.runtime.onConnect.addListener((port) => {
+  port.onMessage.addListener(async (wrappedMessage: IWrappedMessage) => {
+    const msg = wrappedMessage.message;
+
+    console.log(wrappedMessage);
+
+    switch (wrappedMessage.messageType) {
+      case MessageType.SEND_PROMPT:
+        try {
+          await getAnswer(msg.question, (answer) => {
+            console.log("sending answer");
+            console.log({ answer, port });
+
+            port.postMessage(
+              wrapMessage(
+                wrappedMessage.channelId,
+                MessageType.SEND_PROMPT_RESPONSE,
+                { answer }
+              )
+            );
+            console.log("sent answer");
+          });
+        } catch (err) {
+          console.error(err);
+
+          port.postMessage(
+            wrapMessage(
+              wrappedMessage.channelId,
+              MessageType.SEND_PROMPT_RESPONSE,
+              { error: err.message }
+            )
+          );
+          cache.delete(KEY_ACCESS_TOKEN);
+        }
+        break;
+      default:
+        throw new Error("Unknown message type");
+    }
+  });
+});
+
+console.log("initialized messaging");
 
 chrome.omnibox.onInputEntered.addListener((text: string) => {
   // @ts-ignore
@@ -126,8 +78,6 @@ chrome.omnibox.onInputChanged.addListener(async (text, suggest) => {
   const normalizedText = text.trim().toLowerCase();
 
   const history = await chrome.storage.local.get(CHAT_GPT_HISTORY_KEY);
-
-  console.log({ history });
 
   if (history[CHAT_GPT_HISTORY_KEY]) {
     suggest(
@@ -156,6 +106,8 @@ chrome.omnibox.onInputChanged.addListener(async (text, suggest) => {
   }
 });
 
+console.log("initialized omnibox");
+
 try {
   chrome.contextMenus.create({
     id: "gpt-search",
@@ -181,7 +133,7 @@ try {
   chrome.contextMenus.create({
     id: "gpt-settings",
     title: "ChatGPT Assistant settings",
-    contexts: ["audio", "editable", "frame", "image", "link", "page", "video"],
+    contexts: ["audio", "frame", "image", "link", "page", "video"],
   });
 
   chrome.contextMenus.onClicked.addListener((info, tab) => {
@@ -197,3 +149,27 @@ try {
 } catch (e) {
   console.log(e);
 }
+
+// try {
+//   chrome.contextMenus.create({
+//     id: "gpt-replace",
+//     title: "Replace this with ChatGPT output",
+//     contexts: ["editable"],
+//   });
+
+//   chrome.contextMenus.onClicked.addListener((info, tab) => {
+//     if (info.menuItemId === "gpt-replace") {
+//       // @ts-ignore
+//       //   const url = chrome.runtime.getManifest().options_ui.page;
+
+//       //   chrome.tabs.create({
+//       //     url: chrome.runtime.getURL(`${url}#/settings`),
+//       //   });
+//       console.log(info, tab);
+//     }
+//   });
+// } catch (e) {
+//   console.log(e);
+// }
+
+console.log("initialized context menus");

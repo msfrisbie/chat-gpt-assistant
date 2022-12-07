@@ -1,15 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import Card from "react-bootstrap/Card";
+import { SearchContext } from "../contexts/Search";
 
 export default function History({
-  history,
   inputValue,
   selectHistoryItem,
 }: {
-  history: string[];
   inputValue: string;
   selectHistoryItem: (historyItem: string) => void;
 }) {
+  const { history } = useContext(SearchContext);
+
   return (
     <>
       {history
