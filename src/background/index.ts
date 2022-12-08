@@ -1,7 +1,9 @@
 import { createParser } from "eventsource-parser";
 import ExpiryMap from "expiry-map";
 import { v4 as uuidv4 } from "uuid";
-import { CHAT_GPT_HISTORY_KEY } from "../consts";
+import { IChatGptPostMessage } from "~interfaces/settings";
+import { ChatGptMessageType, CHAT_GPT_HISTORY_KEY } from "../consts";
+import { sendMessage } from "../utils/messaging";
 
 export async function fetchSSE(resource, options) {
   const { onMessage, ...fetchOptions } = options;
@@ -37,6 +39,8 @@ const KEY_ACCESS_TOKEN = "accessToken";
 const cache = new ExpiryMap(10 * 1000);
 
 async function getAccessToken() {
+  console.debug("Retrieving access token...");
+
   if (cache.get(KEY_ACCESS_TOKEN)) {
     return cache.get(KEY_ACCESS_TOKEN);
   }
@@ -50,8 +54,12 @@ async function getAccessToken() {
   return resp.accessToken;
 }
 
-async function getAnswer(question, callback) {
+async function getAnswer(
+  question: string,
+  callback: ({ done, answer }: { done: boolean; answer?: string }) => void
+) {
   const accessToken = await getAccessToken();
+  console.debug("Dispatching to API...", question);
   await fetchSSE("https://chat.openai.com/backend-api/conversation", {
     method: "POST",
     headers: {
@@ -73,30 +81,46 @@ async function getAnswer(question, callback) {
       model: "text-davinci-002-render",
       parent_message_id: uuidv4(),
     }),
-    onMessage(message) {
+    onMessage(message: any) {
       console.debug("sse message", message);
       if (message === "[DONE]") {
+        callback({ done: true });
         return;
       }
       const data = JSON.parse(message);
       const text = data.message?.content?.parts?.[0];
       if (text) {
-        callback(text);
+        callback({ done: false, answer: text });
       }
     },
   });
 }
 
 chrome.runtime.onConnect.addListener((port) => {
-  port.onMessage.addListener(async (msg) => {
-    console.debug("received msg", msg);
+  port.onDisconnect.addListener(() => console.log("Port disconnected"));
+
+  port.onMessage.addListener(async (msg: IChatGptPostMessage) => {
+    console.debug("Recieved question", msg.data.question.slice(0, 20));
     try {
-      await getAnswer(msg.question, (answer) => {
-        port.postMessage({ answer });
-      });
+      await getAnswer(
+        msg.data.question,
+        ({ done, answer }: { done: boolean; answer?: string }) => {
+          if (done) {
+            sendMessage(port, ChatGptMessageType.ANSWER_DONE_FROM_BG);
+            port.disconnect();
+          } else {
+            sendMessage(port, ChatGptMessageType.ANSWER_TEXT_FROM_BG, {
+              answer,
+            });
+          }
+        }
+      );
     } catch (err) {
       console.error(err);
-      port.postMessage({ error: err.message });
+      sendMessage(port, ChatGptMessageType.ANSWER_ERROR_FROM_BG, {
+        error: err.message,
+      });
+      port.disconnect();
       cache.delete(KEY_ACCESS_TOKEN);
     }
   });

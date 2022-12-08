@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { vs2015 } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { ChatGptMessageType } from "../consts";
+import { IChatGptPostMessage } from "../interfaces/settings";
+import { sendPromptFromContentScript } from "../utils/messaging";
 
 enum State {
   INITIAL,
@@ -13,24 +16,37 @@ enum State {
 
 export default function GoogleCard(props: any) {
   const [cardState, setCardState] = useState(State.INITIAL);
-  const [msg, setMsg] = useState({});
-
-  let port = chrome.runtime.connect();
-  port.onMessage.addListener((msg: any) => {
-    if (msg.answer) {
-      setMsg(msg);
-      setCardState(State.SUCCESS);
-    } else if (msg.error === "UNAUTHORIZED") {
-      setCardState(State.UNAUTHORIZED);
-    } else {
-      setCardState(State.ERROR);
-    }
-  });
+  const [answer, setAnswer] = useState("");
 
   useEffect(() => {
     if (props.query && props.query.length > 0) {
-      port.postMessage({ question: props.query });
       setCardState(State.LOADING);
+
+      console.log("Sending", props.query.slice(0, 20));
+
+      sendPromptFromContentScript(
+        props.query,
+        (message: IChatGptPostMessage) => {
+          switch (message.messageType) {
+            case ChatGptMessageType.ANSWER_TEXT_FROM_BG:
+              setAnswer(message.data.answer);
+              setCardState(State.SUCCESS);
+              break;
+            case ChatGptMessageType.ANSWER_DONE_FROM_BG:
+              console.log("Message done");
+              break;
+            case ChatGptMessageType.ANSWER_ERROR_FROM_BG:
+              if (message.data.error === "UNAUTHORIZED") {
+                setCardState(State.UNAUTHORIZED);
+              } else {
+                setCardState(State.ERROR);
+              }
+              break;
+            default:
+              throw new Error("Unrecognized message");
+          }
+        }
+      );
     } else {
       setCardState(State.INITIAL);
     }
@@ -61,7 +77,7 @@ export default function GoogleCard(props: any) {
           style={{ color: "white" }}
         >
           <ReactMarkdown
-            children={msg.answer}
+            children={answer}
             components={components}
           ></ReactMarkdown>
         </div>
