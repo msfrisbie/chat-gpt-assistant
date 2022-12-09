@@ -17,17 +17,11 @@ export function sendPromptFromContentScript(
   messageHandler: (message: IChatGptPostMessage) => void
 ) {
   const port = chrome.runtime.connect();
-  try {
-    port.onMessage.addListener((message: IChatGptPostMessage) =>
-      messageHandler(message)
-    );
-    port.onDisconnect.addListener(() => console.log("Port disconnected"));
-    sendMessage(port, ChatGptMessageType.SEND_PROMPT_FROM_CS, {
-      question: prompt,
-    });
-  } catch (e) {
-    console.error(e);
-  } finally {
-    // port.disconnect();
-  }
+  port.onMessage.addListener((message: IChatGptPostMessage) =>
+    messageHandler(message)
+  );
+  port.onDisconnect.addListener(() => console.log("Port disconnected"));
+  sendMessage(port, ChatGptMessageType.SEND_PROMPT_FROM_CS, {
+    question: prompt,
+  });
 }

@@ -48,7 +48,8 @@
         "https://*.google.com/*",
         "https://*.bing.com/*",
         "https://search.brave.com/*",
-        "https://*.duckduckgo.com/*"
+        "https://*.duckduckgo.com/*",
+        "https://*.ecosia.org/*"
       ],
       "js": ["content-script/index.ts"]
     },

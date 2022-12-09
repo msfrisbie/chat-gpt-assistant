@@ -4,6 +4,8 @@ export enum ChatGptSettingsKey {
   ENABLE_CONTENT_SCRIPT = "ENABLE_CONTENT_SCRIPT",
   EAGER_SEARCH = "EAGER_SEARCH",
   IFRAME_POPUP = "IFRAME_POPUP",
+  DEBUG = "DEBUG",
+  RESPONSE_BEHAVIOR_TYPE = "RESPONSE_BEHAVIOR_TYPE",
 }
 
 export enum ChatGptMessageType {
@@ -12,3 +14,12 @@ export enum ChatGptMessageType {
   ANSWER_DONE_FROM_BG = "ANSWER_DONE_FROM_BG",
   ANSWER_ERROR_FROM_BG = "ANSWER_ERROR_FROM_BG",
 }
+
+export enum ResponseBehaviorType {
+  DEFAULT = "DEFAULT",
+  STUB_ANSWER = "STUB_ANSWER",
+  STUB_ERROR = "STUB_ERROR",
+  STUB_UNAUTHORIZED = "STUB_UNAUTHORIZED",
+}
+
+export const KEY_ACCESS_TOKEN = "accessToken";

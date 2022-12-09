@@ -1,11 +1,14 @@
 import { ISettings } from "~interfaces/settings";
-import { ChatGptSettingsKey, CHAT_GPT_SETTINGS_KEY } from "../consts";
+import { ChatGptSettingsKey, CHAT_GPT_SETTINGS_KEY, ResponseBehaviorType } from "../consts";
+
 
 export const defaultSettings: ISettings = {
-  [ChatGptSettingsKey.ENABLE_CONTENT_SCRIPT]: true,
-  [ChatGptSettingsKey.EAGER_SEARCH]: true,
-  [ChatGptSettingsKey.IFRAME_POPUP]: false,
-};
+    [ChatGptSettingsKey.ENABLE_CONTENT_SCRIPT]: true,
+    [ChatGptSettingsKey.EAGER_SEARCH]: true,
+    [ChatGptSettingsKey.IFRAME_POPUP]: false,
+    [ChatGptSettingsKey.DEBUG]: false,
+    [ChatGptSettingsKey.RESPONSE_BEHAVIOR_TYPE]: ResponseBehaviorType.DEFAULT,
+  };
 
 export async function updateSetting(key: ChatGptSettingsKey, value: any) {
   const settings = await getAllSettings();

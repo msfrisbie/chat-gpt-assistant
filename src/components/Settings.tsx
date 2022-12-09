@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import { ISettings } from "~interfaces/settings";
-import { ChatGptSettingsKey } from "../consts";
+import { ChatGptSettingsKey, ResponseBehaviorType } from "../consts";
 import {
   defaultSettings,
   getAllSettings,
@@ -33,6 +33,32 @@ export default function Settings() {
     setLocalSettings(newSettings);
   };
 
+  const options = [
+    ResponseBehaviorType.DEFAULT,
+    ResponseBehaviorType.STUB_ANSWER,
+    ResponseBehaviorType.STUB_ERROR,
+    ResponseBehaviorType.STUB_UNAUTHORIZED,
+  ];
+
+  const debugFormControls = (
+    <>
+      <Form.Label>Override prompt response behavior</Form.Label>
+      <Form.Select
+        value={localSettings[ChatGptSettingsKey.RESPONSE_BEHAVIOR_TYPE]}
+        onChange={(e) =>
+          updateSettingsKey(
+            ChatGptSettingsKey.RESPONSE_BEHAVIOR_TYPE,
+            e.target.value
+          )
+        }
+      >
+        {options.map((x) => (
+          <option key={x}>{x}</option>
+        ))}
+      </Form.Select>
+    </>
+  );
+
   return (
     <div className="tw-text-white tw-p-8 tw-flex tw-flex-col tw-items-stretch tw-gap-8">
       <Form>
@@ -63,6 +89,16 @@ export default function Settings() {
             updateSettingsKey(ChatGptSettingsKey.IFRAME_POPUP, e.target.checked)
           }
         />
+        <hr></hr>
+        <Form.Check
+          type="switch"
+          label="Enable debug mode"
+          checked={localSettings[ChatGptSettingsKey.DEBUG]}
+          onChange={(e) =>
+            updateSettingsKey(ChatGptSettingsKey.DEBUG, e.target.checked)
+          }
+        />
+        {localSettings[ChatGptSettingsKey.DEBUG] && debugFormControls}
       </Form>
     </div>
   );
