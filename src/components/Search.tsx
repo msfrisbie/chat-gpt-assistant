@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { SearchContext } from "../contexts/Search";
-import GoogleCard from "./GoogleCard";
+import ChatGptResult from "./ChatGptResult";
 import History from "./History";
 
 async function getCurrentTab() {
@@ -73,7 +73,7 @@ export default function Search() {
         />
         {query && <Button onClick={reset}>RESET</Button>}
       </InputGroup>
-      {query && <GoogleCard></GoogleCard>}
+      {query && <ChatGptResult></ChatGptResult>}
       {!query && (
         <History
           selectHistoryItem={selectHistoryItem}

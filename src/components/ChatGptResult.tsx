@@ -7,7 +7,7 @@ import { SearchContext } from "../contexts/Search";
 import { IChatGptPostMessage } from "../interfaces/settings";
 import { sendPromptFromContentScript } from "../utils/messaging";
 
-export default function GoogleCard() {
+export default function ChatGptResult() {
   const [answer, setAnswer] = useState("");
   const {
     searchSuccessInflight,
@@ -29,7 +29,7 @@ export default function GoogleCard() {
           break;
         case ChatGptMessageType.ANSWER_DONE_FROM_BG:
           console.log("Message done");
-          searchSuccessComplete()
+          searchSuccessComplete();
           break;
         case ChatGptMessageType.ANSWER_ERROR_FROM_BG:
           if (message.data.error === "UNAUTHORIZED") {

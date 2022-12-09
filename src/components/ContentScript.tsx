@@ -10,7 +10,7 @@ import Card from "react-bootstrap/Card";
 import { ChatGptSettingsKey, ChatGptThreadState } from "../consts";
 import { SearchContext } from "../contexts/Search";
 import { getAllSettings } from "../utils/settings";
-import GoogleCard from "./GoogleCard";
+import ChatGptResult from "./ChatGptResult";
 
 export default function ContentScript() {
   const q: string = new URL(window.location.href).searchParams.get("q") || "";
@@ -51,7 +51,7 @@ export default function ContentScript() {
             </Card.Body>
             {chatGptResultState !== ChatGptThreadState.INITIAL && (
               <Card.Body>
-                <GoogleCard></GoogleCard>
+                <ChatGptResult></ChatGptResult>
               </Card.Body>
             )}
           </Card>
