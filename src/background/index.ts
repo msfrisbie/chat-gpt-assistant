@@ -1,9 +1,9 @@
-import { IChatGptPostMessage } from "../interfaces/settings";
 import {
   ChatGptMessageType,
   CHAT_GPT_HISTORY_KEY,
   KEY_ACCESS_TOKEN,
 } from "../consts";
+import { IChatGptPostMessage } from "../interfaces/settings";
 import { cache, getAnswer } from "../utils/chatgpt";
 import { sendMessage } from "../utils/messaging";
 
@@ -40,17 +40,41 @@ chrome.runtime.onConnect.addListener((port) => {
 });
 
 chrome.runtime.onInstalled.addListener((details) => {
-  try {
-    if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
-      // @ts-ignore
-      const url = chrome.runtime.getManifest().options_ui.page;
+  if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
+    // @ts-ignore
+    const url = chrome.runtime.getManifest().options_ui.page;
 
-      chrome.tabs.create({
-        url: chrome.runtime.getURL(`${url}#/how-to-use`),
-      });
-    }
+    chrome.tabs.create({
+      url: chrome.runtime.getURL(`${url}#/how-to-use`),
+    });
+  }
+
+  try {
+    chrome.contextMenus.create({
+      id: "gpt-search",
+      title: "Use selected text as ChatGPT prompt",
+      contexts: ["selection"],
+    });
   } catch (e) {
-    console.error(e);
+    console.log(e);
+  }
+
+  try {
+    chrome.contextMenus.create({
+      id: "gpt-settings",
+      title: "ChatGPT Assistant settings",
+      contexts: [
+        "audio",
+        "editable",
+        "frame",
+        "image",
+        "link",
+        "page",
+        "video",
+      ],
+    });
+  } catch (e) {
+    console.log(e);
   }
 });
 
@@ -93,18 +117,6 @@ chrome.omnibox.onInputChanged.addListener(async (text, suggest) => {
       })
     );
   }
-});
-
-chrome.contextMenus.create({
-  id: "gpt-search",
-  title: "Use selected text as ChatGPT prompt",
-  contexts: ["selection"],
-});
-
-chrome.contextMenus.create({
-  id: "gpt-settings",
-  title: "ChatGPT Assistant settings",
-  contexts: ["audio", "editable", "frame", "image", "link", "page", "video"],
 });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {

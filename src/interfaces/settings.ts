@@ -16,3 +16,41 @@ export interface IChatGptPostMessage {
   messageType: ChatGptMessageType;
   data?: any;
 }
+
+export type UUID = string;
+
+export interface ChatGptSSEMessage {
+  message: {
+    id: UUID;
+    role: "assistant";
+    user: null;
+    create_time: null;
+    update_time: null;
+    content: {
+      content_type: "text";
+      parts: string[];
+    };
+    end_turn: null;
+    weight: 1.0;
+    metadata: {};
+    recipient: "all";
+  };
+  conversation_id: UUID;
+  error: null;
+}
+
+export interface ChatGptPromptPayload {
+  action: "next" | "variant";
+  messages: [
+    {
+      id: UUID;
+      role: "user";
+      content: {
+        content_type: "text";
+        parts: string[];
+      };
+    }
+  ];
+  model: "text-davinci-002-render";
+  parent_message_id: UUID;
+}

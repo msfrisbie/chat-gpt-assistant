@@ -7,6 +7,10 @@ import {
   ResponseBehaviorType,
   STUB_RESPONSE,
 } from "../consts";
+import {
+  ChatGptPromptPayload,
+  ChatGptSSEMessage,
+} from "../interfaces/settings";
 import { getSetting } from "./settings";
 
 export const cache = new ExpiryMap(10 * 1000);
@@ -87,35 +91,39 @@ export async function getAnswer(
   }
 
   const accessToken = await getAccessToken();
+
+  const payload: ChatGptPromptPayload = {
+    action: "next",
+    messages: [
+      {
+        id: uuidv4(),
+        role: "user",
+        content: {
+          content_type: "text",
+          parts: [question],
+        },
+      },
+    ],
+    model: "text-davinci-002-render",
+    parent_message_id: uuidv4(),
+  };
+
   console.debug("Dispatching to API...", question);
+
   await fetchSSE("https://chat.openai.com/backend-api/conversation", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     },
-    body: JSON.stringify({
-      action: "next",
-      messages: [
-        {
-          id: uuidv4(),
-          role: "user",
-          content: {
-            content_type: "text",
-            parts: [question],
-          },
-        },
-      ],
-      model: "text-davinci-002-render",
-      parent_message_id: uuidv4(),
-    }),
+    body: JSON.stringify(payload),
     onMessage(message: any) {
       console.debug("sse message", message);
       if (message === "[DONE]") {
         callback({ done: true });
         return;
       }
-      const data = JSON.parse(message);
+      const data: ChatGptSSEMessage = JSON.parse(message);
       const text = data.message?.content?.parts?.[0];
       if (text) {
         callback({ done: false, answer: text });
