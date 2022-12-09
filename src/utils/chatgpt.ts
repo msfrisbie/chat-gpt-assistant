@@ -5,6 +5,7 @@ import {
   ChatGptSettingsKey,
   KEY_ACCESS_TOKEN,
   ResponseBehaviorType,
+  STUB_RESPONSE,
 } from "../consts";
 import { getSetting } from "./settings";
 
@@ -69,9 +70,8 @@ export async function getAnswer(
 
     switch (responseBehaviorType) {
       case ResponseBehaviorType.STUB_ANSWER:
-        const stubAnswer = `This is a stub response!`;
-        for (let i = 0; i < stubAnswer.length; ++i) {
-          callback({ done: false, answer: stubAnswer.slice(0, i) });
+        for (let i = 0; i < STUB_RESPONSE.length; ++i) {
+          callback({ done: false, answer: STUB_RESPONSE.slice(0, i) });
           await new Promise((resolve) => setTimeout(resolve, 10));
         }
         callback({ done: true });

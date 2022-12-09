@@ -1,3 +1,9 @@
+import {
+  faCog,
+  faQuestionCircle,
+  faSearch,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -31,13 +37,29 @@ export default function Options() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link href="#/">Search</Nav.Link>
-              <Nav.Link href="#/how-to-use">How to use</Nav.Link>
-              <Nav.Link href="#/settings">Settings</Nav.Link>
+              <Nav.Link href="#/">
+                <div className="tw-flex tw-flex-row tw-items-center tw-gap-1 px-2">
+                  <FontAwesomeIcon icon={faSearch} />
+                  <span>Search</span>
+                </div>
+              </Nav.Link>
+              <Nav.Link href="#/how-to-use">
+                <div className="tw-flex tw-flex-row tw-items-center tw-gap-1 px-2">
+                  <FontAwesomeIcon icon={faQuestionCircle} />
+                  <span>How to use</span>
+                </div>
+              </Nav.Link>
+              <Nav.Link href="#/settings">
+                <div className="tw-flex tw-flex-row tw-items-center tw-gap-1 px-2">
+                  <FontAwesomeIcon icon={faCog} />
+                  <span>Settings</span>
+                </div>
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
+
       <div
         style={{ maxWidth: "600px" }}
         className="tw-w-full tw-flex tw-flex-col tw-items-stretch"

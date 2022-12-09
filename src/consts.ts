@@ -1,3 +1,6 @@
+
+export const GA_ID = "G-62P3FH3XKV";
+
 export const CHAT_GPT_HISTORY_KEY = "CHAT_GPT_HISTORY";
 export const CHAT_GPT_SETTINGS_KEY = "CHAT_GPT_SETTINGS_KEY";
 export enum ChatGptSettingsKey {
@@ -23,3 +26,17 @@ export enum ResponseBehaviorType {
 }
 
 export const KEY_ACCESS_TOKEN = "accessToken";
+
+export const STUB_RESPONSE = `
+This is a stub response! This is a stub response! 
+This is a stub response! This is a stub response! 
+
+\`\`\`
+// Here is some code:
+function foobar() {
+    return "baz";
+}
+
+This is a stub response! This is a stub response! 
+This is a stub response! This is a stub response! 
+`;

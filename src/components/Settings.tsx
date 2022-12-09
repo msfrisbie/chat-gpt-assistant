@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
-import { ISettings } from "~interfaces/settings";
 import { ChatGptSettingsKey, ResponseBehaviorType } from "../consts";
+import { ISettings } from "../interfaces/settings";
 import {
   defaultSettings,
   getAllSettings,

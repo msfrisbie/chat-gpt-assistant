@@ -4,7 +4,7 @@
   "description": "ChatGPT assistant",
   "scripts": {
     "start": "parcel watch src/manifest.json --host localhost  --no-cache",
-    "build": "parcel build src/manifest.json --no-content-hash",
+    "build": "parcel build src/manifest.json --no-content-hash --no-cache",
     "clean": "rm -r dist .parcel-cache"
   },
   "author": "Matt Frisbie",
@@ -28,6 +28,10 @@
     "typescript": "4.9.3"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.2.1",
+    "@fortawesome/free-regular-svg-icons": "^6.2.1",
+    "@fortawesome/free-solid-svg-icons": "^6.2.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@types/chrome": "^0.0.203",
     "bootstrap": "^5.2.3",
     "eventsource-parser": "^0.0.5",
