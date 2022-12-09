@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import { CHAT_GPT_HISTORY_KEY } from "../consts";
+import { SearchContext } from "../contexts/Search";
 import GoogleCard from "./GoogleCard";
 import History from "./History";
 
@@ -14,10 +14,9 @@ async function getCurrentTab() {
 }
 
 export default function Search() {
-  const [query, setQuery] = useState("");
   const [inputValue, setInputValue] = useState("");
-  const [history, setHistory] = useState([]);
   const inputRef = useRef();
+  const { executeSearch, resetSearch, query } = useContext(SearchContext);
 
   useEffect(() => {
     getCurrentTab().then((tab: chrome.tabs.Tab) => {
@@ -28,19 +27,17 @@ export default function Search() {
       const q: string = new URL(tab.url).searchParams.get("q") || "";
 
       if (q) {
-        setQuery(q);
         setInputValue(q);
-      }
-    });
-
-    chrome.storage.local.get(CHAT_GPT_HISTORY_KEY).then((result: any) => {
-      if (result[CHAT_GPT_HISTORY_KEY]) {
-        setHistory(result[CHAT_GPT_HISTORY_KEY]);
+        search(q);
       }
     });
 
     inputRef.current.focus();
   }, []);
+
+  const search = (question: string) => {
+    executeSearch(question);
+  };
 
   const handleOnChange = (event: any) => {
     setInputValue(event.target.value);
@@ -48,30 +45,19 @@ export default function Search() {
 
   const handleKeyPress = (event: any) => {
     if (event.code === "Enter") {
-      setQuery(event.target.value);
-      pushHistoryItem(event.target.value);
+      search(event.target.value);
     }
   };
 
   const reset = () => {
-    setQuery("");
     setInputValue("");
+    resetSearch();
     inputRef.current.focus();
   };
 
   const selectHistoryItem = (historyItem: string) => {
     setInputValue(historyItem);
-    setQuery(historyItem);
-    pushHistoryItem(historyItem);
-  };
-
-  const pushHistoryItem = (historyItem: string) => {
-    const newHistory = [
-      historyItem,
-      ...history.filter((x) => x !== historyItem),
-    ].slice(0, 100);
-    setHistory(newHistory);
-    chrome.storage.local.set({ [CHAT_GPT_HISTORY_KEY]: newHistory });
+    search(historyItem);
   };
 
   return (
@@ -83,14 +69,14 @@ export default function Search() {
           onChange={handleOnChange}
           onKeyPress={handleKeyPress}
           ref={inputRef}
+          disabled={!!query}
         />
         {query && <Button onClick={reset}>RESET</Button>}
       </InputGroup>
-      {query && <GoogleCard query={query || ""}></GoogleCard>}
+      {query && <GoogleCard></GoogleCard>}
       {!query && (
         <History
           selectHistoryItem={selectHistoryItem}
-          history={history}
           inputValue={inputValue}
         ></History>
       )}

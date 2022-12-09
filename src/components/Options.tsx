@@ -12,6 +12,7 @@ import { createHashRouter, RouterProvider } from "react-router-dom";
 import Help from "./Help";
 import Search from "./Search";
 import Settings from "./Settings";
+import { SearchProvider } from "../contexts/Search";
 
 const router = createHashRouter([
   {
@@ -64,7 +65,9 @@ export default function Options() {
         style={{ maxWidth: "600px" }}
         className="tw-w-full tw-flex tw-flex-col tw-items-stretch"
       >
-        <RouterProvider router={router}></RouterProvider>
+        <SearchProvider>
+          <RouterProvider router={router}></RouterProvider>
+        </SearchProvider>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { ChatGptResultState, CHAT_GPT_HISTORY_KEY } from "../../consts";
+import { ChatGptThreadState, CHAT_GPT_HISTORY_KEY } from "../../consts";
 import { SearchContextAction } from "./consts";
 import { ISearchContextAction, ISearchContextState } from "./interfaces";
 
@@ -19,7 +19,7 @@ export const reducer = (
 
       return {
         ...state,
-        chatGptResultState: ChatGptResultState.LOADING,
+        chatGptResultState: ChatGptThreadState.LOADING,
         query: action.payload.query,
         history: updatedHistory,
       };
@@ -33,26 +33,28 @@ export const reducer = (
     case SearchContextAction.RESET_SEARCH:
       return {
         ...state,
-        chatGptResultState: ChatGptResultState.INITIAL,
+        chatGptResultState: ChatGptThreadState.INITIAL,
         query: "",
       };
-    case SearchContextAction.SEARCH_SUCCESS:
-      console.log("search success");
-
+    case SearchContextAction.SEARCH_SUCCESS_INFLIGHT:
       return {
         ...state,
-        chatGptResultState: ChatGptResultState.SUCCESS,
-        output: action.payload.output,
+        chatGptResultState: ChatGptThreadState.SUCCESS_INFLIGHT,
+      };
+    case SearchContextAction.SEARCH_SUCCESS_COMPLETE:
+      return {
+        ...state,
+        chatGptResultState: ChatGptThreadState.SUCCESS_COMPLETE,
       };
     case SearchContextAction.SEARCH_UNAUTHORIZED:
       return {
         ...state,
-        chatGptResultState: ChatGptResultState.UNAUTHORIZED,
+        chatGptResultState: ChatGptThreadState.UNAUTHORIZED,
       };
     case SearchContextAction.SEARCH_ERROR:
       return {
         ...state,
-        chatGptResultState: ChatGptResultState.ERROR,
+        chatGptResultState: ChatGptThreadState.ERROR,
       };
     default:
       throw new Error("Unmatched state");
@@ -60,8 +62,7 @@ export const reducer = (
 };
 
 export const initialState: ISearchContextState = {
-  chatGptResultState: ChatGptResultState.INITIAL,
+  chatGptResultState: ChatGptThreadState.INITIAL,
   query: "",
-  output: "",
   history: [],
 };

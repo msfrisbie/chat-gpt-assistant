@@ -1,56 +1,48 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { vs2015 } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { ChatGptMessageType } from "../consts";
+import { ChatGptMessageType, ChatGptThreadState } from "../consts";
+import { SearchContext } from "../contexts/Search";
 import { IChatGptPostMessage } from "../interfaces/settings";
 import { sendPromptFromContentScript } from "../utils/messaging";
 
-enum State {
-  INITIAL,
-  UNAUTHORIZED,
-  LOADING,
-  SUCCESS,
-  ERROR,
-}
-
-export default function GoogleCard(props: any) {
-  const [cardState, setCardState] = useState(State.INITIAL);
+export default function GoogleCard() {
   const [answer, setAnswer] = useState("");
+  const {
+    searchSuccessInflight,
+    searchSuccessComplete,
+    searchUnauthorized,
+    searchError,
+    chatGptResultState,
+    query,
+  } = useContext(SearchContext);
 
   useEffect(() => {
-    if (props.query && props.query.length > 0) {
-      setCardState(State.LOADING);
+    console.log("Sending", query.slice(0, 20));
 
-      console.log("Sending", props.query.slice(0, 20));
-
-      sendPromptFromContentScript(
-        props.query,
-        (message: IChatGptPostMessage) => {
-          switch (message.messageType) {
-            case ChatGptMessageType.ANSWER_TEXT_FROM_BG:
-              setAnswer(message.data.answer);
-              setCardState(State.SUCCESS);
-              break;
-            case ChatGptMessageType.ANSWER_DONE_FROM_BG:
-              console.log("Message done");
-              break;
-            case ChatGptMessageType.ANSWER_ERROR_FROM_BG:
-              if (message.data.error === "UNAUTHORIZED") {
-                setCardState(State.UNAUTHORIZED);
-              } else {
-                setCardState(State.ERROR);
-              }
-              break;
-            default:
-              throw new Error("Unrecognized message");
+    sendPromptFromContentScript(query, (message: IChatGptPostMessage) => {
+      switch (message.messageType) {
+        case ChatGptMessageType.ANSWER_TEXT_FROM_BG:
+          setAnswer(message.data.answer);
+          searchSuccessInflight();
+          break;
+        case ChatGptMessageType.ANSWER_DONE_FROM_BG:
+          console.log("Message done");
+          searchSuccessComplete()
+          break;
+        case ChatGptMessageType.ANSWER_ERROR_FROM_BG:
+          if (message.data.error === "UNAUTHORIZED") {
+            searchUnauthorized();
+          } else {
+            searchError();
           }
-        }
-      );
-    } else {
-      setCardState(State.INITIAL);
-    }
-  }, [props.query]);
+          break;
+        default:
+          throw new Error("Unrecognized message");
+      }
+    });
+  }, [query]);
 
   const components = {
     code({ node, inline, className, children, ...props }) {
@@ -63,27 +55,31 @@ export default function GoogleCard(props: any) {
   };
 
   return (
-    <div>
-      {cardState === State.INITIAL && <></>}
-      {cardState === State.LOADING && (
+    <div className="tw-text-white">
+      {chatGptResultState === ChatGptThreadState.INITIAL && <></>}
+      {chatGptResultState === ChatGptThreadState.LOADING && (
         <div className="loading tw-text-gray-300">
           Waiting for ChatGPT response...
         </div>
       )}
-      {cardState === State.SUCCESS && (
-        <div
-          id="chatgpt-result"
-          className="tw-text-white"
-          style={{ color: "white" }}
-        >
+      {chatGptResultState === ChatGptThreadState.SUCCESS_INFLIGHT && (
+        <div id="chatgpt-result" style={{ color: "white" }}>
           <ReactMarkdown
             children={answer}
             components={components}
           ></ReactMarkdown>
         </div>
       )}
-      {cardState === State.UNAUTHORIZED && (
-        <div className="tw-text-white">
+      {chatGptResultState === ChatGptThreadState.SUCCESS_COMPLETE && (
+        <div id="chatgpt-result" style={{ color: "white" }}>
+          <ReactMarkdown
+            children={answer}
+            components={components}
+          ></ReactMarkdown>
+        </div>
+      )}
+      {chatGptResultState === ChatGptThreadState.UNAUTHORIZED && (
+        <div>
           Please login at{" "}
           <a href="https://chat.openai.com" target="_blank">
             chat.openai.com
@@ -91,7 +87,9 @@ export default function GoogleCard(props: any) {
           first
         </div>
       )}
-      {cardState === State.ERROR && <p>Failed to load response from ChatGPT</p>}
+      {chatGptResultState === ChatGptThreadState.ERROR && (
+        <div>Failed to load response from ChatGPT</div>
+      )}
     </div>
   );
 }

@@ -1,4 +1,3 @@
-
 export const GA_ID = "G-62P3FH3XKV";
 
 export const CHAT_GPT_HISTORY_KEY = "CHAT_GPT_HISTORY";
@@ -9,6 +8,15 @@ export enum ChatGptSettingsKey {
   IFRAME_POPUP = "IFRAME_POPUP",
   DEBUG = "DEBUG",
   RESPONSE_BEHAVIOR_TYPE = "RESPONSE_BEHAVIOR_TYPE",
+}
+
+export enum ChatGptThreadState {
+  INITIAL,
+  UNAUTHORIZED,
+  LOADING,
+  SUCCESS_INFLIGHT,
+  SUCCESS_COMPLETE,
+  ERROR,
 }
 
 export enum ChatGptMessageType {
@@ -36,6 +44,7 @@ This is a stub response! This is a stub response!
 function foobar() {
     return "baz";
 }
+\`\`\`
 
 This is a stub response! This is a stub response! 
 This is a stub response! This is a stub response! 
