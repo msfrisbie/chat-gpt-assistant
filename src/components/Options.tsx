@@ -9,10 +9,11 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { createHashRouter, RouterProvider } from "react-router-dom";
+import ai from "../assets/images/ai.png";
+import { SearchProvider } from "../contexts/Search";
 import Help from "./Help";
 import Search from "./Search";
 import Settings from "./Settings";
-import { SearchProvider } from "../contexts/Search";
 
 const router = createHashRouter([
   {
@@ -34,7 +35,13 @@ export default function Options() {
     <div className="tw-w-full tw-grow tw-bg-neutral-900 tw-flex tw-flex-col tw-items-center">
       <Navbar className="tw-w-full" variant="dark" bg="dark" expand="lg">
         <Container>
-          <Navbar.Brand href="#/">ChatGPT Assistant</Navbar.Brand>
+          <Navbar.Brand
+            href="#/"
+            className="tw-flex tw-flex-row tw-items-center tw-gap-2"
+          >
+            <img style={{ width: "1.5rem" }} src={ai} />
+            <span>ChatGPT Assistant</span>
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">

@@ -57,5 +57,11 @@
       "matches": ["https://msfrisbie.github.io/*"],
       "css": ["styles/content-script.scss"]
     }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/*"],
+      "matches": ["<all_urls>"]
+    }
   ]
 }
