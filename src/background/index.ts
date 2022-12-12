@@ -93,29 +93,6 @@ chrome.runtime.onConnect.addListener((port) => {
       port.disconnect();
       cache.delete(KEY_ACCESS_TOKEN);
     }
-
-    // try {
-    //   await getAnswer(
-    //     msg.data.question,
-    //     ({ done, answer }: { done: boolean; answer?: string }) => {
-    //       if (done) {
-    //         sendMessage(port, ChatGptMessageType.ANSWER_DONE_FROM_BG);
-    //         port.disconnect();
-    //       } else {
-    //         sendMessage(port, ChatGptMessageType.ANSWER_TEXT_FROM_BG, {
-    //           answer,
-    //         });
-    //       }
-    //     }
-    //   );
-    // } catch (e) {
-    //   //   console.error(e);
-    //   sendMessage(port, ChatGptMessageType.ANSWER_ERROR_FROM_BG, {
-    //     error: e.message,
-    //   });
-    //   port.disconnect();
-    //   cache.delete(KEY_ACCESS_TOKEN);
-    // }
   });
 });
 
