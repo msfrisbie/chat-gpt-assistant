@@ -1,3 +1,5 @@
+<img src="static/1400x560.png" alt="ChatGPT Assistant"/>
+
 # Summarize
 
 Browser Extension to integrate ChatGPT everywhere:
