@@ -70,7 +70,10 @@ chrome.runtime.onConnect.addListener((port) => {
     }
 
     try {
-      const conversation = api.getConversation();
+      const conversation = api.getConversation({
+        conversationId: msg.data.conversationId,
+        parentMessageId: msg.data.parentMessageId,
+      });
 
       await conversation.sendMessage(msg.data.question, {
         onProgress(progressResponse) {
@@ -81,9 +84,13 @@ chrome.runtime.onConnect.addListener((port) => {
         },
         onConversationResponse(conversationResponse) {
           console.debug({ conversationResponse });
+          sendMessage(
+            port,
+            ChatGptMessageType.ANSWER_DONE_FROM_BG,
+            conversationResponse
+          );
         },
       });
-      sendMessage(port, ChatGptMessageType.ANSWER_DONE_FROM_BG);
       port.disconnect();
     } catch (e) {
       console.error(e);
