@@ -1,1 +1,1 @@
-export async function lazyWrite
+export async function lazyWrite() {}
