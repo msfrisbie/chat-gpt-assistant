@@ -25,11 +25,11 @@ export async function updateAllSettings(settings: ISettings) {
 }
 
 export async function getAllSettings(): Promise<ISettings> {
-  return get(CHAT_GPT_SETTINGS_KEY).then((result) => {
-    if (result[CHAT_GPT_SETTINGS_KEY]) {
+  return get(CHAT_GPT_SETTINGS_KEY).then((settings) => {
+    if (settings) {
       return {
         ...defaultSettings,
-        ...result[CHAT_GPT_SETTINGS_KEY],
+        ...settings,
       };
     } else {
       return defaultSettings;
@@ -38,11 +38,11 @@ export async function getAllSettings(): Promise<ISettings> {
 }
 
 export async function getSetting(key: ChatGptSettingsKey) {
-  return get(CHAT_GPT_SETTINGS_KEY).then((result) => {
-    if (!result[CHAT_GPT_SETTINGS_KEY]) {
+  return get(CHAT_GPT_SETTINGS_KEY).then((settings) => {
+    if (!settings) {
       return null;
     } else {
-      return result[CHAT_GPT_SETTINGS_KEY][key];
+      return settings[key];
     }
   });
 }

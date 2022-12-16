@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
 import { ChatGptMessageType } from "../consts";
 import { IChatGptPostMessage } from "../interfaces/settings";
 
@@ -23,8 +22,8 @@ export function sendPromptFromContentScript(
   );
   port.onDisconnect.addListener(() => console.log("Port disconnected"));
   sendMessage(port, ChatGptMessageType.SEND_PROMPT_FROM_CS, {
-    conversationId: uuidv4(),
-    parentMessageId: uuidv4(),
+    // conversationId: uuidv4(),
+    // parentMessageId: uuidv4(),
     question: prompt,
   });
 }

@@ -63,12 +63,11 @@ export const SearchProvider = ({ children }) => {
     },
   };
 
-  get(CHAT_GPT_HISTORY_KEY).then((result: any) => {
-    if (!result[CHAT_GPT_HISTORY_KEY]) {
-      return;
+  // Initialize the history onload
+  get(CHAT_GPT_HISTORY_KEY).then((history: any) => {
+    if (history) {
+      value.setHistory(history);
     }
-
-    value.setHistory(result[CHAT_GPT_HISTORY_KEY]);
   });
 
   return (

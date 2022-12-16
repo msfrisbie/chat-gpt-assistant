@@ -162,29 +162,31 @@ chrome.omnibox.onInputChanged.addListener(async (text, suggest) => {
 
   const history = await get(CHAT_GPT_HISTORY_KEY);
 
-  if (history[CHAT_GPT_HISTORY_KEY]) {
+  if (history) {
     suggest(
-      history[CHAT_GPT_HISTORY_KEY].filter((historyItem: string) =>
-        historyItem.trim().toLowerCase().includes(normalizedText)
-      ).map((historyItem: string) => {
-        let title = historyItem;
+      history
+        .filter((historyItem: string) =>
+          historyItem.trim().toLowerCase().includes(normalizedText)
+        )
+        .map((historyItem: string) => {
+          let title = historyItem;
 
-        const titleStartIdx = title.toLowerCase().indexOf(normalizedText);
-        if (titleStartIdx >= 0) {
-          const titleEndIdx = titleStartIdx + normalizedText.length;
-          title =
-            title.slice(0, titleStartIdx) +
-            "<match>" +
-            title.slice(titleStartIdx, titleEndIdx) +
-            "</match>" +
-            title.slice(titleEndIdx);
-        }
+          const titleStartIdx = title.toLowerCase().indexOf(normalizedText);
+          if (titleStartIdx >= 0) {
+            const titleEndIdx = titleStartIdx + normalizedText.length;
+            title =
+              title.slice(0, titleStartIdx) +
+              "<match>" +
+              title.slice(titleStartIdx, titleEndIdx) +
+              "</match>" +
+              title.slice(titleEndIdx);
+          }
 
-        return {
-          content: historyItem,
-          description: `${title}`,
-        };
-      })
+          return {
+            content: historyItem,
+            description: `${title}`,
+          };
+        })
     );
   }
 });
