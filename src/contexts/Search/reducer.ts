@@ -30,6 +30,23 @@ export const reducer = (
         history: action.payload.history,
       };
 
+    case SearchContextAction.REMOVE_HISTORY_ITEM:
+      console.log(
+        action.payload.historyElement,
+        state.history.filter((x) => x !== action.payload.historyElement)
+      );
+
+      const filteredHistory = state.history.filter(
+        (x) => x !== action.payload.historyElement
+      );
+
+      chrome.storage.local.set({ [CHAT_GPT_HISTORY_KEY]: filteredHistory });
+
+      return {
+        ...state,
+        history: filteredHistory,
+      };
+
     case SearchContextAction.RESET_SEARCH:
       return {
         ...state,

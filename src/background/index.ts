@@ -55,18 +55,21 @@ chrome.runtime.onConnect.addListener((port) => {
       }
     }
 
-    const sessionToken = await getAccessToken();
-
-    const api = new ChatGPTAPI({
-      sessionToken,
-    });
+    let api: ChatGPTAPI;
 
     try {
+      const sessionToken = await getAccessToken();
+
+      api = new ChatGPTAPI({
+        sessionToken,
+      });
+
       await api.ensureAuth();
     } catch (e) {
       sendMessage(port, ChatGptMessageType.ANSWER_ERROR_FROM_BG, {
         error: "UNAUTHORIZED",
       });
+      return;
     }
 
     try {

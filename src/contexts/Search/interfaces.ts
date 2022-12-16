@@ -7,6 +7,7 @@ export interface ISearchContextState {
   history: string[];
   executeSearch: (query: string) => void;
   setHistory: (history: string[]) => void;
+  removeHistoryItem: (historyItem: string) => void;
   resetSearch: () => void;
   searchSuccessInflight: () => void;
   searchSuccessComplete: () => void;

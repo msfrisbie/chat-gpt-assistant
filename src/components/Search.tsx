@@ -15,7 +15,7 @@ async function getCurrentTab() {
 
 export default function Search() {
   const [inputValue, setInputValue] = useState("");
-  const inputRef = useRef();
+  const inputRef = useRef<Form.Control>();
   const { executeSearch, resetSearch, query } = useContext(SearchContext);
 
   useEffect(() => {
@@ -32,7 +32,9 @@ export default function Search() {
       }
     });
 
-    inputRef.current.focus();
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   }, []);
 
   const search = (question: string) => {
@@ -52,7 +54,9 @@ export default function Search() {
   const reset = () => {
     setInputValue("");
     resetSearch();
-    inputRef.current.focus();
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   };
 
   const selectHistoryItem = (historyItem: string) => {

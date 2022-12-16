@@ -27,6 +27,14 @@ export const SearchProvider = ({ children }) => {
         },
       });
     },
+    removeHistoryItem: (historyElement: string) => {
+      dispatch({
+        type: SearchContextAction.REMOVE_HISTORY_ITEM,
+        payload: {
+          historyElement,
+        },
+      });
+    },
     resetSearch: () => {
       dispatch({
         type: SearchContextAction.RESET_SEARCH,
