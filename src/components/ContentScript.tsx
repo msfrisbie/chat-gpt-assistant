@@ -1,10 +1,6 @@
-import {
-  default as React,
-  default as React,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useContext, useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { ChatGptSettingsKey, ChatGptThreadState } from "../consts";
@@ -16,6 +12,7 @@ export default function ContentScript() {
   const q: string = new URL(window.location.href).searchParams.get("q") || "";
 
   const [showOverlay, setShowOverlay] = useState(false);
+  const [expandOverlay, setExpandOverlay] = useState(true);
   const { executeSearch, chatGptResultState, query } =
     useContext(SearchContext);
 
@@ -48,9 +45,21 @@ export default function ContentScript() {
                   GO
                 </Button>
               )}
+              {chatGptResultState !== ChatGptThreadState.INITIAL && (
+                <Button
+                  size="sm"
+                  variant="dark"
+                  onClick={() => setExpandOverlay(!expandOverlay)}
+                >
+                  <FontAwesomeIcon
+                    className="tw-w-4 tw-h-4"
+                    icon={expandOverlay ? faChevronDown : faChevronUp}
+                  ></FontAwesomeIcon>
+                </Button>
+              )}
             </Card.Body>
             {chatGptResultState !== ChatGptThreadState.INITIAL && (
-              <Card.Body>
+              <Card.Body style={{ display: expandOverlay ? "block" : "none" }}>
                 <ChatGptResult></ChatGptResult>
               </Card.Body>
             )}

@@ -20,7 +20,7 @@ export default function History({
         .map((x) => (
           <div
             key={x}
-            className="tw-p-2 tw-bg-gray-800 tw-text-white tw-flex tw-flex-row tw-items-stretch tw-flex-nowrap"
+            className="tw-rounded-md tw-p-2 tw-bg-gray-800 tw-text-white tw-flex tw-flex-row tw-items-stretch tw-flex-nowrap"
           >
             <div className="tw-grow">
               <div
