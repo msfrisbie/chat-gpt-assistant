@@ -1,4 +1,4 @@
-import { ChatGPTAPI } from "../../node_modules/chatgpt/build/browser/index.js";
+import { ChatGPTAPI } from "../../node_modules/chatgpt/build/index.js";
 import {
   ChatGptMessageType,
   ChatGptSettingsKey,
@@ -11,6 +11,7 @@ import { IChatGptPostMessage } from "../interfaces/settings";
 import { cache, getAccessToken } from "../utils/chatgpt";
 import { sendMessage } from "../utils/messaging";
 import { getSetting } from "../utils/settings";
+
 console.log("Initialized background", Date.now());
 
 chrome.runtime.onConnect.addListener((port) => {
