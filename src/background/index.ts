@@ -5,7 +5,7 @@ import {
   CHAT_GPT_HISTORY_KEY,
   KEY_ACCESS_TOKEN,
   ResponseBehaviorType,
-  STUB_RESPONSE,
+  STUB_RESPONSE
 } from "../consts";
 import { IChatGptPostMessage } from "../interfaces/settings";
 import { cache, getAccessToken } from "../utils/chatgpt";
