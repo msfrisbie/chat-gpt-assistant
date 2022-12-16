@@ -1,4 +1,5 @@
 import { ChatGptThreadState, CHAT_GPT_HISTORY_KEY } from "../../consts";
+import { set } from "../../utils/storage";
 import { SearchContextAction } from "./consts";
 import { ISearchContextAction, ISearchContextState } from "./interfaces";
 
@@ -13,9 +14,7 @@ export const reducer = (
         ...state.history.filter((x) => x !== action.payload.query),
       ].slice(0, 100);
 
-      chrome.storage.local.set({ [CHAT_GPT_HISTORY_KEY]: updatedHistory });
-
-      console.log("execute search");
+      set(CHAT_GPT_HISTORY_KEY, updatedHistory);
 
       return {
         ...state,
@@ -40,7 +39,7 @@ export const reducer = (
         (x) => x !== action.payload.historyElement
       );
 
-      chrome.storage.local.set({ [CHAT_GPT_HISTORY_KEY]: filteredHistory });
+      set(CHAT_GPT_HISTORY_KEY, filteredHistory);
 
       return {
         ...state,

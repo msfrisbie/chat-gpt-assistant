@@ -1,5 +1,6 @@
 import React, { createContext, useReducer } from "react";
 import { CHAT_GPT_HISTORY_KEY } from "../../consts";
+import { get } from "../../utils/storage";
 import { SearchContextAction } from "./consts";
 import { ISearchContextState } from "./interfaces";
 import { initialState, reducer } from "./reducer";
@@ -62,7 +63,7 @@ export const SearchProvider = ({ children }) => {
     },
   };
 
-  chrome.storage.local.get(CHAT_GPT_HISTORY_KEY).then((result: any) => {
+  get(CHAT_GPT_HISTORY_KEY).then((result: any) => {
     if (!result[CHAT_GPT_HISTORY_KEY]) {
       return;
     }

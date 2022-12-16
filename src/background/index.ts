@@ -1,16 +1,18 @@
-import { ChatGPTAPI } from "../../node_modules/chatgpt/build/index.js";
+import { ChatGPTAPI } from "../../node_modules/chatgpt/build/browser/index.js";
 import {
   ChatGptMessageType,
   ChatGptSettingsKey,
   CHAT_GPT_HISTORY_KEY,
   KEY_ACCESS_TOKEN,
   ResponseBehaviorType,
-  STUB_RESPONSE
+  STUB_RESPONSE,
+  UNAUTHORIZED_ERROR,
 } from "../consts";
 import { IChatGptPostMessage } from "../interfaces/settings";
 import { cache, getAccessToken } from "../utils/chatgpt";
 import { sendMessage } from "../utils/messaging";
 import { getSetting } from "../utils/settings";
+import { get } from "../utils/storage";
 
 console.log("Initialized background", Date.now());
 
@@ -47,7 +49,7 @@ chrome.runtime.onConnect.addListener((port) => {
           return;
         case ResponseBehaviorType.STUB_UNAUTHORIZED:
           sendMessage(port, ChatGptMessageType.ANSWER_ERROR_FROM_BG, {
-            error: "UNAUTHORIZED",
+            error: UNAUTHORIZED_ERROR,
           });
           return;
         case ResponseBehaviorType.DEFAULT:
@@ -68,7 +70,7 @@ chrome.runtime.onConnect.addListener((port) => {
       await api.ensureAuth();
     } catch (e) {
       sendMessage(port, ChatGptMessageType.ANSWER_ERROR_FROM_BG, {
-        error: "UNAUTHORIZED",
+        error: UNAUTHORIZED_ERROR,
       });
       return;
     }
@@ -158,7 +160,7 @@ chrome.omnibox.onInputEntered.addListener((text: string) => {
 chrome.omnibox.onInputChanged.addListener(async (text, suggest) => {
   const normalizedText = text.trim().toLowerCase();
 
-  const history = await chrome.storage.local.get(CHAT_GPT_HISTORY_KEY);
+  const history = await get(CHAT_GPT_HISTORY_KEY);
 
   if (history[CHAT_GPT_HISTORY_KEY]) {
     suggest(
