@@ -1,8 +1,8 @@
-import { ChatGptThreadState } from "../../consts";
+import { ChatGptConversationState } from "../../consts";
 import { SearchContextAction } from "./consts";
 
 export interface ISearchContextState {
-  chatGptResultState: ChatGptThreadState;
+  chatGptResultState: ChatGptConversationState;
   query: string;
   history: string[];
   executeSearch: (query: string) => void;

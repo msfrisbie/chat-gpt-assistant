@@ -8,7 +8,7 @@ import {
   STUB_RESPONSE,
   UNAUTHORIZED_ERROR,
 } from "../consts";
-import { IChatGptPostMessage } from "../interfaces/settings";
+import { IChatGptPostMessage } from "../interfaces/messaging";
 import { cache, getAccessToken } from "../utils/chatgpt";
 import { getSetting } from "../utils/settings";
 
@@ -116,6 +116,40 @@ export async function backgroundHandleConnect(port: chrome.runtime.Port) {
             },
             onConversationResponse(conversationResponse) {
               console.debug({ conversationResponse });
+              // {
+              //   action: "next",
+              //   messages: [
+              //     {
+              //       id: "aeac2d84-4926-4e15-b525-5d266aba6931",
+              //       role: "user",
+              //       content: { content_type: "text", parts: ["test"] },
+              //     },
+              //   ],
+              //   parent_message_id: "db025ee7-7aa9-456e-87da-41cd06e73398",
+              //   model: "text-davinci-002-render",
+              // }
+
+              //   {
+              //     "message": {
+              //         "id": "42bb1fe5-4973-4c98-a54a-a13510f5d6fd",
+              //         "role": "assistant",
+              //         "user": null,
+              //         "create_time": null,
+              //         "update_time": null,
+              //         "content": {
+              //             "content_type": "text",
+              //             "parts": [
+              //                 "Hello! How can I help you today? Do you have any specific questions or topics you would like to discuss"
+              //             ]
+              //         },
+              //         "end_turn": null,
+              //         "weight": 1,
+              //         "metadata": {},
+              //         "recipient": "all"
+              //     },
+              //     "conversation_id": "16a17c30-451f-463a-8efa-22b9ed44c75e",
+              //     "error": null
+              // }
               sendMessage(
                 port,
                 ChatGptMessageType.ANSWER_DONE_FROM_BG,

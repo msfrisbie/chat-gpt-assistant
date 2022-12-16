@@ -5,6 +5,7 @@ export const UNAUTHORIZED_ERROR = "UNAUTHORIZED";
 export const CHAT_GPT_HISTORY_KEY = "CHAT_GPT_HISTORY";
 export const CHAT_GPT_CONVERSATION_KEY = "CHAT_GPT_CONVERSATION_KEY";
 export const CHAT_GPT_SETTINGS_KEY = "CHAT_GPT_SETTINGS_KEY";
+
 export enum ChatGptSettingsKey {
   ENABLE_CONTENT_SCRIPT = "ENABLE_CONTENT_SCRIPT",
   EAGER_SEARCH = "EAGER_SEARCH",
@@ -13,7 +14,7 @@ export enum ChatGptSettingsKey {
   RESPONSE_BEHAVIOR_TYPE = "RESPONSE_BEHAVIOR_TYPE",
 }
 
-export enum ChatGptThreadState {
+export enum ChatGptConversationState {
   INITIAL,
   UNAUTHORIZED,
   LOADING,

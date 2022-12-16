@@ -1,4 +1,4 @@
-import { ChatGptThreadState, CHAT_GPT_HISTORY_KEY } from "../../consts";
+import { ChatGptConversationState, CHAT_GPT_HISTORY_KEY } from "../../consts";
 import { set } from "../../utils/storage";
 import { SearchContextAction } from "./consts";
 import { ISearchContextAction, ISearchContextState } from "./interfaces";
@@ -18,7 +18,7 @@ export const reducer = (
 
       return {
         ...state,
-        chatGptResultState: ChatGptThreadState.LOADING,
+        chatGptResultState: ChatGptConversationState.LOADING,
         query: action.payload.query,
         history: updatedHistory,
       };
@@ -49,28 +49,28 @@ export const reducer = (
     case SearchContextAction.RESET_SEARCH:
       return {
         ...state,
-        chatGptResultState: ChatGptThreadState.INITIAL,
+        chatGptResultState: ChatGptConversationState.INITIAL,
         query: "",
       };
     case SearchContextAction.SEARCH_SUCCESS_INFLIGHT:
       return {
         ...state,
-        chatGptResultState: ChatGptThreadState.SUCCESS_INFLIGHT,
+        chatGptResultState: ChatGptConversationState.SUCCESS_INFLIGHT,
       };
     case SearchContextAction.SEARCH_SUCCESS_COMPLETE:
       return {
         ...state,
-        chatGptResultState: ChatGptThreadState.SUCCESS_COMPLETE,
+        chatGptResultState: ChatGptConversationState.SUCCESS_COMPLETE,
       };
     case SearchContextAction.SEARCH_UNAUTHORIZED:
       return {
         ...state,
-        chatGptResultState: ChatGptThreadState.UNAUTHORIZED,
+        chatGptResultState: ChatGptConversationState.UNAUTHORIZED,
       };
     case SearchContextAction.SEARCH_ERROR:
       return {
         ...state,
-        chatGptResultState: ChatGptThreadState.ERROR,
+        chatGptResultState: ChatGptConversationState.ERROR,
       };
     default:
       throw new Error("Unmatched state");
@@ -78,7 +78,7 @@ export const reducer = (
 };
 
 export const initialState: ISearchContextState = {
-  chatGptResultState: ChatGptThreadState.INITIAL,
+  chatGptResultState: ChatGptConversationState.INITIAL,
   query: "",
   history: [],
 };

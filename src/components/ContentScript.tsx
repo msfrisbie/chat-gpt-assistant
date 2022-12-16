@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import { ChatGptSettingsKey, ChatGptThreadState } from "../consts";
+import { ChatGptConversationState, ChatGptSettingsKey } from "../consts";
 import { SearchContext } from "../contexts/Search";
 import { getAllSettings } from "../utils/settings";
 import ChatGptResult from "./ChatGptResult";
@@ -40,12 +40,12 @@ export default function ContentScript() {
           <Card style={{ backgroundColor: "#111111" }} text="white">
             <Card.Body className="tw-border-b tw-border-solid tw-border-gray-700 tw-bg-neutral-800 tw-font-semibold tw-flex tw-flex-row tw-justify-between tw-items-center">
               <span className="tw-text-white">{query}</span>
-              {chatGptResultState === ChatGptThreadState.INITIAL && (
+              {chatGptResultState === ChatGptConversationState.INITIAL && (
                 <Button size="sm" variant="primary" onClick={search}>
                   GO
                 </Button>
               )}
-              {chatGptResultState !== ChatGptThreadState.INITIAL && (
+              {chatGptResultState !== ChatGptConversationState.INITIAL && (
                 <Button
                   size="sm"
                   variant="dark"
@@ -58,7 +58,7 @@ export default function ContentScript() {
                 </Button>
               )}
             </Card.Body>
-            {chatGptResultState !== ChatGptThreadState.INITIAL && (
+            {chatGptResultState !== ChatGptConversationState.INITIAL && (
               <Card.Body style={{ display: expandOverlay ? "block" : "none" }}>
                 <ChatGptResult></ChatGptResult>
               </Card.Body>

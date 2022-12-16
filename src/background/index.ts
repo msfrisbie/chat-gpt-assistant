@@ -11,8 +11,7 @@ chrome.runtime.onConnect.addListener(backgroundHandleConnect);
 
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
-    // @ts-ignore
-    const url = chrome.runtime.getManifest().options_ui.page;
+    const url = chrome.runtime.getManifest().options_ui?.page;
 
     chrome.tabs.create({
       url: chrome.runtime.getURL(`${url}#/how-to-use`),
@@ -23,8 +22,7 @@ chrome.runtime.onInstalled.addListener((details) => {
 });
 
 chrome.omnibox.onInputEntered.addListener((text: string) => {
-  // @ts-ignore
-  const url = chrome.runtime.getManifest().options_ui.page;
+  const url = chrome.runtime.getManifest().options_ui?.page;
 
   chrome.tabs.create({
     url: chrome.runtime.getURL(`${url}?q=${text}`),
