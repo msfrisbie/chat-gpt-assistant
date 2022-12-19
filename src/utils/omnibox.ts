@@ -1,5 +1,4 @@
 import { CHAT_GPT_HISTORY_KEY } from "../consts";
-import { get } from "../utils/storage";
 
 export async function handleOmniboxOnInputChanged(
   text: string,
@@ -7,7 +6,7 @@ export async function handleOmniboxOnInputChanged(
 ) {
   const normalizedText = text.trim().toLowerCase();
 
-  const history = await get(CHAT_GPT_HISTORY_KEY);
+  const history = await chromeGet(CHAT_GPT_HISTORY_KEY);
 
   if (!history) {
     return;

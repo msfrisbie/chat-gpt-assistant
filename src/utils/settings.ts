@@ -4,7 +4,6 @@ import {
   ResponseBehaviorType,
 } from "../consts";
 import { ISettings } from "../interfaces/settings";
-import { get, set } from "./storage";
 
 export const defaultSettings: ISettings = {
   [ChatGptSettingsKey.ENABLE_CONTENT_SCRIPT]: true,
@@ -17,15 +16,15 @@ export const defaultSettings: ISettings = {
 export async function updateSetting(key: ChatGptSettingsKey, value: any) {
   const settings = await getAllSettings();
   settings[key] = value;
-  return set(CHAT_GPT_SETTINGS_KEY, settings);
+  return chromeSet(CHAT_GPT_SETTINGS_KEY, settings);
 }
 
 export async function updateAllSettings(settings: ISettings) {
-  return set(CHAT_GPT_SETTINGS_KEY, settings);
+  return chromeSet(CHAT_GPT_SETTINGS_KEY, settings);
 }
 
 export async function getAllSettings(): Promise<ISettings> {
-  return get(CHAT_GPT_SETTINGS_KEY).then((settings) => {
+  return chromeGet(CHAT_GPT_SETTINGS_KEY).then((settings) => {
     if (settings) {
       return {
         ...defaultSettings,
@@ -38,7 +37,7 @@ export async function getAllSettings(): Promise<ISettings> {
 }
 
 export async function getSetting(key: ChatGptSettingsKey) {
-  return get(CHAT_GPT_SETTINGS_KEY).then((settings) => {
+  return chromeGet(CHAT_GPT_SETTINGS_KEY).then((settings) => {
     if (!settings) {
       return null;
     } else {

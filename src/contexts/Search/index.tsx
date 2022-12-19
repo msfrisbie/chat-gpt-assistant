@@ -1,6 +1,5 @@
 import React, { createContext, useReducer } from "react";
 import { CHAT_GPT_HISTORY_KEY } from "../../consts";
-import { get } from "../../utils/storage";
 import { SearchContextAction } from "./consts";
 import { ISearchContextState } from "./interfaces";
 import { initialState, reducer } from "./reducer";
@@ -64,7 +63,7 @@ export const SearchProvider = ({ children }) => {
   };
 
   // Initialize the history onload
-  get(CHAT_GPT_HISTORY_KEY).then((history: any) => {
+  chromeGet(CHAT_GPT_HISTORY_KEY).then((history: any) => {
     if (history) {
       value.setHistory(history);
     }
