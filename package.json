@@ -35,6 +35,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@reduxjs/toolkit": "^1.9.1",
     "@types/chrome": "^0.0.203",
     "bootstrap": "^5.2.3",
     "chatgpt": "^2.0.5",
@@ -48,9 +49,12 @@
     "react-dom": "18.2.0",
     "react-highlight": "^0.15.0",
     "react-markdown": "^8.0.4",
+    "react-redux": "^8.0.5",
     "react-router-dom": "^6.4.4",
     "react-syntax-highlighter": "^15.5.0",
     "react-textarea-autosize": "^8.4.0",
+    "redux": "^4.2.0",
+    "redux-thunk": "^2.4.2",
     "tailwindcss": "3.2.4",
     "uuid": "^9.0.0"
   }

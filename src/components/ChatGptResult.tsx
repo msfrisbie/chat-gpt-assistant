@@ -1,22 +1,31 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import { useDispatch, useSelector } from "react-redux";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { vs2015 } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { ChatGptMessageType, ChatGptThreadState } from "../consts";
-import { SearchContext } from "../contexts/Search";
+import { IRootState } from "../features/interfaces";
+import {
+  searchError,
+  searchSuccessComplete,
+  searchSuccessInflight,
+  searchUnauthorized,
+} from "../features/search/searchSlice";
 import { IChatGptPostMessage } from "../interfaces/settings";
 import { sendPromptFromContentScript } from "../utils/messaging";
 
 export default function ChatGptResult() {
   const [answer, setAnswer] = useState("");
-  const {
-    searchSuccessInflight,
-    searchSuccessComplete,
-    searchUnauthorized,
-    searchError,
-    chatGptResultState,
-    query,
-  } = useContext(SearchContext);
+  // const {
+  //   chatGptResultState,
+  //   query,
+  // } = useContext(SearchContext);
+
+  const query = useSelector((state: IRootState) => state.search.query);
+  const chatGptResultState = useSelector(
+    (state: IRootState) => state.search.chatGptResultState
+  );
+  const dispatch = useDispatch();
 
   useEffect(() => {
     console.log("Sending", query.slice(0, 20));
@@ -25,17 +34,17 @@ export default function ChatGptResult() {
       switch (message.messageType) {
         case ChatGptMessageType.ANSWER_TEXT_FROM_BG:
           setAnswer(message.data.answer);
-          searchSuccessInflight();
+          dispatch(searchSuccessInflight({}));
           break;
         case ChatGptMessageType.ANSWER_DONE_FROM_BG:
           console.log("Message done");
-          searchSuccessComplete();
+          dispatch(searchSuccessComplete({}));
           break;
         case ChatGptMessageType.ANSWER_ERROR_FROM_BG:
           if (message.data.error === "UNAUTHORIZED") {
-            searchUnauthorized();
+            dispatch(searchUnauthorized({}));
           } else {
-            searchError();
+            dispatch(searchError({}));
           }
           break;
         default:

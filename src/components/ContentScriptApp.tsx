@@ -1,11 +1,12 @@
 import React from "react";
-import { SearchProvider } from "../contexts/Search";
+import { Provider } from "react-redux";
+import { store } from "../store";
 import ContentScript from "./ContentScript";
 
 export default function ContentScriptApp() {
   return (
-    <SearchProvider>
+    <Provider store={store}>
       <ContentScript></ContentScript>
-    </SearchProvider>
+    </Provider>
   );
 }

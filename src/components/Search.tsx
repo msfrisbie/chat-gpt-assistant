@@ -1,8 +1,14 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import { SearchContext } from "../contexts/Search";
+import { useDispatch, useSelector } from "react-redux";
+import { IRootState } from "~features/interfaces";
+import {
+  executeSearch,
+  resetSearch,
+  setInputValue,
+} from "../features/search/searchSlice";
 import ChatGptResult from "./ChatGptResult";
 import History from "./History";
 
@@ -14,9 +20,14 @@ async function getCurrentTab() {
 }
 
 export default function Search() {
-  const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<Form.Control>();
-  const { executeSearch, resetSearch, query } = useContext(SearchContext);
+  // const { executeSearch, resetSearch, query } = useContext(SearchContext);
+
+  const query = useSelector((state: IRootState) => state.search.query);
+  const inputValue = useSelector(
+    (state: IRootState) => state.search.inputValue
+  );
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getCurrentTab().then((tab: chrome.tabs.Tab) => {
@@ -27,8 +38,7 @@ export default function Search() {
       const q: string = new URL(tab.url).searchParams.get("q") || "";
 
       if (q) {
-        setInputValue(q);
-        search(q);
+        dispatch(executeSearch({ prompt: q }));
       }
     });
 
@@ -37,31 +47,18 @@ export default function Search() {
     }
   }, []);
 
-  const search = (question: string) => {
-    executeSearch(question);
-  };
-
-  const handleOnChange = (event: any) => {
-    setInputValue(event.target.value);
-  };
-
   const handleKeyPress = (event: any) => {
     if (event.code === "Enter") {
-      search(event.target.value);
+      dispatch(executeSearch({ prompt: event.target.value }));
     }
   };
 
   const reset = () => {
-    setInputValue("");
-    resetSearch();
+    dispatch(setInputValue({ inputValue: "" }));
+    dispatch(resetSearch({}));
     if (inputRef.current) {
       inputRef.current.focus();
     }
-  };
-
-  const selectHistoryItem = (historyItem: string) => {
-    setInputValue(historyItem);
-    search(historyItem);
   };
 
   return (
@@ -70,7 +67,9 @@ export default function Search() {
         <Form.Control
           value={inputValue}
           placeholder="ChatGPT prompt"
-          onChange={handleOnChange}
+          onChange={(event) =>
+            dispatch(setInputValue({ inputValue: event.target.value }))
+          }
           onKeyPress={handleKeyPress}
           ref={inputRef}
           disabled={!!query}
@@ -78,12 +77,7 @@ export default function Search() {
         {query && <Button onClick={reset}>RESET</Button>}
       </InputGroup>
       {query && <ChatGptResult></ChatGptResult>}
-      {!query && (
-        <History
-          selectHistoryItem={selectHistoryItem}
-          inputValue={inputValue}
-        ></History>
-      )}
+      {!query && <History></History>}
     </div>
   );
 }

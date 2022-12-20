@@ -8,9 +8,10 @@ import React from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
+import { Provider } from "react-redux";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 import ai from "../assets/images/ai.png";
-import { SearchProvider } from "../contexts/Search";
+import { store } from "../store";
 import Help from "./Help";
 import Search from "./Search";
 import Settings from "./Settings";
@@ -72,9 +73,9 @@ export default function Options() {
         style={{ maxWidth: "600px" }}
         className="tw-w-full tw-flex tw-flex-col tw-items-stretch"
       >
-        <SearchProvider>
+        <Provider store={store}>
           <RouterProvider router={router}></RouterProvider>
-        </SearchProvider>
+        </Provider>
       </div>
     </div>
   );
