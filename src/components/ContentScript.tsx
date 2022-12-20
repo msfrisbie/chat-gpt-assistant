@@ -4,9 +4,9 @@ import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { useDispatch, useSelector } from "react-redux";
-import { IRootState } from "../features/interfaces";
 import { ChatGptSettingsKey, ChatGptThreadState } from "../consts";
-import { executeSearch } from "../features/search/searchSlice";
+import { IRootState } from "../features/interfaces";
+import { executeSearch, setInputValue } from "../features/search/searchSlice";
 import { getAllSettings } from "../utils/settings";
 import ChatGptResult from "./ChatGptResult";
 
@@ -17,6 +17,7 @@ export default function ContentScript() {
   const [expandOverlay, setExpandOverlay] = useState(true);
 
   const query = useSelector((state: IRootState) => state.search.query);
+  const inputText = useSelector((state: IRootState) => state.search.inputValue);
   const chatGptResultState = useSelector(
     (state: IRootState) => state.search.chatGptResultState
   );
@@ -25,6 +26,8 @@ export default function ContentScript() {
   useEffect(() => {
     getAllSettings().then((settings) => {
       setShowOverlay(settings[ChatGptSettingsKey.ENABLE_CONTENT_SCRIPT]);
+
+      dispatch(setInputValue({ inputValue: q }));
 
       if (settings[ChatGptSettingsKey.EAGER_SEARCH]) {
         search();
@@ -45,7 +48,7 @@ export default function ContentScript() {
         >
           <Card style={{ backgroundColor: "#111111" }} text="white">
             <Card.Body className="tw-border-b tw-border-solid tw-border-gray-700 tw-bg-neutral-800 tw-font-semibold tw-flex tw-flex-row tw-justify-between tw-items-center">
-              <span className="tw-text-white">{query}</span>
+              <span className="tw-text-white">{inputText}</span>
               {chatGptResultState === ChatGptThreadState.INITIAL && (
                 <Button size="sm" variant="primary" onClick={search}>
                   GO
