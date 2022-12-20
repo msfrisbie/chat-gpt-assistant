@@ -1,5 +1,6 @@
 import React, { createContext, useReducer } from "react";
 import { CHAT_GPT_HISTORY_KEY } from "../../consts";
+import { chromeGet } from "../../utils/storage";
 import { SearchContextAction } from "./consts";
 import { ISearchContextState } from "./interfaces";
 import { initialState, reducer } from "./reducer";
@@ -40,14 +41,9 @@ export const SearchProvider = ({ children }) => {
         type: SearchContextAction.RESET_SEARCH,
       });
     },
-    searchSuccessInflight: () => {
+    searchSuccess: () => {
       dispatch({
-        type: SearchContextAction.SEARCH_SUCCESS_INFLIGHT,
-      });
-    },
-    searchSuccessComplete: () => {
-      dispatch({
-        type: SearchContextAction.SEARCH_SUCCESS_COMPLETE,
+        type: SearchContextAction.SEARCH_SUCCESS,
       });
     },
     searchError: () => {

@@ -1,4 +1,5 @@
 import { CHAT_GPT_HISTORY_KEY } from "../consts";
+import { chromeGet } from "../utils/storage";
 
 export async function handleOmniboxOnInputChanged(
   text: string,

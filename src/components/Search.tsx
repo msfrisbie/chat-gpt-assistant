@@ -64,6 +64,8 @@ export default function Search() {
     search(historyItem);
   };
 
+  console.log("Search");
+
   return (
     <div className="tw-bg-neutral-900 tw-text-white tw-p-8 tw-flex tw-flex-col tw-items-stretch tw-gap-8">
       <InputGroup>

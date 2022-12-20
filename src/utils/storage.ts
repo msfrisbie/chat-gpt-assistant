@@ -1,4 +1,4 @@
-export async function chromseSet(key: string, value: any) {
+export async function chromeSet(key: string, value: any) {
   return chrome.storage.local.set({ [key]: value });
 }
 

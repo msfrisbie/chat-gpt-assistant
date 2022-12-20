@@ -1,7 +1,8 @@
 import { ConversationResponseEvent } from "chatgpt";
 import _ from "lodash";
-import { ChatGptConversationState, CHAT_GPT_CONVERSATION_KEY } from "~consts";
+import { ChatGptConversationState, CHAT_GPT_CONVERSATION_KEY } from "../consts";
 import { IChatGptConversation } from "../interfaces/conversation";
+import { chromeGet, chromeSet } from "../utils/storage";
 
 let inMemoryConversations: IChatGptConversation[] | null = null;
 getConversations();
@@ -23,22 +24,44 @@ export async function getConversation(
   return conversations.find((x) => x.conversationId === conversationId);
 }
 
-const writeConversations = _.debounce(
-  async function writeConversations() {
+const lazyWriteConversations = _.debounce(
+  async function lazyWriteConversations() {
     chromeSet(CHAT_GPT_CONVERSATION_KEY, inMemoryConversations);
   },
   1000,
   {
+    leading: true,
     maxWait: 1000,
     trailing: true,
   }
 );
 
+export async function handleConversationResponse(
+  prompt: string,
+  conversationResponse: ConversationResponseEvent,
+  port: chrome.runtime.Port
+) {
+  console.debug({ conversationResponse });
+
+  if (!conversationResponse.conversation_id) {
+    throw new Error("Missing conversation ID");
+  }
+
+  await getConversation(conversationResponse.conversation_id);
+
+  await maybeRecordConversationPrompt(
+    prompt,
+    conversationResponse.conversation_id
+  );
+
+  recordConversationResponse(conversationResponse);
+}
+
 export async function savedConversations(): Promise<IChatGptConversation[]> {
   return (await chromeGet(CHAT_GPT_CONVERSATION_KEY)) || [];
 }
 
-export async function recordConversationPrompt(
+export async function maybeRecordConversationPrompt(
   prompt: string,
   conversationId: string
 ) {
@@ -51,18 +74,20 @@ export async function recordConversationPrompt(
     messages: [],
   };
 
-  conversation.messages.push({
-    prompt,
-  });
+  if (![ChatGptConversationState.LOADING].includes(conversation.state)) {
+    conversation.messages.push({
+      prompt,
+    });
 
-  writeConversations();
+    lazyWriteConversations();
+  }
 }
 
 export async function recordConversationResponse(
   conversationResponse: ConversationResponseEvent
 ) {
   if (!conversationResponse.conversation_id) {
-    throw new Error("Missinc conversation_id");
+    throw new Error("Missing conversation_id");
   }
 
   const conversation: IChatGptConversation | undefined = await getConversation(
@@ -88,5 +113,5 @@ export async function recordConversationResponse(
     });
   }
 
-  writeConversations();
+  lazyWriteConversations();
 }

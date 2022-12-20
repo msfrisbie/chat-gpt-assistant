@@ -1,4 +1,5 @@
 import { ChatGptConversationState, CHAT_GPT_HISTORY_KEY } from "../../consts";
+import { chromeSet } from "../../utils/storage";
 import { SearchContextAction } from "./consts";
 import { ISearchContextAction, ISearchContextState } from "./interfaces";
 

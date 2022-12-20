@@ -4,6 +4,7 @@ import {
   ResponseBehaviorType,
 } from "../consts";
 import { ISettings } from "../interfaces/settings";
+import { chromeGet, chromeSet } from "./storage";
 
 export const defaultSettings: ISettings = {
   [ChatGptSettingsKey.ENABLE_CONTENT_SCRIPT]: true,
