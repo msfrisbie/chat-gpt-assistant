@@ -73,6 +73,7 @@ export const {
   searchSuccessComplete,
   searchError,
   searchUnauthorized,
+  loadHistory,
 } = searchSlice.actions;
 
 export default searchSlice.reducer;

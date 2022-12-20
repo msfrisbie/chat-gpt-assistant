@@ -1,12 +1,14 @@
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { CHAT_GPT_HISTORY_KEY } from "../consts";
 import { IRootState } from "../features/interfaces";
 import {
   executeSearch,
   removeHistoryItem,
+  setHistory,
 } from "../features/search/searchSlice";
 
 export default function History() {
@@ -15,6 +17,14 @@ export default function History() {
     (state: IRootState) => state.search.inputValue
   );
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    chrome.storage.local.get(CHAT_GPT_HISTORY_KEY).then((result) => {
+      if (result[CHAT_GPT_HISTORY_KEY]) {
+        dispatch(setHistory({ history: result[CHAT_GPT_HISTORY_KEY] }));
+      }
+    });
+  }, []);
 
   return (
     <>
