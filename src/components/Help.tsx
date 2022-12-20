@@ -33,7 +33,7 @@ export default function Help() {
             Send ChatGPT prompts from a popup
           </Card.Title>
           <Card.Text>
-            Quickly access ChatGPT with the CMD + Shift + Y command
+            Quickly access ChatGPT with the Ctrl + Shift + K command
           </Card.Text>
         </Card.Body>
       </Card>

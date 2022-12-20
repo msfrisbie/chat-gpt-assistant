@@ -21,8 +21,6 @@ async function getCurrentTab() {
 
 export default function Search() {
   const inputRef = useRef<Form.Control>();
-  // const { executeSearch, resetSearch, query } = useContext(SearchContext);
-
   const query = useSelector((state: IRootState) => state.search.query);
   const inputValue = useSelector(
     (state: IRootState) => state.search.inputValue

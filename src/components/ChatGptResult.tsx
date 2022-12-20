@@ -16,10 +16,6 @@ import { sendPromptFromContentScript } from "../utils/messaging";
 
 export default function ChatGptResult() {
   const [answer, setAnswer] = useState("");
-  // const {
-  //   chatGptResultState,
-  //   query,
-  // } = useContext(SearchContext);
 
   const query = useSelector((state: IRootState) => state.search.query);
   const chatGptResultState = useSelector(
