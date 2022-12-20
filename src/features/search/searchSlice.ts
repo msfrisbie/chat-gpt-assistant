@@ -19,7 +19,10 @@ const searchSlice = createSlice({
         ...state.history.filter((x) => x !== action.payload.prompt),
       ].slice(0, 100);
 
-      chrome.storage.local.set({ [CHAT_GPT_HISTORY_KEY]: updatedHistory });
+      // This might execute eagerly, delay
+      setTimeout(() => {
+        chrome.storage.local.set({ [CHAT_GPT_HISTORY_KEY]: updatedHistory });
+      }, 500);
 
       console.log("execute search");
 
