@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "ChatGPT Assistant",
   "description": "Use ChatGPT everywhere",
-  "version": "0.8.0",
+  "version": "0.8.3",
   "action": {
     "default_popup": "popup/index.html",
     "default_icon": {
