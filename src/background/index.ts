@@ -226,7 +226,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
       });
 
       await api.ensureAuth();
-
+    } catch (e) {
       chrome.tabs.create(
         {
           active: false,
@@ -238,7 +238,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
           }, 10000);
         }
       );
-    } catch (e) {}
+    }
   }
 });
 
