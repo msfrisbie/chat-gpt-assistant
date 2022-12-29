@@ -83,21 +83,20 @@ chrome.runtime.onConnect.addListener((port) => {
       });
 
       await conversation.sendMessage(msg.data.question, {
-        onProgress(progressResponse) {
-          console.debug({ progressResponse });
-          sendMessage(port, ChatGptMessageType.ANSWER_TEXT_FROM_BG, {
-            answer: progressResponse,
-          });
-        },
+        // onProgress(progressResponse) {
+        //   console.debug({ progressResponse });
+        //   sendMessage(port, ChatGptMessageType.ANSWER_TEXT_FROM_BG, {
+        //     answer: progressResponse,
+        //   });
+        // },
         onConversationResponse(conversationResponse) {
           console.debug({ conversationResponse });
-          sendMessage(
-            port,
-            ChatGptMessageType.ANSWER_DONE_FROM_BG,
+          sendMessage(port, ChatGptMessageType.ANSWER_TEXT_FROM_BG, {
             conversationResponse
-          );
+          });
         },
       });
+      sendMessage(port, ChatGptMessageType.ANSWER_DONE_FROM_BG);
       port.disconnect();
     } catch (e) {
       console.error(e);

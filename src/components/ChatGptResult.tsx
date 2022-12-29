@@ -1,4 +1,6 @@
+import { ConversationResponseEvent } from "chatgpt/build/browser";
 import React, { useEffect, useState } from "react";
+import { Button } from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
 import { useDispatch, useSelector } from "react-redux";
 import SyntaxHighlighter from "react-syntax-highlighter";
@@ -16,6 +18,7 @@ import { sendPromptFromContentScript } from "../utils/messaging";
 
 export default function ChatGptResult() {
   const [answer, setAnswer] = useState("");
+  const [conversationId, setConversationId] = useState<string | null>(null);
 
   const query = useSelector((state: IRootState) => state.search.query);
   const chatGptResultState = useSelector(
@@ -29,7 +32,10 @@ export default function ChatGptResult() {
     sendPromptFromContentScript(query, (message: IChatGptPostMessage) => {
       switch (message.messageType) {
         case ChatGptMessageType.ANSWER_TEXT_FROM_BG:
-          setAnswer(message.data.answer);
+          const conversationResponse: ConversationResponseEvent =
+            message.data.conversationResponse;
+          setAnswer(conversationResponse.message?.content.parts[0] as string);
+          setConversationId(conversationResponse.conversation_id as string);
           dispatch(searchSuccessInflight({}));
           break;
         case ChatGptMessageType.ANSWER_DONE_FROM_BG:
@@ -81,6 +87,18 @@ export default function ChatGptResult() {
             children={answer}
             components={components}
           ></ReactMarkdown>
+          {conversationId && (
+            <div className="tw-flex tw-flex-row tw-justify-center">
+              <Button
+                variant="dark"
+                size="sm"
+                href={`https://chat.openai.com/chat/${conversationId}`}
+                target="_blank"
+              >
+                CONTINUE CHAT THREAD
+              </Button>
+            </div>
+          )}
         </div>
       )}
       {chatGptResultState === ChatGptThreadState.UNAUTHORIZED && (

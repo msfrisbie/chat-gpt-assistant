@@ -1,4 +1,8 @@
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronDown,
+  faChevronUp,
+  faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
@@ -59,16 +63,28 @@ export default function SearchContentScript() {
                 </Button>
               )}
               {chatGptResultState !== ChatGptThreadState.INITIAL && (
-                <Button
-                  size="sm"
-                  variant="dark"
-                  onClick={() => setExpandOverlay(!expandOverlay)}
-                >
-                  <FontAwesomeIcon
-                    className="tw-w-4 tw-h-4"
-                    icon={expandOverlay ? faChevronDown : faChevronUp}
-                  ></FontAwesomeIcon>
-                </Button>
+                <div className="tw-flex tw-flex-row tw-gap-1">
+                  <Button
+                    size="sm"
+                    variant="dark"
+                    onClick={() => setExpandOverlay(!expandOverlay)}
+                  >
+                    <FontAwesomeIcon
+                      className="tw-w-4 tw-h-4"
+                      icon={expandOverlay ? faChevronDown : faChevronUp}
+                    ></FontAwesomeIcon>
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="dark"
+                    onClick={() => setShowOverlay(false)}
+                  >
+                    <FontAwesomeIcon
+                      className="tw-w-4 tw-h-4"
+                      icon={faTimes}
+                    ></FontAwesomeIcon>
+                  </Button>
+                </div>
               )}
             </Card.Body>
             {chatGptResultState !== ChatGptThreadState.INITIAL && (
