@@ -27,12 +27,12 @@ export default function OpenAIContentScript() {
               return;
             }
 
-            chrome.runtime.sendMessage({
-              type: ChatGptMessageType.BURN_PROMPT,
-            });
             textarea.value = prompt;
             setTimeout(() => {
               submitButton.click();
+              chrome.runtime.sendMessage({
+                type: ChatGptMessageType.BURN_PROMPT,
+              });
             }, 0);
           }
         }
