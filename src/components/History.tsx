@@ -1,22 +1,37 @@
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext } from "react";
+import React, { useEffect } from "react";
 import { Button } from "react-bootstrap";
-import { SearchContext } from "../contexts/Search";
+import { useDispatch, useSelector } from "react-redux";
+import { CHAT_GPT_HISTORY_KEY } from "../consts";
+import { IRootState } from "../features/interfaces";
+import {
+  executeSearch,
+  removeHistoryItem,
+  setHistory,
+} from "../features/search/searchSlice";
 
-export default function History({
-  inputValue,
-  selectHistoryItem,
-}: {
-  inputValue: string;
-  selectHistoryItem: (historyItem: string) => void;
-}) {
-  const { history, removeHistoryItem } = useContext(SearchContext);
+export default function History() {
+  const history = useSelector((state: IRootState) => state.search.history);
+  const inputValue = useSelector(
+    (state: IRootState) => state.search.inputValue
+  );
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    chrome.storage.local.get(CHAT_GPT_HISTORY_KEY).then((result) => {
+      if (result[CHAT_GPT_HISTORY_KEY]) {
+        dispatch(setHistory({ history: result[CHAT_GPT_HISTORY_KEY] }));
+      }
+    });
+  }, []);
 
   return (
     <>
       {history
-        .filter((x) => x.toLowerCase().includes(inputValue.toLowerCase()))
+        .filter((x: string) =>
+          x.toLowerCase().includes(inputValue.toLowerCase())
+        )
         .map((x) => (
           <div
             key={x}
@@ -24,7 +39,7 @@ export default function History({
           >
             <div className="tw-grow">
               <div
-                onClick={() => selectHistoryItem(x)}
+                onClick={() => dispatch(executeSearch({ prompt: x }))}
                 className="tw-cursor-pointer tw-opacity-80 hover:tw-opacity-100"
               >
                 {x}
@@ -33,9 +48,9 @@ export default function History({
             <div className="tw-grow-0">
               <Button variant="dark" size="sm">
                 <FontAwesomeIcon
-                  onClick={() => {
-                    removeHistoryItem(x);
-                  }}
+                  onClick={() =>
+                    dispatch(removeHistoryItem({ historyElement: x }))
+                  }
                   icon={faTimes}
                 />
               </Button>

@@ -1,10 +1,14 @@
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { ChatGptConversationState, ChatGptSettingsKey } from "../consts";
 import { SearchContext } from "../contexts/Search";
+import { useDispatch, useSelector } from "react-redux";
+import { ChatGptSettingsKey, ChatGptThreadState } from "../consts";
+import { IRootState } from "../features/interfaces";
+import { executeSearch, setInputValue } from "../features/search/searchSlice";
 import { getAllSettings } from "../utils/settings";
 import ChatGptResult from "./ChatGptResult";
 
@@ -13,12 +17,19 @@ export default function ContentScript() {
 
   const [showOverlay, setShowOverlay] = useState(false);
   const [expandOverlay, setExpandOverlay] = useState(true);
-  const { executeSearch, chatGptResultState, query } =
-    useContext(SearchContext);
+
+  const query = useSelector((state: IRootState) => state.search.query);
+  const inputText = useSelector((state: IRootState) => state.search.inputValue);
+  const chatGptResultState = useSelector(
+    (state: IRootState) => state.search.chatGptResultState
+  );
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getAllSettings().then((settings) => {
       setShowOverlay(settings[ChatGptSettingsKey.ENABLE_CONTENT_SCRIPT]);
+
+      dispatch(setInputValue({ inputValue: q }));
 
       if (settings[ChatGptSettingsKey.EAGER_SEARCH]) {
         search();
@@ -27,7 +38,7 @@ export default function ContentScript() {
   }, []);
 
   const search = () => {
-    executeSearch(q);
+    dispatch(executeSearch({ prompt: q }));
   };
 
   return (

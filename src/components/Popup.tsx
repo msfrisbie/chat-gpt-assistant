@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { Provider } from "react-redux";
 import { ChatGptSettingsKey } from "../consts";
-import { SearchProvider } from "../contexts/Search";
+import { store } from "../store";
 import { getAllSettings } from "../utils/settings";
 import Search from "./Search";
 
@@ -15,7 +16,7 @@ export default function Popup() {
 
   return (
     <>
-      <SearchProvider>
+      <Provider store={store}>
         {useIframe && (
           <iframe
             className="tw-w-screen tw-h-screen"
@@ -27,7 +28,7 @@ export default function Popup() {
             <Search></Search>;
           </div>
         )}
-      </SearchProvider>
+      </Provider>
     </>
   );
 }

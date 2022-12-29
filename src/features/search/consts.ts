@@ -1,4 +1,4 @@
-export enum SearchContextAction {
+export enum SearchAction {
   EXECUTE_SEARCH,
   SET_HISTORY,
   REMOVE_HISTORY_ITEM,
