@@ -4,9 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { vs2015 } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { ChatGptConversationState, ChatGptMessageType } from "../consts";
-import { SearchContext } from "../contexts/Search";
-import { IChatGptPostMessage } from "../interfaces/messaging";
-import { ChatGptMessageType, ChatGptThreadState } from "../consts";
 import { IRootState } from "../features/interfaces";
 import {
   searchError,
@@ -14,15 +11,15 @@ import {
   searchSuccessInflight,
   searchUnauthorized,
 } from "../features/search/searchSlice";
-import { IChatGptPostMessage } from "../interfaces/settings";
+import { IChatGptPostMessage } from "../interfaces/messaging";
 import { sendPromptFromContentScript } from "../utils/messaging";
 
 export default function ChatGptResult() {
   const [answer, setAnswer] = useState("");
 
   const query = useSelector((state: IRootState) => state.search.query);
-  const chatGptResultState = useSelector(
-    (state: IRootState) => state.search.chatGptResultState
+  const chatGptConversationState = useSelector(
+    (state: IRootState) => state.search.chatGptConversationState
   );
   const dispatch = useDispatch();
 
@@ -64,13 +61,14 @@ export default function ChatGptResult() {
 
   return (
     <div className="tw-text-white">
-      {chatGptResultState === ChatGptConversationState.INITIAL && <></>}
-      {chatGptResultState === ChatGptConversationState.LOADING && (
+      {chatGptConversationState === ChatGptConversationState.INITIAL && <></>}
+      {chatGptConversationState === ChatGptConversationState.LOADING && (
         <div className="loading tw-text-gray-300">
           Waiting for ChatGPT response...
         </div>
       )}
-      {chatGptResultState === ChatGptConversationState.SUCCESS_INFLIGHT && (
+      {chatGptConversationState ===
+        ChatGptConversationState.SUCCESS_INFLIGHT && (
         <div id="chatgpt-result" style={{ color: "white" }}>
           <ReactMarkdown
             children={answer}
@@ -78,7 +76,8 @@ export default function ChatGptResult() {
           ></ReactMarkdown>
         </div>
       )}
-      {chatGptResultState === ChatGptConversationState.SUCCESS_COMPLETE && (
+      {chatGptConversationState ===
+        ChatGptConversationState.SUCCESS_COMPLETE && (
         <div id="chatgpt-result" style={{ color: "white" }}>
           <ReactMarkdown
             children={answer}
@@ -86,7 +85,7 @@ export default function ChatGptResult() {
           ></ReactMarkdown>
         </div>
       )}
-      {chatGptResultState === ChatGptConversationState.UNAUTHORIZED && (
+      {chatGptConversationState === ChatGptConversationState.UNAUTHORIZED && (
         <div>
           Please login at{" "}
           <a href="https://chat.openai.com" target="_blank">
@@ -95,7 +94,7 @@ export default function ChatGptResult() {
           first
         </div>
       )}
-      {chatGptResultState === ChatGptConversationState.ERROR && (
+      {chatGptConversationState === ChatGptConversationState.ERROR && (
         <div>Failed to load response from ChatGPT</div>
       )}
     </div>

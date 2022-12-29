@@ -18,7 +18,7 @@ export const reducer = (
 
       return {
         ...state,
-        chatGptResultState: ChatGptConversationState.LOADING,
+        chatGptConversationState: ChatGptConversationState.LOADING,
         query: action.payload.query,
         history: updatedHistory,
       };
@@ -49,28 +49,28 @@ export const reducer = (
     case SearchContextAction.RESET_SEARCH:
       return {
         ...state,
-        chatGptResultState: ChatGptConversationState.INITIAL,
+        chatGptConversationState: ChatGptConversationState.INITIAL,
         query: "",
       };
     case SearchContextAction.SEARCH_SUCCESS_INFLIGHT:
       return {
         ...state,
-        chatGptResultState: ChatGptConversationState.SUCCESS_INFLIGHT,
+        chatGptConversationState: ChatGptConversationState.SUCCESS_INFLIGHT,
       };
     case SearchContextAction.SEARCH_SUCCESS_COMPLETE:
       return {
         ...state,
-        chatGptResultState: ChatGptConversationState.SUCCESS_COMPLETE,
+        chatGptConversationState: ChatGptConversationState.SUCCESS_COMPLETE,
       };
     case SearchContextAction.SEARCH_UNAUTHORIZED:
       return {
         ...state,
-        chatGptResultState: ChatGptConversationState.UNAUTHORIZED,
+        chatGptConversationState: ChatGptConversationState.UNAUTHORIZED,
       };
     case SearchContextAction.SEARCH_ERROR:
       return {
         ...state,
-        chatGptResultState: ChatGptConversationState.ERROR,
+        chatGptConversationState: ChatGptConversationState.ERROR,
       };
     default:
       throw new Error("Unmatched state");
@@ -78,7 +78,7 @@ export const reducer = (
 };
 
 export const initialState: ISearchContextState = {
-  chatGptResultState: ChatGptConversationState.INITIAL,
+  chatGptConversationState: ChatGptConversationState.INITIAL,
   query: "",
   history: [],
 };

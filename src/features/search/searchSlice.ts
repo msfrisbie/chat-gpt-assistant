@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ChatGptThreadState, CHAT_GPT_HISTORY_KEY } from "../../consts";
+import { ChatGptConversationState, CHAT_GPT_HISTORY_KEY } from "../../consts";
 import { ISearchState } from "./interfaces";
 
 const initialState: ISearchState = {
-  chatGptResultState: ChatGptThreadState.INITIAL,
+  chatGptConversationState: ChatGptConversationState.INITIAL,
   inputValue: "",
   query: "",
   history: [],
@@ -28,7 +28,7 @@ const searchSlice = createSlice({
 
       state.inputValue = action.payload.prompt;
       state.query = action.payload.prompt;
-      state.chatGptResultState = ChatGptThreadState.LOADING;
+      state.chatGptConversationState = ChatGptConversationState.LOADING;
       state.history = updatedHistory;
     },
     setInputValue(state, action: { payload: { inputValue: string } }) {
@@ -49,19 +49,21 @@ const searchSlice = createSlice({
     resetSearch(state, action) {
       state.inputValue = "";
       state.query = "";
-      state.chatGptResultState = ChatGptThreadState.INITIAL;
+      state.chatGptConversationState = ChatGptConversationState.INITIAL;
     },
     searchSuccessInflight(state, action) {
-      state.chatGptResultState = ChatGptThreadState.SUCCESS_INFLIGHT;
+      state.chatGptConversationState =
+        ChatGptConversationState.SUCCESS_INFLIGHT;
     },
     searchSuccessComplete(state, action) {
-      state.chatGptResultState = ChatGptThreadState.SUCCESS_COMPLETE;
+      state.chatGptConversationState =
+        ChatGptConversationState.SUCCESS_COMPLETE;
     },
     searchError(state, action) {
-      state.chatGptResultState = ChatGptThreadState.ERROR;
+      state.chatGptConversationState = ChatGptConversationState.ERROR;
     },
     searchUnauthorized(state, action) {
-      state.chatGptResultState = ChatGptThreadState.UNAUTHORIZED;
+      state.chatGptConversationState = ChatGptConversationState.UNAUTHORIZED;
     },
   },
 });

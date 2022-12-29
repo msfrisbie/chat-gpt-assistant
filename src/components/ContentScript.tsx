@@ -3,10 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import { ChatGptConversationState, ChatGptSettingsKey } from "../consts";
-import { SearchContext } from "../contexts/Search";
 import { useDispatch, useSelector } from "react-redux";
-import { ChatGptSettingsKey, ChatGptThreadState } from "../consts";
+import { ChatGptConversationState, ChatGptSettingsKey } from "../consts";
 import { IRootState } from "../features/interfaces";
 import { executeSearch, setInputValue } from "../features/search/searchSlice";
 import { getAllSettings } from "../utils/settings";
@@ -20,8 +18,8 @@ export default function ContentScript() {
 
   const query = useSelector((state: IRootState) => state.search.query);
   const inputText = useSelector((state: IRootState) => state.search.inputValue);
-  const chatGptResultState = useSelector(
-    (state: IRootState) => state.search.chatGptResultState
+  const chatGptConversationState = useSelector(
+    (state: IRootState) => state.search.chatGptConversationState
   );
   const dispatch = useDispatch();
 
@@ -51,12 +49,14 @@ export default function ContentScript() {
           <Card style={{ backgroundColor: "#111111" }} text="white">
             <Card.Body className="tw-border-b tw-border-solid tw-border-gray-700 tw-bg-neutral-800 tw-font-semibold tw-flex tw-flex-row tw-justify-between tw-items-center">
               <span className="tw-text-white">{query}</span>
-              {chatGptResultState === ChatGptConversationState.INITIAL && (
+              {chatGptConversationState ===
+                ChatGptConversationState.INITIAL && (
                 <Button size="sm" variant="primary" onClick={search}>
                   GO
                 </Button>
               )}
-              {chatGptResultState !== ChatGptConversationState.INITIAL && (
+              {chatGptConversationState !==
+                ChatGptConversationState.INITIAL && (
                 <Button
                   size="sm"
                   variant="dark"
@@ -69,7 +69,7 @@ export default function ContentScript() {
                 </Button>
               )}
             </Card.Body>
-            {chatGptResultState !== ChatGptConversationState.INITIAL && (
+            {chatGptConversationState !== ChatGptConversationState.INITIAL && (
               <Card.Body style={{ display: expandOverlay ? "block" : "none" }}>
                 <ChatGptResult></ChatGptResult>
               </Card.Body>
