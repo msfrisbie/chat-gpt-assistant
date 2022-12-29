@@ -81,14 +81,14 @@ export default function Settings() {
             updateSettingsKey(ChatGptSettingsKey.EAGER_SEARCH, e.target.checked)
           }
         />
-        <Form.Check
+        {/* <Form.Check
           type="switch"
           label="Show OpenAI chat interface in popup"
           checked={localSettings[ChatGptSettingsKey.IFRAME_POPUP]}
           onChange={(e) =>
             updateSettingsKey(ChatGptSettingsKey.IFRAME_POPUP, e.target.checked)
           }
-        />
+        /> */}
         <hr></hr>
         <Form.Check
           type="switch"

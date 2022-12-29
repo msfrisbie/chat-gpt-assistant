@@ -50,7 +50,8 @@
         "https://search.brave.com/*",
         "https://*.duckduckgo.com/*",
         "https://*.ecosia.org/*",
-        "https://*.presearch.com/*"
+        "https://*.presearch.com/*",
+        "https://chat.openai.com/*"
       ],
       "js": ["content-script/index.ts"]
     },

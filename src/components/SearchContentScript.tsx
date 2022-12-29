@@ -10,7 +10,7 @@ import { executeSearch, setInputValue } from "../features/search/searchSlice";
 import { getAllSettings } from "../utils/settings";
 import ChatGptResult from "./ChatGptResult";
 
-export default function ContentScript() {
+export default function SearchContentScript() {
   const q: string = new URL(window.location.href).searchParams.get("q") || "";
 
   const [showOverlay, setShowOverlay] = useState(false);
@@ -25,6 +25,10 @@ export default function ContentScript() {
 
   useEffect(() => {
     getAllSettings().then((settings) => {
+      if (!q) {
+        return;
+      }
+
       setShowOverlay(settings[ChatGptSettingsKey.ENABLE_CONTENT_SCRIPT]);
 
       dispatch(setInputValue({ inputValue: q }));

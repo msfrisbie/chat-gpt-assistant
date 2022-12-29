@@ -1,3 +1,4 @@
+import ExpiryMap from "expiry-map";
 import { ChatGPTAPI } from "../../node_modules/chatgpt/build/browser/index.js";
 import {
   ChatGptMessageType,
@@ -11,7 +12,10 @@ import { IChatGptPostMessage } from "../interfaces/settings";
 import { cache, getAccessToken } from "../utils/chatgpt";
 import { sendMessage } from "../utils/messaging";
 import { getSetting } from "../utils/settings";
+
 console.log("Initialized background", Date.now());
+
+const expiryMap = new ExpiryMap(30 * 1000);
 
 chrome.runtime.onConnect.addListener((port) => {
   port.onDisconnect.addListener(() => console.log("Port disconnected"));
@@ -112,7 +116,7 @@ chrome.runtime.onInstalled.addListener((details) => {
     const url = chrome.runtime.getManifest().options_ui.page;
 
     chrome.tabs.create({
-      url: chrome.runtime.getURL(`${url}#/how-to-use`),
+      url: chrome.runtime.getURL(`${url}#/`),
     });
   }
 
@@ -147,11 +151,20 @@ chrome.runtime.onInstalled.addListener((details) => {
 
 chrome.omnibox.onInputEntered.addListener((text: string) => {
   // @ts-ignore
-  const url = chrome.runtime.getManifest().options_ui.page;
+  // const url = chrome.runtime.getManifest().options_ui.page;
 
-  chrome.tabs.create({
-    url: chrome.runtime.getURL(`${url}?q=${text}`),
-  });
+  // chrome.tabs.create({
+  //   url: chrome.runtime.getURL(`${url}?q=${text}`),
+  // });
+
+  chrome.tabs.create(
+    {
+      url: "https://chat.openai.com/chat",
+    },
+    (tab) => {
+      expiryMap.set(tab?.id, text);
+    }
+  );
 });
 
 chrome.omnibox.onInputChanged.addListener(async (text, suggest) => {
@@ -200,16 +213,25 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     info.selectionText;
 
     // @ts-ignore
-    const url = chrome.runtime.getManifest().options_ui.page;
+    // const url = chrome.runtime.getManifest().options_ui.page;
 
-    chrome.tabs.create({
-      url: chrome.runtime.getURL(`${url}?q=${info.selectionText}`),
-    });
+    // chrome.tabs.create({
+    //   url: chrome.runtime.getURL(`${url}?q=${info.selectionText}`),
+    // });
+
+    chrome.tabs.create(
+      {
+        url: "https://chat.openai.com/chat",
+      },
+      (tab) => {
+        expiryMap.set(tab?.id, info.selectionText);
+      }
+    );
   }
 });
 
 chrome.alarms.create("authCheck", {
-  periodInMinutes: 3,
+  periodInMinutes: 5,
 });
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
@@ -233,9 +255,27 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
         (tab) => {
           setTimeout(() => {
             tab.id && chrome.tabs.remove(tab.id);
-          }, 8000);
+          }, 10000);
         }
       );
     }
+  }
+});
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  switch (message.type) {
+    case ChatGptMessageType.GET_PROMPT:
+      sendResponse({
+        data: {
+          prompt: expiryMap.get(sender.tab?.id),
+        },
+      });
+      break;
+    case ChatGptMessageType.BURN_PROMPT:
+      expiryMap.delete(sender.tab?.id);
+      break;
+    default:
+      console.error(message);
+      throw new Error("Bad message type");
   }
 });

@@ -24,6 +24,8 @@ export enum ChatGptMessageType {
   ANSWER_TEXT_FROM_BG = "ANSWER_FROM_BG",
   ANSWER_DONE_FROM_BG = "ANSWER_DONE_FROM_BG",
   ANSWER_ERROR_FROM_BG = "ANSWER_ERROR_FROM_BG",
+  BURN_PROMPT = "BURN_PROMPT",
+  GET_PROMPT = "GET_PROMPT",
 }
 
 export enum ResponseBehaviorType {
