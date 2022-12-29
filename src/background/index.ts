@@ -83,16 +83,13 @@ chrome.runtime.onConnect.addListener((port) => {
       });
 
       await conversation.sendMessage(msg.data.question, {
-        // onProgress(progressResponse) {
-        //   console.debug({ progressResponse });
-        //   sendMessage(port, ChatGptMessageType.ANSWER_TEXT_FROM_BG, {
-        //     answer: progressResponse,
-        //   });
-        // },
+        onProgress(progressResponse) {
+          // console.debug({ progressResponse });
+        },
         onConversationResponse(conversationResponse) {
           console.debug({ conversationResponse });
           sendMessage(port, ChatGptMessageType.ANSWER_TEXT_FROM_BG, {
-            conversationResponse
+            conversationResponse,
           });
         },
       });
@@ -149,13 +146,6 @@ chrome.runtime.onInstalled.addListener((details) => {
 });
 
 chrome.omnibox.onInputEntered.addListener((text: string) => {
-  // @ts-ignore
-  // const url = chrome.runtime.getManifest().options_ui.page;
-
-  // chrome.tabs.create({
-  //   url: chrome.runtime.getURL(`${url}?q=${text}`),
-  // });
-
   chrome.tabs.create(
     {
       url: "https://chat.openai.com/chat",
@@ -209,15 +199,6 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   }
 
   if (info.menuItemId === "gpt-search") {
-    info.selectionText;
-
-    // @ts-ignore
-    // const url = chrome.runtime.getManifest().options_ui.page;
-
-    // chrome.tabs.create({
-    //   url: chrome.runtime.getURL(`${url}?q=${info.selectionText}`),
-    // });
-
     chrome.tabs.create(
       {
         url: "https://chat.openai.com/chat",
@@ -245,7 +226,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
       });
 
       await api.ensureAuth();
-    } catch (e) {
+
       chrome.tabs.create(
         {
           active: false,
@@ -257,7 +238,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
           }, 10000);
         }
       );
-    }
+    } catch (e) {}
   }
 });
 
