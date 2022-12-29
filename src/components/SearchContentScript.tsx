@@ -66,6 +66,11 @@ export default function SearchContentScript() {
           className="tw-rounded-xl tw-border tw-border-solid tw-border-gray-700 tw-overflow-y-auto"
         >
           <Card style={{ backgroundColor: "#111111" }} text="white">
+            {chatGptResultState !== ChatGptThreadState.INITIAL && (
+              <Card.Body style={{ display: expandOverlay ? "block" : "none" }}>
+                <ChatGptResult></ChatGptResult>
+              </Card.Body>
+            )}
             <Card.Body className="tw-border-b tw-border-solid tw-border-gray-700 tw-bg-neutral-800 tw-font-semibold tw-flex tw-flex-row tw-justify-between tw-items-center">
               <span className="tw-text-white">{inputText}</span>
               {chatGptResultState === ChatGptThreadState.INITIAL && (
@@ -104,11 +109,6 @@ export default function SearchContentScript() {
                 </div>
               )}
             </Card.Body>
-            {chatGptResultState !== ChatGptThreadState.INITIAL && (
-              <Card.Body style={{ display: expandOverlay ? "block" : "none" }}>
-                <ChatGptResult></ChatGptResult>
-              </Card.Body>
-            )}
           </Card>
         </div>
       )}
