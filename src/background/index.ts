@@ -12,6 +12,7 @@ import { IChatGptPostMessage } from "../interfaces/settings";
 import { cache, getAccessToken } from "../utils/chatgpt";
 import { sendMessage } from "../utils/messaging";
 import { getSetting } from "../utils/settings";
+import { openSettings } from "../utils/tabs";
 
 console.log("Initialized background", Date.now());
 
@@ -190,12 +191,7 @@ chrome.omnibox.onInputChanged.addListener(async (text, suggest) => {
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "gpt-settings") {
-    // @ts-ignore
-    const url = chrome.runtime.getManifest().options_ui.page;
-
-    chrome.tabs.create({
-      url: chrome.runtime.getURL(`${url}#/settings`),
-    });
+    openSettings();
   }
 
   if (info.menuItemId === "gpt-search") {
@@ -250,6 +246,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           prompt: expiryMap.get(sender.tab?.id),
         },
       });
+      break;
+    case ChatGptMessageType.OPEN_SETTINGS:
+      openSettings();
       break;
     case ChatGptMessageType.BURN_PROMPT:
       expiryMap.delete(sender.tab?.id);

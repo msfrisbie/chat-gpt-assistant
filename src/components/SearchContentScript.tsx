@@ -1,6 +1,7 @@
 import {
   faChevronDown,
   faChevronUp,
+  faCog,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,7 +9,11 @@ import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { useDispatch, useSelector } from "react-redux";
-import { ChatGptSettingsKey, ChatGptThreadState } from "../consts";
+import {
+  ChatGptMessageType,
+  ChatGptSettingsKey,
+  ChatGptThreadState,
+} from "../consts";
 import { IRootState } from "../features/interfaces";
 import { executeSearch, setInputValue } from "../features/search/searchSlice";
 import { getAllSettings } from "../utils/settings";
@@ -47,6 +52,12 @@ export default function SearchContentScript() {
     dispatch(executeSearch({ prompt: q }));
   };
 
+  const openSettings = () => {
+    chrome.runtime.sendMessage({
+      type: ChatGptMessageType.OPEN_SETTINGS,
+    });
+  };
+
   return (
     <>
       {showOverlay && (
@@ -58,12 +69,18 @@ export default function SearchContentScript() {
             <Card.Body className="tw-border-b tw-border-solid tw-border-gray-700 tw-bg-neutral-800 tw-font-semibold tw-flex tw-flex-row tw-justify-between tw-items-center">
               <span className="tw-text-white">{inputText}</span>
               {chatGptResultState === ChatGptThreadState.INITIAL && (
-                <Button size="sm" variant="primary" onClick={search}>
+                <Button size="sm" variant="dark" onClick={search}>
                   GO
                 </Button>
               )}
               {chatGptResultState !== ChatGptThreadState.INITIAL && (
                 <div className="tw-flex tw-flex-row tw-gap-1">
+                  <Button size="sm" variant="dark" onClick={openSettings}>
+                    <FontAwesomeIcon
+                      className="tw-w-4 tw-h-4"
+                      icon={faCog}
+                    ></FontAwesomeIcon>
+                  </Button>
                   <Button
                     size="sm"
                     variant="dark"
