@@ -34,7 +34,7 @@
     }
   },
   "host_permissions": ["https://*.openai.com/"],
-  "permissions": ["activeTab", "storage", "tabs", "contextMenus"],
+  "permissions": ["alarms", "activeTab", "storage", "tabs", "contextMenus"],
   "options_ui": {
     "page": "options/index.html",
     "open_in_tab": true

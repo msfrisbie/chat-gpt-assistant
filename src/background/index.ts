@@ -207,3 +207,35 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     });
   }
 });
+
+chrome.alarms.create("authCheck", {
+  periodInMinutes: 3,
+});
+
+chrome.alarms.onAlarm.addListener(async (alarm) => {
+  if (alarm.name === "authCheck") {
+    let api: ChatGPTAPI;
+
+    try {
+      const sessionToken = await getAccessToken();
+
+      api = new ChatGPTAPI({
+        sessionToken,
+      });
+
+      await api.ensureAuth();
+    } catch (e) {
+      chrome.tabs.create(
+        {
+          active: false,
+          url: "https://chat.openai.com/chat",
+        },
+        (tab) => {
+          setTimeout(() => {
+            tab.id && chrome.tabs.remove(tab.id);
+          }, 8000);
+        }
+      );
+    }
+  }
+});
