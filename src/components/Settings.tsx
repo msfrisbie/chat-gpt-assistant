@@ -89,6 +89,17 @@ export default function Settings() {
             updateSettingsKey(ChatGptSettingsKey.IFRAME_POPUP, e.target.checked)
           }
         /> */}
+        <Form.Check
+          type="switch"
+          label="Automatically refresh my ChatGPT session"
+          checked={localSettings[ChatGptSettingsKey.AUTO_REFRESH_SESSION]}
+          onChange={(e) =>
+            updateSettingsKey(
+              ChatGptSettingsKey.AUTO_REFRESH_SESSION,
+              e.target.checked
+            )
+          }
+        />
         <hr></hr>
         <Form.Check
           type="switch"

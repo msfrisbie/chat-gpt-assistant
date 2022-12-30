@@ -9,6 +9,7 @@ export const defaultSettings: ISettings = {
   [ChatGptSettingsKey.ENABLE_CONTENT_SCRIPT]: true,
   [ChatGptSettingsKey.EAGER_SEARCH]: true,
   [ChatGptSettingsKey.IFRAME_POPUP]: false,
+  [ChatGptSettingsKey.AUTO_REFRESH_SESSION]: true,
   [ChatGptSettingsKey.DEBUG]: false,
   [ChatGptSettingsKey.RESPONSE_BEHAVIOR_TYPE]: ResponseBehaviorType.DEFAULT,
 };

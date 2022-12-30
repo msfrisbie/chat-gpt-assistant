@@ -8,6 +8,7 @@ export interface ISettings {
   [ChatGptSettingsKey.ENABLE_CONTENT_SCRIPT]: boolean;
   [ChatGptSettingsKey.EAGER_SEARCH]: boolean;
   [ChatGptSettingsKey.IFRAME_POPUP]: boolean;
+  [ChatGptSettingsKey.AUTO_REFRESH_SESSION]: boolean;
   [ChatGptSettingsKey.DEBUG]: boolean;
   [ChatGptSettingsKey.RESPONSE_BEHAVIOR_TYPE]: ResponseBehaviorType;
 }

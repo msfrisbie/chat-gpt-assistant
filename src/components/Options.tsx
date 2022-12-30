@@ -1,4 +1,8 @@
-import { faCog, faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCog,
+  faQuestionCircle,
+  faStar,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import Container from "react-bootstrap/Container";
@@ -8,6 +12,7 @@ import { Provider } from "react-redux";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 import ai from "../assets/images/ai.png";
 import { store } from "../store";
+import Feedback from "./Feedback";
 import Help from "./Help";
 import Settings from "./Settings";
 
@@ -19,6 +24,10 @@ const router = createHashRouter([
   {
     path: "/settings",
     element: <Settings></Settings>,
+  },
+  {
+    path: "/feedback",
+    element: <Feedback></Feedback>,
   },
 ]);
 
@@ -53,6 +62,12 @@ export default function Options() {
                 <div className="tw-flex tw-flex-row tw-items-center tw-gap-1 px-2">
                   <FontAwesomeIcon icon={faCog} />
                   <span>Settings</span>
+                </div>
+              </Nav.Link>
+              <Nav.Link href="#/feedback" target="_blank">
+                <div className="tw-flex tw-flex-row tw-items-center tw-gap-1 px-2">
+                  <FontAwesomeIcon icon={faStar} />
+                  <span>Feedback</span>
                 </div>
               </Nav.Link>
             </Nav>

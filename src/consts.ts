@@ -8,6 +8,7 @@ export enum ChatGptSettingsKey {
   IFRAME_POPUP = "IFRAME_POPUP",
   DEBUG = "DEBUG",
   RESPONSE_BEHAVIOR_TYPE = "RESPONSE_BEHAVIOR_TYPE",
+  AUTO_REFRESH_SESSION = "AUTO_REFRESH_SESSION",
 }
 
 export enum ChatGptThreadState {

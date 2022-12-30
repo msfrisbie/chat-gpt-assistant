@@ -212,6 +212,10 @@ chrome.alarms.create("authCheck", {
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name === "authCheck") {
+    if (!(await getSetting(ChatGptSettingsKey.AUTO_REFRESH_SESSION))) {
+      return;
+    }
+
     let api: ChatGPTAPI;
 
     try {
