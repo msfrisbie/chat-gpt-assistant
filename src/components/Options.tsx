@@ -11,10 +11,18 @@ import Navbar from "react-bootstrap/Navbar";
 import { Provider } from "react-redux";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 import ai from "../assets/images/ai.png";
+import { ChatGptMessageType } from "../consts";
 import { store } from "../store";
 import Feedback from "./Feedback";
 import Help from "./Help";
 import Settings from "./Settings";
+
+chrome.runtime.sendMessage({
+  type: ChatGptMessageType.TRACK_EVENT,
+  data: {
+    eventName: "Opened options",
+  },
+});
 
 const router = createHashRouter([
   {

@@ -1,4 +1,5 @@
 export const GA_ID = "G-62P3FH3XKV";
+export const AMPLITUDE_API_KEY = "714b112a57c633f7488b2910efcb103f";
 
 export const CHAT_GPT_HISTORY_KEY = "CHAT_GPT_HISTORY";
 export const CHAT_GPT_SETTINGS_KEY = "CHAT_GPT_SETTINGS_KEY";
@@ -28,6 +29,7 @@ export enum ChatGptMessageType {
   BURN_PROMPT = "BURN_PROMPT",
   GET_PROMPT = "GET_PROMPT",
   OPEN_SETTINGS = "OPEN_SETTINGS",
+  TRACK_EVENT = "TRACK_EVENT",
 }
 
 export enum ResponseBehaviorType {

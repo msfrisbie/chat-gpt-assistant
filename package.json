@@ -31,6 +31,7 @@
     "typescript": "4.9.3"
   },
   "dependencies": {
+    "@amplitude/analytics-browser": "^1.6.7",
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@fortawesome/free-regular-svg-icons": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",

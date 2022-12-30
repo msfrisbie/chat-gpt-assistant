@@ -1,4 +1,7 @@
-import { GA_ID } from "../consts";
+import { init, track } from "@amplitude/analytics-browser";
+import { AMPLITUDE_API_KEY, GA_ID } from "../consts";
+
+init(AMPLITUDE_API_KEY);
 
 export function initializeGoogleAnalytics() {
   const script = document.createElement("script");
@@ -20,4 +23,8 @@ export function initializeGoogleAnalytics() {
   });
 
   return gtag;
+}
+
+export function trackEvent(eventName: string, eventProperties?: any) {
+  track(eventName, eventProperties);
 }

@@ -9,6 +9,7 @@ import {
   STUB_RESPONSE,
 } from "../consts";
 import { IChatGptPostMessage } from "../interfaces/settings";
+import { trackEvent } from "../utils/analytics";
 import { cache, getAccessToken } from "../utils/chatgpt";
 import { sendMessage } from "../utils/messaging";
 import { getSetting } from "../utils/settings";
@@ -23,6 +24,8 @@ chrome.runtime.onConnect.addListener((port) => {
 
   port.onMessage.addListener(async (msg: IChatGptPostMessage) => {
     console.debug("Received question:", msg.data.question.slice(0, 20));
+
+    trackEvent("Search engine prompt submitted");
 
     const debug: boolean = !!(await getSetting(ChatGptSettingsKey.DEBUG));
 
@@ -147,6 +150,8 @@ chrome.runtime.onInstalled.addListener((details) => {
 });
 
 chrome.omnibox.onInputEntered.addListener((text: string) => {
+  trackEvent("Omnibox prompt submitted");
+
   chrome.tabs.create(
     {
       url: "https://chat.openai.com/chat",
@@ -195,6 +200,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   }
 
   if (info.menuItemId === "gpt-search") {
+    trackEvent("Context menu prompt submitted");
     chrome.tabs.create(
       {
         url: "https://chat.openai.com/chat",
@@ -256,6 +262,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       break;
     case ChatGptMessageType.BURN_PROMPT:
       expiryMap.delete(sender.tab?.id);
+      break;
+    case ChatGptMessageType.TRACK_EVENT:
+      trackEvent(message.data.eventName, message.data.eventProperties);
       break;
     default:
       console.error(message);
