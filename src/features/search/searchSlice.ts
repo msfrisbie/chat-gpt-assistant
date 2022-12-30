@@ -24,8 +24,6 @@ const searchSlice = createSlice({
         chrome.storage.local.set({ [CHAT_GPT_HISTORY_KEY]: updatedHistory });
       }, 500);
 
-      console.log("execute search");
-
       state.inputValue = action.payload.prompt;
       state.query = action.payload.prompt;
       state.chatGptResultState = ChatGptThreadState.LOADING;

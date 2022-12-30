@@ -13,7 +13,6 @@ export default function Settings() {
 
   useEffect(() => {
     getAllSettings().then((result) => {
-      console.log({ result });
       setLocalSettings(result);
     });
   }, []);

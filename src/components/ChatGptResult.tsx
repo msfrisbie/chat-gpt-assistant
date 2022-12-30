@@ -39,7 +39,6 @@ export default function ChatGptResult() {
           dispatch(searchSuccessInflight({}));
           break;
         case ChatGptMessageType.ANSWER_DONE_FROM_BG:
-          console.log("Message done");
           dispatch(searchSuccessComplete({}));
           break;
         case ChatGptMessageType.ANSWER_ERROR_FROM_BG:

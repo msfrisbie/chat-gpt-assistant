@@ -10,13 +10,9 @@ export default function OpenAIContentScript() {
           type: ChatGptMessageType.GET_PROMPT,
         },
         (response) => {
-          console.log(response);
-
           const prompt = response.data?.prompt;
 
           if (prompt) {
-            console.log({ prompt });
-
             const textarea: HTMLTextAreaElement | null =
               document.querySelector("form textarea");
             const submitButton: HTMLButtonElement | null =
