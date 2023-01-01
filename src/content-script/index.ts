@@ -34,12 +34,16 @@ function init() {
     ReactDOM.createRoot(container).render(
       React.createElement(OpenAIContentScriptApp)
     );
+  } else if (
+    window.location.hostname + window.location.pathname ===
+    "mail.google.com/mail"
+  ) {
   } else {
     document.body.appendChild(shadowHost);
 
     shadowHost.setAttribute(
       "style",
-      "position:fixed; right: 2rem; bottom: 2rem; z-index: 1000000;"
+      "position:fixed; right: 1rem; bottom: 1rem; z-index: 1000000;"
     );
     container.style.width = "400px";
 

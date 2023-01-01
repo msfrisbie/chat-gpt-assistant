@@ -1,6 +1,12 @@
+import {
+  faArrowUpRightFromSquare,
+  faCopy,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ConversationResponseEvent } from "chatgpt/build/browser";
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
+import Toast from "react-bootstrap/Toast";
 import ReactMarkdown from "react-markdown";
 import { useDispatch, useSelector } from "react-redux";
 import SyntaxHighlighter from "react-syntax-highlighter";
@@ -19,6 +25,7 @@ import { sendPromptFromContentScript } from "../utils/messaging";
 export default function ChatGptResult() {
   const [answer, setAnswer] = useState("");
   const [conversationId, setConversationId] = useState<string | null>(null);
+  const [show, setShow] = useState(false);
 
   const query = useSelector((state: IRootState) => state.search.query);
   const chatGptResultState = useSelector(
@@ -64,6 +71,12 @@ export default function ChatGptResult() {
     },
   };
 
+  const copyToClipbboard = (text: string) => {
+    setShow(true);
+
+    navigator.clipboard.writeText(text);
+  };
+
   return (
     <div className="tw-text-white">
       {chatGptResultState === ChatGptThreadState.INITIAL && <></>}
@@ -87,14 +100,33 @@ export default function ChatGptResult() {
             components={components}
           ></ReactMarkdown>
           {conversationId && (
-            <div className="tw-flex tw-flex-row tw-justify-center">
+            <div className="tw-flex tw-flex-col tw-items-center gap-2">
+              <Button
+                variant="dark"
+                size="sm"
+                onClick={() => copyToClipbboard(answer)}
+              >
+                <div className="tw-flex tw-flex-row tw-items-center tw-gap-2">
+                  <FontAwesomeIcon
+                    className="tw-h-4"
+                    icon={faCopy}
+                  ></FontAwesomeIcon>
+                  <span>COPY RESULT</span>
+                </div>
+              </Button>
               <Button
                 variant="dark"
                 size="sm"
                 href={`https://chat.openai.com/chat/${conversationId}`}
                 target="_blank"
               >
-                CONTINUE CHAT THREAD
+                <div className="tw-flex tw-flex-row tw-items-center tw-gap-2">
+                  <FontAwesomeIcon
+                    className="tw-h-4"
+                    icon={faArrowUpRightFromSquare}
+                  ></FontAwesomeIcon>
+                  <span>CONTINUE CHAT THREAD</span>
+                </div>
               </Button>
             </div>
           )}
@@ -112,6 +144,21 @@ export default function ChatGptResult() {
       {chatGptResultState === ChatGptThreadState.ERROR && (
         <div>Failed to load response from ChatGPT</div>
       )}
+
+      <Toast
+        onClose={() => setShow(false)}
+        show={show}
+        delay={1500}
+        autohide
+        className="tw-absolute"
+      >
+        {/* <Toast.Header>
+          <strong className="me-auto">Copied result to clipboard</strong>
+        </Toast.Header> */}
+        <Toast.Body className="tw-bg-gray-800 tw-text-white">
+          Copied result to clipboard
+        </Toast.Body>
+      </Toast>
     </div>
   );
 }
