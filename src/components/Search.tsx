@@ -1,9 +1,10 @@
+import { getCurrentTab } from "../utils/tabs";
 import React, { useEffect, useRef } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { useDispatch, useSelector } from "react-redux";
-import { IRootState } from "~features/interfaces";
+import { IRootState } from "../features/interfaces";
 import {
   executeSearch,
   resetSearch,
@@ -11,13 +12,6 @@ import {
 } from "../features/search/searchSlice";
 import ChatGptResult from "./ChatGptResult";
 import History from "./History";
-
-async function getCurrentTab() {
-  let queryOptions = { active: true, lastFocusedWindow: true };
-  // `tab` will either be a `tabs.Tab` instance or `undefined`.
-  let [tab] = await chrome.tabs.query(queryOptions);
-  return tab;
-}
 
 export default function Search() {
   const inputRef = useRef<Form.Control>();

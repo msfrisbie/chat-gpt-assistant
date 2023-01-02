@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ISharedState } from "./interfaces";
 
-let defaultTheme = "light";
+let defaultTheme: "light" | "dark" = "light";
 if (
   window.matchMedia &&
   window.matchMedia("(prefers-color-scheme: dark)").matches
