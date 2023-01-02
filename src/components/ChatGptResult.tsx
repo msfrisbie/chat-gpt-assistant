@@ -23,7 +23,8 @@ import { IChatGptPostMessage } from "../interfaces/settings";
 import { sendPromptFromContentScript } from "../utils/messaging";
 
 export default function ChatGptResult() {
-  const [theme, setTheme] = useState("light");
+  const theme = useSelector((state: IRootState) => state.shared.theme);
+
   const [answer, setAnswer] = useState("");
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [show, setShow] = useState(false);
@@ -35,19 +36,6 @@ export default function ChatGptResult() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-    ) {
-      setTheme("dark");
-    }
-    window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", (event) => {
-        console.log(event);
-        setTheme(event.matches ? "dark" : "light");
-      });
-
     console.log("Sending", query.slice(0, 20));
 
     sendPromptFromContentScript(query, (message: IChatGptPostMessage) => {

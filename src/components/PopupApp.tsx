@@ -1,14 +1,14 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { store } from "../store";
-import OpenAIContentScript from "./OpenAIContentScript";
+import Popup from "./Popup";
 import SharedWrapper from "./SharedWrapper";
 
-export default function OpenAIContentScriptApp() {
+export default function OptionsApp() {
   return (
     <Provider store={store}>
       <SharedWrapper>
-        <OpenAIContentScript></OpenAIContentScript>
+        <Popup></Popup>
       </SharedWrapper>
     </Provider>
   );

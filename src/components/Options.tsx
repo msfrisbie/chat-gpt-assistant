@@ -4,15 +4,15 @@ import {
   faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import { Provider } from "react-redux";
+import { useSelector } from "react-redux";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 import ai from "../assets/images/ai.png";
 import { ChatGptMessageType } from "../consts";
-import { store } from "../store";
+import { IRootState } from "../features/interfaces";
 import Feedback from "./Feedback";
 import Help from "./Help";
 import Settings from "./Settings";
@@ -40,22 +40,7 @@ const router = createHashRouter([
 ]);
 
 export default function Options() {
-  const [theme, setTheme] = useState("light");
-
-  useEffect(() => {
-    if (
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-    ) {
-      setTheme("dark");
-    }
-    window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", (event) => {
-        console.log(event);
-        setTheme(event.matches ? "dark" : "light");
-      });
-  }, []);
+  const theme = useSelector((state: IRootState) => state.shared.theme);
 
   return (
     <div className="tw-w-full tw-grow tw-text-gray-800 dark:tw-text-white tw-bg-white dark:tw-bg-neutral-900 tw-flex tw-flex-col tw-items-center">
@@ -104,9 +89,7 @@ export default function Options() {
         style={{ maxWidth: "600px" }}
         className="tw-w-full tw-flex tw-flex-col tw-items-stretch"
       >
-        <Provider store={store}>
-          <RouterProvider router={router}></RouterProvider>
-        </Provider>
+        <RouterProvider router={router}></RouterProvider>
       </div>
     </div>
   );

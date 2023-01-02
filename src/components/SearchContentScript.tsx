@@ -20,7 +20,8 @@ import { getAllSettings } from "../utils/settings";
 import ChatGptResult from "./ChatGptResult";
 
 export default function SearchContentScript() {
-  const [theme, setTheme] = useState("light");
+  const theme = useSelector((state: IRootState) => state.shared.theme);
+
   const q: string = new URL(window.location.href).searchParams.get("q") || "";
 
   const [showOverlay, setShowOverlay] = useState(false);
@@ -34,19 +35,6 @@ export default function SearchContentScript() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-    ) {
-      setTheme("dark");
-    }
-    window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", (event) => {
-        console.log(event);
-        setTheme(event.matches ? "dark" : "light");
-      });
-
     getAllSettings().then((settings) => {
       if (!q) {
         return;

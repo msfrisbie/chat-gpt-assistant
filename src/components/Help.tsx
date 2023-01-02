@@ -1,27 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Card from "react-bootstrap/Card";
+import { useSelector } from "react-redux";
 import contextMenuImage from "../assets/images/contextmenu.png";
 import googleImage from "../assets/images/google.png";
 import omniboxImage from "../assets/images/omnibox.png";
 import popupImage from "../assets/images/popup.png";
+import { IRootState } from "../features/interfaces";
 
 export default function Help() {
-  const [theme, setTheme] = useState("light");
-
-  useEffect(() => {
-    if (
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-    ) {
-      setTheme("dark");
-    }
-    window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", (event) => {
-        console.log(event);
-        setTheme(event.matches ? "dark" : "light");
-      });
-  }, []);
+  const theme = useSelector((state: IRootState) => state.shared.theme);
 
   return (
     <div className="tw-p-8 tw-flex tw-flex-col tw-items-stretch tw-gap-8">
