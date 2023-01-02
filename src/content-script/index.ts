@@ -41,7 +41,6 @@ function init() {
       "style",
       "position:fixed; right: 3rem; bottom: 1rem; z-index: 1000000;"
     );
-    container.style.width = "400px";
 
     ReactDOM.createRoot(container).render(
       React.createElement(EmailContentScriptApp)

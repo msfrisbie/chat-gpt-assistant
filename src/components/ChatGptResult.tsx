@@ -102,9 +102,9 @@ export default function ChatGptResult() {
             components={components}
           ></ReactMarkdown>
           {conversationId && (
-            <div className="tw-flex tw-flex-col tw-items-center gap-2">
+            <div className="tw-flex tw-flex-col tw-items-stretch gap-2">
               <Button
-                variant="dark"
+                variant={theme}
                 size="sm"
                 onClick={() => copyToClipbboard(answer)}
               >
