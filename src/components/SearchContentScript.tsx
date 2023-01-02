@@ -20,6 +20,7 @@ import { getAllSettings } from "../utils/settings";
 import ChatGptResult from "./ChatGptResult";
 
 export default function SearchContentScript() {
+  const [theme, setTheme] = useState("light");
   const q: string = new URL(window.location.href).searchParams.get("q") || "";
 
   const [showOverlay, setShowOverlay] = useState(false);
@@ -33,6 +34,19 @@ export default function SearchContentScript() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
+      setTheme("dark");
+    }
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (event) => {
+        console.log(event);
+        setTheme(event.matches ? "dark" : "light");
+      });
+
     getAllSettings().then((settings) => {
       if (!q) {
         return;
@@ -63,24 +77,24 @@ export default function SearchContentScript() {
       {showOverlay && (
         <div
           style={{ maxHeight: "80vh" }}
-          className="tw-rounded-xl tw-border tw-border-solid tw-border-gray-700 tw-overflow-y-auto"
+          className="tw-bg-white tw-text-gray-800 dark:tw-text-white dark:tw-bg-neutral-800 tw-rounded-xl tw-border tw-border-solid tw-border-gray-700 tw-overflow-y-auto"
         >
-          <Card style={{ backgroundColor: "#111111" }} text="white">
+          <Card className="dark:tw-bg-neutral-800">
             {chatGptResultState !== ChatGptThreadState.INITIAL && (
               <Card.Body style={{ display: expandOverlay ? "block" : "none" }}>
                 <ChatGptResult></ChatGptResult>
               </Card.Body>
             )}
-            <Card.Body className="tw-border-b tw-border-solid tw-border-gray-700 tw-bg-neutral-800 tw-font-semibold tw-flex tw-flex-row tw-justify-between tw-items-center">
-              <span className="tw-text-white">{inputText}</span>
+            <Card.Body className="tw-border-b tw-border-solid tw-border-gray-700 tw-font-semibold tw-flex tw-flex-row tw-justify-between tw-items-center">
+              <span>{inputText}</span>
               {chatGptResultState === ChatGptThreadState.INITIAL && (
-                <Button size="sm" variant="dark" onClick={search}>
+                <Button size="sm" variant={theme} onClick={search}>
                   GO
                 </Button>
               )}
               {chatGptResultState !== ChatGptThreadState.INITIAL && (
                 <div className="tw-flex tw-flex-row tw-gap-1">
-                  <Button size="sm" variant="dark" onClick={openSettings}>
+                  <Button size="sm" variant={theme} onClick={openSettings}>
                     <FontAwesomeIcon
                       className="tw-w-4 tw-h-4"
                       icon={faCog}
@@ -88,7 +102,7 @@ export default function SearchContentScript() {
                   </Button>
                   <Button
                     size="sm"
-                    variant="dark"
+                    variant={theme}
                     onClick={() => setExpandOverlay(!expandOverlay)}
                   >
                     <FontAwesomeIcon
@@ -98,7 +112,7 @@ export default function SearchContentScript() {
                   </Button>
                   <Button
                     size="sm"
-                    variant="dark"
+                    variant={theme}
                     onClick={() => setShowOverlay(false)}
                   >
                     <FontAwesomeIcon

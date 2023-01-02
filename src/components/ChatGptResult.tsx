@@ -23,6 +23,7 @@ import { IChatGptPostMessage } from "../interfaces/settings";
 import { sendPromptFromContentScript } from "../utils/messaging";
 
 export default function ChatGptResult() {
+  const [theme, setTheme] = useState("light");
   const [answer, setAnswer] = useState("");
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [show, setShow] = useState(false);
@@ -34,6 +35,19 @@ export default function ChatGptResult() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
+      setTheme("dark");
+    }
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (event) => {
+        console.log(event);
+        setTheme(event.matches ? "dark" : "light");
+      });
+
     console.log("Sending", query.slice(0, 20));
 
     sendPromptFromContentScript(query, (message: IChatGptPostMessage) => {
@@ -78,7 +92,7 @@ export default function ChatGptResult() {
   };
 
   return (
-    <div className="tw-text-white">
+    <div>
       {chatGptResultState === ChatGptThreadState.INITIAL && <></>}
       {chatGptResultState === ChatGptThreadState.LOADING && (
         <div className="loading tw-text-gray-300">
@@ -86,7 +100,7 @@ export default function ChatGptResult() {
         </div>
       )}
       {chatGptResultState === ChatGptThreadState.SUCCESS_INFLIGHT && (
-        <div id="chatgpt-result" style={{ color: "white" }}>
+        <div id="chatgpt-result">
           <ReactMarkdown
             children={answer}
             components={components}
@@ -94,7 +108,7 @@ export default function ChatGptResult() {
         </div>
       )}
       {chatGptResultState === ChatGptThreadState.SUCCESS_COMPLETE && (
-        <div id="chatgpt-result" style={{ color: "white" }}>
+        <div id="chatgpt-result">
           <ReactMarkdown
             children={answer}
             components={components}
@@ -115,7 +129,7 @@ export default function ChatGptResult() {
                 </div>
               </Button>
               <Button
-                variant="dark"
+                variant={theme}
                 size="sm"
                 href={`https://chat.openai.com/chat/${conversationId}`}
                 target="_blank"
@@ -151,13 +165,9 @@ export default function ChatGptResult() {
         delay={1500}
         autohide
         className="tw-absolute"
+        bg={theme}
       >
-        {/* <Toast.Header>
-          <strong className="me-auto">Copied result to clipboard</strong>
-        </Toast.Header> */}
-        <Toast.Body className="tw-bg-gray-800 tw-text-white">
-          Copied result to clipboard
-        </Toast.Body>
+        <Toast.Body>Copied result to clipboard</Toast.Body>
       </Toast>
     </div>
   );

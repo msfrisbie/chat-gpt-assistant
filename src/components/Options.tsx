@@ -58,7 +58,7 @@ export default function Options() {
   }, []);
 
   return (
-    <div className="tw-w-full tw-grow tw-text-slate-800 dark:tw-text-white tw-bg-white dark:tw-bg-neutral-900 tw-flex tw-flex-col tw-items-center">
+    <div className="tw-w-full tw-grow tw-text-gray-800 dark:tw-text-white tw-bg-white dark:tw-bg-neutral-900 tw-flex tw-flex-col tw-items-center">
       <Navbar className="tw-w-full" variant={theme} bg={theme} expand="lg">
         <Container>
           <Navbar.Brand
@@ -89,7 +89,7 @@ export default function Options() {
                   <span>Settings</span>
                 </div>
               </Nav.Link>
-              <Nav.Link href="#/feedback" target="_blank">
+              <Nav.Link href="#/feedback">
                 <div className="tw-flex tw-flex-row tw-items-center tw-gap-1 px-2">
                   <FontAwesomeIcon icon={faStar} />
                   <span>Feedback</span>

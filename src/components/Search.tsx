@@ -60,7 +60,7 @@ export default function Search() {
   };
 
   return (
-    <div className="tw-bg-white dark:tw-bg-neutral-900 tw-text-slate-800- dark:tw-text-white tw-p-8 tw-flex tw-flex-col tw-items-stretch tw-gap-8">
+    <div className="tw-bg-white dark:tw-bg-neutral-900 tw-text-gray-800- dark:tw-text-white tw-p-8 tw-flex tw-flex-col tw-items-stretch tw-gap-8">
       <InputGroup>
         <Form.Control
           value={inputValue}
