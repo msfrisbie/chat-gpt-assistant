@@ -3,7 +3,7 @@ import { Button } from "react-bootstrap";
 
 export default function Help() {
   return (
-    <div className="tw-text-white tw-p-8 tw-flex tw-flex-col tw-items-stretch tw-gap-8">
+    <div className="tw-p-8 tw-flex tw-flex-col tw-items-stretch tw-gap-8">
       {/* <div className="tw-text-2xl tw-text-blue-300">Leave a review!</div> */}
 
       <div className="">

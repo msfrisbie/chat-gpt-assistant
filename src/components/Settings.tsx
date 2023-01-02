@@ -59,7 +59,7 @@ export default function Settings() {
   );
 
   return (
-    <div className="tw-text-white tw-p-8 tw-flex tw-flex-col tw-items-stretch tw-gap-8">
+    <div className="tw-p-8 tw-flex tw-flex-col tw-items-stretch tw-gap-8">
       <Form>
         <Form.Check
           type="switch"

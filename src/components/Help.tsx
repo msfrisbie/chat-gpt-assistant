@@ -3,12 +3,11 @@ import Card from "react-bootstrap/Card";
 import contextMenuImage from "../assets/images/contextmenu.png";
 import googleImage from "../assets/images/google.png";
 import omniboxImage from "../assets/images/omnibox.png";
-import optionsImage from "../assets/images/options.png";
 import popupImage from "../assets/images/popup.png";
 
 export default function Help() {
   return (
-    <div className="tw-text-white tw-p-8 tw-flex tw-flex-col tw-items-stretch tw-gap-8">
+    <div className="tw-p-8 tw-flex tw-flex-col tw-items-stretch tw-gap-8">
       <div className="tw-text-2xl tw-text-blue-300">
         How do I use ChatGPT Assistant?
       </div>
@@ -26,7 +25,7 @@ export default function Help() {
         Where can I use ChatGPT Assistant?
       </div>
 
-      <Card className="bg-dark" text="white">
+      <Card className="dark:tw-bg-dark">
         <Card.Img src={popupImage} />
         <Card.Body>
           <Card.Title className="tw-text-xl tw-font-semibold">
@@ -38,7 +37,7 @@ export default function Help() {
         </Card.Body>
       </Card>
 
-      <Card className="bg-dark" text="white">
+      <Card className="dark:tw-bg-dark">
         <Card.Img src={omniboxImage} />
         <Card.Body>
           <Card.Title className="tw-text-xl tw-font-semibold">
@@ -51,7 +50,7 @@ export default function Help() {
         </Card.Body>
       </Card>
 
-      <Card className="bg-dark" text="white">
+      <Card className="dark:tw-bg-dark">
         <Card.Img src={contextMenuImage} />
         <Card.Body>
           <Card.Title className="tw-text-xl tw-font-semibold">
@@ -63,7 +62,7 @@ export default function Help() {
         </Card.Body>
       </Card>
 
-      <Card className="bg-dark" text="white">
+      {/* <Card className="dark:tw-bg-dark dark:tw-text-white">
         <Card.Img src={optionsImage} />
         <Card.Body>
           <Card.Title className="tw-text-xl tw-font-semibold">
@@ -71,9 +70,9 @@ export default function Help() {
           </Card.Title>
           <Card.Text>Use ChatGPT in a dedicated extension tab.</Card.Text>
         </Card.Body>
-      </Card>
+      </Card> */}
 
-      <Card className="bg-dark" text="white">
+      <Card className="dark:tw-bg-dark">
         <Card.Img src={googleImage} />
         <Card.Body>
           <Card.Title className="tw-text-xl tw-font-semibold">
