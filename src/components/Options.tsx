@@ -43,9 +43,16 @@ export default function Options() {
   const [theme, setTheme] = useState("light");
 
   useEffect(() => {
+    if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
+      setTheme("dark");
+    }
     window
       .matchMedia("(prefers-color-scheme: dark)")
       .addEventListener("change", (event) => {
+        console.log(event);
         setTheme(event.matches ? "dark" : "light");
       });
   }, []);

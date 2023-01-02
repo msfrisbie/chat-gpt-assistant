@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Card from "react-bootstrap/Card";
 import contextMenuImage from "../assets/images/contextmenu.png";
 import googleImage from "../assets/images/google.png";
@@ -6,6 +6,23 @@ import omniboxImage from "../assets/images/omnibox.png";
 import popupImage from "../assets/images/popup.png";
 
 export default function Help() {
+  const [theme, setTheme] = useState("light");
+
+  useEffect(() => {
+    if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
+      setTheme("dark");
+    }
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (event) => {
+        console.log(event);
+        setTheme(event.matches ? "dark" : "light");
+      });
+  }, []);
+
   return (
     <div className="tw-p-8 tw-flex tw-flex-col tw-items-stretch tw-gap-8">
       <div className="tw-text-2xl tw-text-blue-300">
@@ -25,7 +42,7 @@ export default function Help() {
         Where can I use ChatGPT Assistant?
       </div>
 
-      <Card className="dark:tw-bg-dark">
+      <Card bg={theme}>
         <Card.Img src={popupImage} />
         <Card.Body>
           <Card.Title className="tw-text-xl tw-font-semibold">
@@ -37,7 +54,7 @@ export default function Help() {
         </Card.Body>
       </Card>
 
-      <Card className="dark:tw-bg-dark">
+      <Card bg={theme}>
         <Card.Img src={omniboxImage} />
         <Card.Body>
           <Card.Title className="tw-text-xl tw-font-semibold">
@@ -50,7 +67,7 @@ export default function Help() {
         </Card.Body>
       </Card>
 
-      <Card className="dark:tw-bg-dark">
+      <Card bg={theme}>
         <Card.Img src={contextMenuImage} />
         <Card.Body>
           <Card.Title className="tw-text-xl tw-font-semibold">
@@ -62,7 +79,8 @@ export default function Help() {
         </Card.Body>
       </Card>
 
-      {/* <Card className="dark:tw-bg-dark dark:tw-text-white">
+      {/* 
+      <Card variant={theme} className="dark:tw-bg-dark">
         <Card.Img src={optionsImage} />
         <Card.Body>
           <Card.Title className="tw-text-xl tw-font-semibold">
@@ -72,7 +90,7 @@ export default function Help() {
         </Card.Body>
       </Card> */}
 
-      <Card className="dark:tw-bg-dark">
+      <Card bg={theme}>
         <Card.Img src={googleImage} />
         <Card.Body>
           <Card.Title className="tw-text-xl tw-font-semibold">
