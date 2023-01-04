@@ -46,6 +46,7 @@ export default function EmailBuilder() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log({ widgetId });
     const debouncedHandler = _.debounce(
       () => {
         const parentContext: HTMLElement | null = document.querySelector(
@@ -56,18 +57,16 @@ export default function EmailBuilder() {
         );
 
         if (!composeContext) {
-          return;
+          throw new Error("Missing compose context");
         }
 
         if (parentContext) {
           setEmails(
             [...parentContext.querySelectorAll(`[data-message-id]`)].map(
-              (el: any) => {
-                return {
-                  messageId: el.getAttribute(`data-message-id`),
-                  messageContent: el.innerText,
-                };
-              }
+              (el: any) => ({
+                messageId: el.getAttribute(`data-message-id`),
+                messageContent: el.innerText,
+              })
             )
           );
         }
@@ -187,22 +186,26 @@ export default function EmailBuilder() {
 
           const answer: string = conversationResponse.message?.content
             .parts[0] as string;
-          console.log({ answer, editable });
+          //   console.log({ answer, editable });
 
           setAnswer(answer);
           setConversationId(conversationResponse.conversation_id as string);
 
           const [body, subject] = answer.split("#####") as string[];
 
+          console.log({ body, subject });
+
           const subjectbox = document.querySelector(
             `input[name="subjectbox"]`
           ) as HTMLInputElement;
-          if (subjectbox) {
+          if (subjectbox && subject) {
             subjectbox.value = subject;
           }
 
           if (editable) {
             editable.innerHTML = body.replaceAll("\n", "\n<br />") as string;
+          } else {
+            console.error("Editable is not set");
           }
           dispatch(searchSuccessInflight({}));
           break;
@@ -225,24 +228,7 @@ export default function EmailBuilder() {
 
   return (
     <div className="tw-py-2 tw-border-b border-neutral-100">
-      {/* <div>{activeMessageId}</div> */}
       <div className="tw-flex tw-flex-nowrap tw-flex-row tw-items-stretch tw-gap-2">
-        {/* {emails.length > 1 && (
-          <div className="tw-flex tw-flex-col tw-justify-between">
-            <Button variant={theme} onClick={() => shiftActiveMessage(-1)}>
-              <FontAwesomeIcon
-                icon={faChevronUp}
-                className="tw-h-4"
-              ></FontAwesomeIcon>
-            </Button>
-            <Button variant={theme} onClick={() => shiftActiveMessage(1)}>
-              <FontAwesomeIcon
-                className="tw-h-4"
-                icon={faChevronDown}
-              ></FontAwesomeIcon>
-            </Button>
-          </div>
-        )} */}
         <div className="tw-relative tw-grow">
           <TextareaAutosize
             disabled={[
@@ -254,24 +240,22 @@ export default function EmailBuilder() {
             className="tw-p-2 tw-w-full tw-text-sm tw-text-gray-900 tw-bg-neutral-50 tw-rounded-lg tw-border tw-border-gray-300 focus:tw-ring-blue-500 focus:tw-border-blue-500 dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-placeholder-gray-400 dark:tw-text-white dark:focus:tw-ring-blue-500 dark:focus:tw-border-blue-500"
             placeholder="Email summary"
           />
-
-          {![
-            ChatGptThreadState.SUCCESS_COMPLETE,
-            ChatGptThreadState.SUCCESS_INFLIGHT,
-          ].includes(chatGptResultState) && (
-            <Button
-              className="tw-absolute tw-bottom-2 tw-right-2"
-              variant={theme}
-              onClick={writeEmail}
-              size="sm"
-            >
-              <FontAwesomeIcon
-                className="tw-h-3"
-                style={{ transform: "rotate(45deg)" }}
-                icon={faLocationArrow}
-              ></FontAwesomeIcon>
-            </Button>
-          )}
+          <Button
+            className="tw-absolute tw-bottom-2 tw-right-2"
+            variant={theme}
+            onClick={writeEmail}
+            size="sm"
+            disabled={[
+              ChatGptThreadState.SUCCESS_INFLIGHT,
+              ChatGptThreadState.LOADING,
+            ].includes(chatGptResultState)}
+          >
+            <FontAwesomeIcon
+              className="tw-h-3"
+              style={{ transform: "rotate(45deg)" }}
+              icon={faLocationArrow}
+            ></FontAwesomeIcon>
+          </Button>
         </div>
       </div>
 

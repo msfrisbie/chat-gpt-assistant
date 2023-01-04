@@ -6,6 +6,7 @@ export default function SharedWrapper(props: any) {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log(props);
     if (props.widgetId) {
       dispatch(setWidgetId({ widgetId: props.widgetId }));
     }
