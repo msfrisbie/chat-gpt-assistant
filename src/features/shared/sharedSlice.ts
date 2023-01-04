@@ -11,6 +11,7 @@ if (
 
 const initialState: ISharedState = {
   theme: defaultTheme,
+  widgetId: null
 };
 
 const sharedSlice = createSlice({
@@ -20,9 +21,12 @@ const sharedSlice = createSlice({
     setTheme(state, action: { payload: { theme: "light" | "dark" } }) {
       state.theme = action.payload.theme;
     },
+    setWidgetId(state, action: { payload: { widgetId: string } }) {
+      state.widgetId = action.payload.widgetId;
+    },
   },
 });
 
-export const { setTheme } = sharedSlice.actions;
+export const { setTheme, setWidgetId } = sharedSlice.actions;
 
 export default sharedSlice.reducer;

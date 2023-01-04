@@ -4,10 +4,10 @@ import { store } from "../store";
 import EmailContentScript from "./EmailContentScript";
 import SharedWrapper from "./SharedWrapper";
 
-export default function EmailContentScriptApp() {
+export default function EmailContentScriptApp(props: any) {
   return (
     <Provider store={store}>
-      <SharedWrapper>
+      <SharedWrapper widgetId={props.widgetId}>
         <EmailContentScript></EmailContentScript>
       </SharedWrapper>
     </Provider>

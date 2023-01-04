@@ -1,9 +1,4 @@
-import {
-  faArrowUpRightFromSquare,
-  faChevronDown,
-  faChevronUp,
-  faCopy,
-} from "@fortawesome/free-solid-svg-icons";
+import { faLocationArrow } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ConversationResponseEvent } from "chatgpt/build/browser";
 import _ from "lodash";
@@ -33,7 +28,12 @@ export default function EmailBuilder() {
 
   const [activeMessageId, setActiveMessageId] = useState<string | null>(null);
   const [emails, setEmails] = useState<Email[]>([]);
-  const [editables, setEditables] = useState<Element[]>([]);
+  const [contextContainer, setContextContainer] = useState<Element | null>(
+    null
+  );
+  const [editable, setEditable] = useState<HTMLElement | null>(null);
+  const [emailFrom, setEmailFrom] = useState<string | null>(null);
+  const [emailTo, setEmailTo] = useState<string | null>(null);
   const [emailBody, setEmailBody] = useState<string>("");
   const [answer, setAnswer] = useState<string>("");
   const [conversationId, setConversationId] = useState<string | null>(null);
@@ -42,21 +42,47 @@ export default function EmailBuilder() {
   const chatGptResultState = useSelector(
     (state: IRootState) => state.search.chatGptResultState
   );
+  const widgetId = useSelector((state: IRootState) => state.shared.widgetId);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("foobar");
     const debouncedHandler = _.debounce(
       () => {
-        setEmails(
-          [...document.querySelectorAll("[data-message-id]")].map((el: any) => {
-            return {
-              messageId: el.getAttribute("data-message-id"),
-              messageContent: el.innerText,
-            };
-          })
+        const parentContext: HTMLElement | null = document.querySelector(
+          `[chatgpt-widget-parent-context="${widgetId}"]`
         );
-        setEditables([...document.querySelectorAll(".editable")]);
+        const composeContext: HTMLElement | null = document.querySelector(
+          `[chatgpt-widget-compose-context="${widgetId}"]`
+        );
+
+        if (!composeContext) {
+          return;
+        }
+
+        if (parentContext) {
+          setEmails(
+            [...parentContext.querySelectorAll(`[data-message-id]`)].map(
+              (el: any) => {
+                return {
+                  messageId: el.getAttribute(`data-message-id`),
+                  messageContent: el.innerText,
+                };
+              }
+            )
+          );
+        }
+        setEditable(composeContext.querySelector(`.editable`) as HTMLElement);
+        setEmailTo(
+          (composeContext.querySelector(`div[name="to"]`) as HTMLElement | null)
+            ?.innerText || null
+        );
+        setEmailFrom(
+          document
+            .querySelector(`[aria-label*="Google Account:"]`)
+            ?.getAttribute("aria-label")
+            ?.split("(")[0]
+            ?.replace("Google Account:", "") || null
+        );
       },
       100,
       {
@@ -73,67 +99,84 @@ export default function EmailBuilder() {
     debouncedHandler();
   }, []);
 
-  useEffect(() => {
-    let newActiveMessageId: string | null = activeMessageId;
-    if (!emails.length) {
-      newActiveMessageId = null;
-    } else if (!emails.find((email) => email.messageId === activeMessageId)) {
-      newActiveMessageId = emails[emails.length - 1].messageId;
-    }
+  //   useEffect(() => {
+  //     let newActiveMessageId: string | null = activeMessageId;
+  //     if (!emails.length) {
+  //       newActiveMessageId = null;
+  //     } else if (!emails.find((email) => email.messageId === activeMessageId)) {
+  //       newActiveMessageId = emails[emails.length - 1].messageId;
+  //     }
 
-    setActiveMessageId(newActiveMessageId);
+  //     setActiveMessageId(newActiveMessageId);
 
-    for (const el of [...document.querySelectorAll("[data-message-id]")]) {
-      if (el.getAttribute("data-message-id") === activeMessageId) {
-        // @ts-ignore
-        el.style.border = "1px solid rgba(56,189,248,100)";
-      } else {
-        // @ts-ignore
-        el.style.border = "0px";
-      }
-    }
-  }, [activeMessageId, emails]);
+  //     for (const el of [...document.querySelectorAll("[data-message-id]")]) {
+  //       if (el.getAttribute("data-message-id") === activeMessageId) {
+  //         // @ts-ignore
+  //         el.style.border = "1px solid rgba(56,189,248,100)";
+  //       } else {
+  //         // @ts-ignore
+  //         el.style.border = "0px";
+  //       }
+  //     }
+  //   }, [activeMessageId, emails]);
 
-  const shiftActiveMessage = (offset: number) => {
-    let idx = emails.findIndex((email) => email.messageId === activeMessageId);
+  //   const shiftActiveMessage = (offset: number) => {
+  //     let idx = emails.findIndex((email) => email.messageId === activeMessageId);
 
-    if (idx < 0) {
-      idx = emails.length - 1;
-    }
+  //     if (idx < 0) {
+  //       idx = emails.length - 1;
+  //     }
 
-    idx += offset;
+  //     idx += offset;
 
-    if (idx < 0) {
-      idx = emails.length - 1;
-    }
+  //     if (idx < 0) {
+  //       idx = emails.length - 1;
+  //     }
 
-    if (idx >= emails.length) {
-      idx = 0;
-    }
+  //     if (idx >= emails.length) {
+  //       idx = 0;
+  //     }
 
-    setActiveMessageId(emails[idx].messageId);
+  //     setActiveMessageId(emails[idx].messageId);
 
-    document
-      .querySelector(`[data-message-id="${emails[idx].messageId}"]`)
-      ?.scrollIntoView();
-  };
-
-  const fill = () => {
-    if (editables.length > 0) {
-      editables[0].textContent = answer + editables[0].textContent;
-    }
-  };
+  //     document
+  //       .querySelector(`[data-message-id="${emails[idx].messageId}"]`)
+  //       ?.scrollIntoView();
+  //   };
 
   const writeEmail = () => {
+    const emailToReplyTo: string | null =
+      emails.find((email) => email.messageId === activeMessageId)
+        ?.messageContent || null;
+
+    const mainInstruction = emailToReplyTo
+      ? `Write an email reply.`
+      : `Write an email.`;
+
+    const toClause = emailTo
+      ? `The email should be addressed to the following people: ${emailTo}`
+      : "";
+
+    const fromClause = emailFrom
+      ? `The email signature should be from: ${emailFrom}`
+      : "The email signature should not be included.";
+
+    const replyClause = emailToReplyTo
+      ? `Reply to the following email:
+
+    ${emailToReplyTo}`
+      : "";
+
     const prompt = `
-        Write an email reply. The reply should accomplish the following: ${emailBody}. Only respond with the email body, no signature.
-
-        Reply to the following email:
-
-        ${
-          emails.find((email) => email.messageId === activeMessageId)
-            ?.messageContent
-        }
+        ${mainInstruction} 
+        The email should accomplish the following: ${emailBody}. 
+        Only respond with the email body. 
+        Place the subject at the end of the email. 
+        Separate the body from the subject with #####.
+        Only append the subject text, don't add a prefix to the subject.
+        ${fromClause}
+        ${toClause}
+        ${replyClause}
     `;
 
     sendPromptFromContentScript(prompt, (message: IChatGptPostMessage) => {
@@ -141,12 +184,31 @@ export default function EmailBuilder() {
         case ChatGptMessageType.ANSWER_TEXT_FROM_BG:
           const conversationResponse: ConversationResponseEvent =
             message.data.conversationResponse;
-          setAnswer(conversationResponse.message?.content.parts[0] as string);
+
+          const answer: string = conversationResponse.message?.content
+            .parts[0] as string;
+          console.log({ answer, editable });
+
+          setAnswer(answer);
           setConversationId(conversationResponse.conversation_id as string);
+
+          const [body, subject] = answer.split("#####") as string[];
+
+          const subjectbox = document.querySelector(
+            `input[name="subjectbox"]`
+          ) as HTMLInputElement;
+          if (subjectbox) {
+            subjectbox.value = subject;
+          }
+
+          if (editable) {
+            editable.innerHTML = body.replaceAll("\n", "\n<br />") as string;
+          }
           dispatch(searchSuccessInflight({}));
           break;
         case ChatGptMessageType.ANSWER_DONE_FROM_BG:
           dispatch(searchSuccessComplete({}));
+          editable?.click();
           break;
         case ChatGptMessageType.ANSWER_ERROR_FROM_BG:
           if (message.data.error === "UNAUTHORIZED") {
@@ -162,77 +224,62 @@ export default function EmailBuilder() {
   };
 
   return (
-    <div>
+    <div className="tw-py-2 tw-border-b border-neutral-100">
       {/* <div>{activeMessageId}</div> */}
-      {emails.length > 1 && (
-        <div className="tw-flex tw-flex-row tw-justify-between">
-          <Button variant={theme} onClick={() => shiftActiveMessage(-1)}>
-            <FontAwesomeIcon
-              icon={faChevronUp}
-              className="tw-h-4"
-            ></FontAwesomeIcon>
-          </Button>
-          <span>Select email</span>
-          <Button variant={theme} onClick={() => shiftActiveMessage(1)}>
-            <FontAwesomeIcon
-              className="tw-h-4"
-              icon={faChevronDown}
-            ></FontAwesomeIcon>
-          </Button>
+      <div className="tw-flex tw-flex-nowrap tw-flex-row tw-items-stretch tw-gap-2">
+        {/* {emails.length > 1 && (
+          <div className="tw-flex tw-flex-col tw-justify-between">
+            <Button variant={theme} onClick={() => shiftActiveMessage(-1)}>
+              <FontAwesomeIcon
+                icon={faChevronUp}
+                className="tw-h-4"
+              ></FontAwesomeIcon>
+            </Button>
+            <Button variant={theme} onClick={() => shiftActiveMessage(1)}>
+              <FontAwesomeIcon
+                className="tw-h-4"
+                icon={faChevronDown}
+              ></FontAwesomeIcon>
+            </Button>
+          </div>
+        )} */}
+        <div className="tw-relative tw-grow">
+          <TextareaAutosize
+            disabled={[
+              ChatGptThreadState.SUCCESS_INFLIGHT,
+              ChatGptThreadState.LOADING,
+            ].includes(chatGptResultState)}
+            minRows={2}
+            onChange={(e) => setEmailBody(e.target.value)}
+            className="tw-p-2 tw-w-full tw-text-sm tw-text-gray-900 tw-bg-neutral-50 tw-rounded-lg tw-border tw-border-gray-300 focus:tw-ring-blue-500 focus:tw-border-blue-500 dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-placeholder-gray-400 dark:tw-text-white dark:focus:tw-ring-blue-500 dark:focus:tw-border-blue-500"
+            placeholder="Email summary"
+          />
+
+          {![
+            ChatGptThreadState.SUCCESS_COMPLETE,
+            ChatGptThreadState.SUCCESS_INFLIGHT,
+          ].includes(chatGptResultState) && (
+            <Button
+              className="tw-absolute tw-bottom-2 tw-right-2"
+              variant={theme}
+              onClick={writeEmail}
+              size="sm"
+            >
+              <FontAwesomeIcon
+                className="tw-h-3"
+                style={{ transform: "rotate(45deg)" }}
+                icon={faLocationArrow}
+              ></FontAwesomeIcon>
+            </Button>
+          )}
         </div>
-      )}
-      <TextareaAutosize
-        onChange={(e) => setEmailBody(e.target.value)}
-        className="tw-p-2 tw-w-full tw-text-sm tw-text-gray-900 tw-bg-neutral-50 tw-rounded-lg tw-border tw-border-gray-300 focus:tw-ring-blue-500 focus:tw-border-blue-500 dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-placeholder-gray-400 dark:tw-text-white dark:focus:tw-ring-blue-500 dark:focus:tw-border-blue-500"
-        placeholder="Write your thoughts here..."
-      />
+      </div>
 
       <div>
         {chatGptResultState === ChatGptThreadState.INITIAL && <></>}
         {chatGptResultState === ChatGptThreadState.LOADING && (
           <div className="loading tw-text-gray-300">
             Waiting for ChatGPT response...
-          </div>
-        )}
-        {chatGptResultState === ChatGptThreadState.SUCCESS_INFLIGHT && (
-          <div id="chatgpt-result">
-            <div>{answer}</div>
-          </div>
-        )}
-        {chatGptResultState === ChatGptThreadState.SUCCESS_COMPLETE && (
-          <div id="chatgpt-result">
-            <div>{answer}</div>
-            {conversationId && (
-              <div className="tw-flex tw-flex-col tw-items-stretch gap-2">
-                <Button
-                  variant={theme}
-                  size="sm"
-                  onClick={() => copyToClipbboard(answer)}
-                >
-                  <div className="tw-flex tw-flex-row tw-items-center tw-gap-2">
-                    <FontAwesomeIcon
-                      className="tw-h-4"
-                      icon={faCopy}
-                    ></FontAwesomeIcon>
-                    <span>COPY RESULT</span>
-                  </div>
-                </Button>
-                <Button
-                  variant={theme}
-                  size="sm"
-                  href={`https://chat.openai.com/chat/${conversationId}`}
-                  target="_blank"
-                >
-                  <div className="tw-flex tw-flex-row tw-items-center tw-gap-2">
-                    <FontAwesomeIcon
-                      className="tw-h-4"
-                      icon={faArrowUpRightFromSquare}
-                    ></FontAwesomeIcon>
-                    <span>CONTINUE CHAT THREAD</span>
-                  </div>
-                </Button>
-              </div>
-            )}
           </div>
         )}
         {chatGptResultState === ChatGptThreadState.UNAUTHORIZED && (
@@ -259,8 +306,6 @@ export default function EmailBuilder() {
           <Toast.Body>Copied result to clipboard</Toast.Body>
         </Toast>
       </div>
-      <Button onClick={writeEmail}>WRITE EMAIL</Button>
-      {answer.length > 0 && <Button onClick={fill}>FILL</Button>}
     </div>
   );
 }
