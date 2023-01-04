@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Card } from "react-bootstrap";
 import ai from "../assets/images/ai.png";
 import EmailBuilder from "./EmailBuilder";
 
@@ -28,7 +27,7 @@ export default function EmailContentScript() {
   //     });
   //   };
 
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
 
   return (
     <>
@@ -41,16 +40,16 @@ export default function EmailContentScript() {
         </div>
       )}
       {expanded && (
-        <div
-          style={{ maxHeight: "80vh", width: "400px" }}
-          className="tw-w-full tw-flex tw-flex-col tw-items-stretch tw-bg-white tw-text-gray-800 dark:tw-text-white dark:tw-bg-neutral-800 tw-rounded-xl tw-border tw-border-solid tw-border-neutral-200 tw-overflow-y-auto"
-        >
-          <Card className="tw-shadow-xl dark:tw-bg-neutral-800">
-            <Card.Body>
-              <EmailBuilder></EmailBuilder>
-            </Card.Body>
-          </Card>
-        </div>
+        // <div
+        //   style={{ maxHeight: "80vh", width: "400px" }}
+        //   className="tw-w-full tw-flex tw-flex-col tw-items-stretch tw-bg-white tw-text-gray-800 dark:tw-text-white dark:tw-bg-neutral-800 tw-rounded-xl tw-border tw-border-solid tw-border-neutral-200 tw-overflow-y-auto"
+        // >
+        //   <Card className="tw-shadow-xl dark:tw-bg-neutral-800">
+        //     <Card.Body>
+        <EmailBuilder></EmailBuilder>
+        //     </Card.Body>
+        //   </Card>
+        // </div>
       )}
     </>
   );
