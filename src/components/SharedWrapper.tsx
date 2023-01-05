@@ -14,16 +14,12 @@ export default function SharedWrapper(props: any) {
     }
 
     const colorScheme = document.querySelector(`meta[name="color-scheme"]`);
+    // Color scheme is explicitly set by meta tag
+    const metaTheme: string | null =
+      colorScheme?.getAttribute("content") || null;
 
-    if (colorScheme) {
-      // Color scheme is explicitly set by meta tag
-      const theme: "dark" | "light" | null = colorScheme.getAttribute(
-        "content"
-      ) as any;
-
-      if (theme && ["dark", "light"].includes(theme)) {
-        dispatch(setTheme({ theme }));
-      }
+    if (metaTheme && ["dark", "light"].includes(metaTheme)) {
+      dispatch(setTheme({ theme: metaTheme as "dark" | "light" }));
     } else {
       // Color scheme should match system preference
       if (

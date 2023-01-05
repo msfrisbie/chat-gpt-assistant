@@ -107,6 +107,11 @@ export default function Settings() {
             updateSettingsKey(ChatGptSettingsKey.ENABLE_EMAIL, e.target.checked)
           }
         />
+
+        <Form.Select size="sm">
+          <option>Small select</option>
+        </Form.Select>
+
         <hr></hr>
         <Form.Check
           type="switch"
