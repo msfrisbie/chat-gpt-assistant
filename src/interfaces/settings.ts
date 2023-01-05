@@ -12,7 +12,10 @@ export interface ISettings {
   [ChatGptSettingsKey.DEBUG]: boolean;
   [ChatGptSettingsKey.RESPONSE_BEHAVIOR_TYPE]: ResponseBehaviorType;
   [ChatGptSettingsKey.ENABLE_EMAIL]: boolean;
-  [ChatGptSettingsKey.EMAIL_ADJECTIVES]: string[];
+  [ChatGptSettingsKey.EMAIL_LENGTH]: string;
+  [ChatGptSettingsKey.EMAIL_STYLE]: string;
+  [ChatGptSettingsKey.EMAIL_URGENCY]: string;
+  [ChatGptSettingsKey.EMAIL_TONE]: string;
 }
 
 export interface IChatGptPostMessage {

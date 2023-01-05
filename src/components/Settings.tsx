@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
-import { ChatGptSettingsKey, ResponseBehaviorType } from "../consts";
+import {
+  ChatGptSettingsKey,
+  EMAIL_LENGTH_OPTIONS,
+  EMAIL_STYLE_OPTIONS,
+  EMAIL_TONE_OPTIONS,
+  EMAIL_URGENCY_OPTIONS,
+  ResponseBehaviorType,
+} from "../consts";
 import { ISettings } from "../interfaces/settings";
 import {
   defaultSettings,
@@ -32,7 +39,7 @@ export default function Settings() {
     setLocalSettings(newSettings);
   };
 
-  const options = [
+  const responseBehaviorTypeOptions = [
     ResponseBehaviorType.DEFAULT,
     ResponseBehaviorType.STUB_ANSWER,
     ResponseBehaviorType.STUB_ERROR,
@@ -51,7 +58,7 @@ export default function Settings() {
           )
         }
       >
-        {options.map((x) => (
+        {responseBehaviorTypeOptions.map((x) => (
           <option key={x}>{x}</option>
         ))}
       </Form.Select>
@@ -64,50 +71,64 @@ export default function Settings() {
         <div>
           <Form.Label className="tw-text-sm">Default email length:</Form.Label>
 
-          <Form.Select size="sm">
-            <option>Brief</option>
-            <option>Standard</option>
-            <option>Thorough</option>
+          <Form.Select
+            size="sm"
+            value={localSettings[ChatGptSettingsKey.EMAIL_LENGTH]}
+            onChange={(e) =>
+              updateSettingsKey(ChatGptSettingsKey.EMAIL_LENGTH, e.target.value)
+            }
+          >
+            {EMAIL_LENGTH_OPTIONS.map((x) => (
+              <option key={x}>{x}</option>
+            ))}
           </Form.Select>
         </div>
         <div>
           <Form.Label className="tw-text-sm">Default email style:</Form.Label>
 
-          <Form.Select size="sm">
-            <option>Formal</option>
-            <option>Standard</option>
-            <option>Casual</option>
+          <Form.Select
+            size="sm"
+            value={localSettings[ChatGptSettingsKey.EMAIL_STYLE]}
+            onChange={(e) =>
+              updateSettingsKey(ChatGptSettingsKey.EMAIL_STYLE, e.target.value)
+            }
+          >
+            {EMAIL_STYLE_OPTIONS.map((x) => (
+              <option key={x}>{x}</option>
+            ))}
           </Form.Select>
         </div>
         <div>
           <Form.Label className="tw-text-sm">Default urgency:</Form.Label>
 
-          <Form.Select size="sm">
-            <option>Urgent</option>
-            <option>Standard</option>
-            <option>Non-urgent</option>
+          <Form.Select
+            size="sm"
+            value={localSettings[ChatGptSettingsKey.EMAIL_URGENCY]}
+            onChange={(e) =>
+              updateSettingsKey(
+                ChatGptSettingsKey.EMAIL_URGENCY,
+                e.target.value
+              )
+            }
+          >
+            {EMAIL_URGENCY_OPTIONS.map((x) => (
+              <option key={x}>{x}</option>
+            ))}
           </Form.Select>
         </div>
         <div>
           <Form.Label className="tw-text-sm">Default email tone:</Form.Label>
 
-          <Form.Select size="sm">
-            <option>Appreciative</option>
-            <option>Assertive</option>
-            <option>Cheerful</option>
-            <option>Critical</option>
-            <option>Dry</option>
-            <option>Friendly</option>
-            <option>Humorous</option>
-            <option>Inspirational</option>
-            <option>Lighthearted</option>
-            <option>Negative</option>
-            <option>Persuasive</option>
-            <option>Polite</option>
-            <option>Positive</option>
-            <option>Professional</option>
-            <option>Serious</option>
-            <option>Thankful</option>
+          <Form.Select
+            size="sm"
+            value={localSettings[ChatGptSettingsKey.EMAIL_TONE]}
+            onChange={(e) =>
+              updateSettingsKey(ChatGptSettingsKey.EMAIL_TONE, e.target.value)
+            }
+          >
+            {EMAIL_TONE_OPTIONS.map((x) => (
+              <option key={x}>{x}</option>
+            ))}
           </Form.Select>
         </div>
       </div>

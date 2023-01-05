@@ -13,7 +13,10 @@ export const defaultSettings: ISettings = {
   [ChatGptSettingsKey.DEBUG]: false,
   [ChatGptSettingsKey.RESPONSE_BEHAVIOR_TYPE]: ResponseBehaviorType.DEFAULT,
   [ChatGptSettingsKey.ENABLE_EMAIL]: true,
-  [ChatGptSettingsKey.EMAIL_ADJECTIVES]: [],
+  [ChatGptSettingsKey.EMAIL_LENGTH]: "Brief",
+  [ChatGptSettingsKey.EMAIL_STYLE]: "Formal",
+  [ChatGptSettingsKey.EMAIL_URGENCY]: "Non-urgent",
+  [ChatGptSettingsKey.EMAIL_TONE]: "Friendly",
 };
 
 export async function updateSetting(key: ChatGptSettingsKey, value: any) {

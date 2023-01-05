@@ -1,13 +1,27 @@
-import { faLocationArrow } from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faSliders } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ConversationResponseEvent } from "chatgpt/build/browser";
 import _ from "lodash";
 import React, { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import Toast from "react-bootstrap/Toast";
 import { useDispatch, useSelector } from "react-redux";
 import TextareaAutosize from "react-textarea-autosize";
-import { ChatGptMessageType, ChatGptThreadState } from "../consts";
+import {
+  ChatGptMessageType,
+  ChatGptSettingsKey,
+  ChatGptThreadState,
+  EMAIL_LENGTH_OPTIONS,
+  EMAIL_STYLE_OPTIONS,
+  EMAIL_TONE_OPTIONS,
+  EMAIL_URGENCY_OPTIONS,
+} from "../consts";
+import {
+  setEmailLength,
+  setEmailStyle,
+  setEmailTone,
+  setEmailUrgency,
+} from "../features/email/emailSlice";
 import { IRootState } from "../features/interfaces";
 import {
   searchError,
@@ -17,6 +31,7 @@ import {
 } from "../features/search/searchSlice";
 import { IChatGptPostMessage } from "../interfaces/settings";
 import { sendPromptFromContentScript } from "../utils/messaging";
+import { getAllSettings } from "../utils/settings";
 
 interface Email {
   messageId: string;
@@ -25,6 +40,7 @@ interface Email {
 
 export default function EmailBuilder() {
   const theme = useSelector((state: IRootState) => state.shared.theme);
+  const email = useSelector((state: IRootState) => state.email);
 
   const [activeMessageId, setActiveMessageId] = useState<string | null>(null);
   const [emails, setEmails] = useState<Email[]>([]);
@@ -38,6 +54,7 @@ export default function EmailBuilder() {
   const [answer, setAnswer] = useState<string>("");
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [show, setShow] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   const chatGptResultState = useSelector(
     (state: IRootState) => state.search.chatGptResultState
@@ -46,6 +63,23 @@ export default function EmailBuilder() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    getAllSettings().then((result) => {
+      dispatch(
+        setEmailLength({ emailLength: result[ChatGptSettingsKey.EMAIL_LENGTH] })
+      );
+      dispatch(
+        setEmailStyle({ emailStyle: result[ChatGptSettingsKey.EMAIL_STYLE] })
+      );
+      dispatch(
+        setEmailUrgency({
+          emailUrgency: result[ChatGptSettingsKey.EMAIL_URGENCY],
+        })
+      );
+      dispatch(
+        setEmailTone({ emailTone: result[ChatGptSettingsKey.EMAIL_TONE] })
+      );
+    });
+
     const debouncedHandler = _.debounce(
       () => {
         const parentContext: HTMLElement | null = document.querySelector(
@@ -157,6 +191,11 @@ export default function EmailBuilder() {
           document.documentElement.lang || "en"
         }`;
 
+    const lengthClause = `The email length should be ${email.emailLength}.`;
+    const styleClause = `The email style should be ${email.emailStyle}.`;
+    const urgencyClause = `The email urgency should be ${email.emailUrgency}.`;
+    const toneClause = `The email tone should be ${email.emailTone}.`;
+
     const toClause = emailTo
       ? `The email should be addressed to the following people: ${emailTo}`
       : "";
@@ -179,6 +218,10 @@ export default function EmailBuilder() {
         Separate the body from the subject with #####.
         Only append the subject text, don't add a prefix to the subject.
         ${languageClause}
+        ${lengthClause}
+        ${styleClause}
+        ${urgencyClause}
+        ${toneClause}
         ${fromClause}
         ${toClause}
         ${replyClause}
@@ -192,7 +235,6 @@ export default function EmailBuilder() {
 
           const answer: string = conversationResponse.message?.content
             .parts[0] as string;
-          //   console.log({ answer, editable });
 
           setAnswer(answer);
           setConversationId(conversationResponse.conversation_id as string);
@@ -232,8 +274,75 @@ export default function EmailBuilder() {
     });
   };
 
+  const emailFormControls = (
+    <>
+      <div className="tw-grid tw-grid-cols-4 tw-gap-4">
+        <div>
+          <Form.Label className="tw-text-sm">Length:</Form.Label>
+
+          <Form.Select
+            size="sm"
+            value={email.emailLength}
+            onChange={(e) =>
+              dispatch(setEmailLength({ emailLength: e.target.value }))
+            }
+          >
+            {EMAIL_LENGTH_OPTIONS.map((x) => (
+              <option key={x}>{x}</option>
+            ))}
+          </Form.Select>
+        </div>
+        <div>
+          <Form.Label className="tw-text-sm">Style:</Form.Label>
+
+          <Form.Select
+            size="sm"
+            value={email.emailStyle}
+            onChange={(e) =>
+              dispatch(setEmailStyle({ emailStyle: e.target.value }))
+            }
+          >
+            {EMAIL_STYLE_OPTIONS.map((x) => (
+              <option key={x}>{x}</option>
+            ))}
+          </Form.Select>
+        </div>
+        <div>
+          <Form.Label className="tw-text-sm">Urgency:</Form.Label>
+
+          <Form.Select
+            size="sm"
+            value={email.emailUrgency}
+            onChange={(e) =>
+              dispatch(setEmailUrgency({ emailUrgency: e.target.value }))
+            }
+          >
+            {EMAIL_URGENCY_OPTIONS.map((x) => (
+              <option key={x}>{x}</option>
+            ))}
+          </Form.Select>
+        </div>
+        <div>
+          <Form.Label className="tw-text-sm">Tone:</Form.Label>
+
+          <Form.Select
+            size="sm"
+            value={email.emailTone}
+            onChange={(e) =>
+              dispatch(setEmailTone({ emailTone: e.target.value }))
+            }
+          >
+            {EMAIL_TONE_OPTIONS.map((x) => (
+              <option key={x}>{x}</option>
+            ))}
+          </Form.Select>
+        </div>
+      </div>
+    </>
+  );
+
   return (
-    <div className="tw-py-2 tw-border-b border-neutral-100">
+    <div className="tw-my-2 tw-mx-1 tw-py-2 tw-border-b border-neutral-100">
       <div className="tw-flex tw-flex-nowrap tw-flex-row tw-items-stretch tw-gap-2">
         <div className="tw-relative tw-grow">
           <TextareaAutosize
@@ -256,14 +365,25 @@ export default function EmailBuilder() {
               ChatGptThreadState.LOADING,
             ].includes(chatGptResultState)}
           >
-            <FontAwesomeIcon
-              className="tw-h-3"
-              style={{ transform: "rotate(45deg)" }}
-              icon={faLocationArrow}
-            ></FontAwesomeIcon>
+            <FontAwesomeIcon className="tw-h-3" icon={faPlay}></FontAwesomeIcon>
           </Button>
         </div>
+
+        {/* <div className="tw-flex tw-flex-col tw-justify-start"> */}
+        <Button
+          variant={theme}
+          onClick={() => setShowSettings(!showSettings)}
+          size="sm"
+        >
+          <FontAwesomeIcon
+            className="tw-h-3"
+            icon={faSliders}
+          ></FontAwesomeIcon>
+        </Button>
+        {/* </div> */}
       </div>
+
+      {showSettings && emailFormControls}
 
       <div>
         {chatGptResultState === ChatGptThreadState.INITIAL && <></>}

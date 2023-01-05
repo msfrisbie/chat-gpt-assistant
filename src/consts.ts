@@ -11,7 +11,10 @@ export enum ChatGptSettingsKey {
   RESPONSE_BEHAVIOR_TYPE = "RESPONSE_BEHAVIOR_TYPE",
   AUTO_REFRESH_SESSION = "AUTO_REFRESH_SESSION",
   ENABLE_EMAIL = "ENABLE_EMAIL",
-  EMAIL_ADJECTIVES = "EMAIL_ADJECTIVES",
+  EMAIL_LENGTH = "EMAIL_LENGTH",
+  EMAIL_STYLE = "EMAIL_STYLE",
+  EMAIL_URGENCY = "EMAIL_URGENCY",
+  EMAIL_TONE = "EMAIL_TONE",
 }
 
 export enum ChatGptThreadState {
@@ -57,3 +60,25 @@ function foobar() {
 This is a stub response! This is a stub response! 
 This is a stub response! This is a stub response! 
 `;
+
+export const EMAIL_LENGTH_OPTIONS = ["Brief", "Thorough"];
+export const EMAIL_STYLE_OPTIONS = ["Formal", "Casual"];
+export const EMAIL_URGENCY_OPTIONS = ["Urgent", "Non-urgent"];
+export const EMAIL_TONE_OPTIONS = [
+  "Appreciative",
+  "Assertive",
+  "Cheerful",
+  "Critical",
+  "Dry",
+  "Friendly",
+  "Humorous",
+  "Inspirational",
+  "Lighthearted",
+  "Negative",
+  "Persuasive",
+  "Polite",
+  "Positive",
+  "Professional",
+  "Serious",
+  "Thankful",
+];
