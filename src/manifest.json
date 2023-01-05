@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "ChatGPT Assistant",
-  "description": "Use ChatGPT everywhere",
+  "name": "ChatGPT Assistant - Use AI Everywhere",
+  "description": "ChatGPT in search results, write emails with AI, send text to ChatGPT from anywhere",
   "version": "0.13.0",
   "action": {
     "default_popup": "popup/index.html",

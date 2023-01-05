@@ -37,5 +37,5 @@ export default function SharedWrapper(props: any) {
     }
   }, []);
 
-  return <div className={`tw-${theme}`}>{props.children}</div>;
+  return <div className={`tw-w-full tw-${theme}`}>{props.children}</div>;
 }

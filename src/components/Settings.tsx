@@ -58,9 +58,85 @@ export default function Settings() {
     </>
   );
 
+  const emailFormControls = (
+    <>
+      <div className="tw-grid tw-grid-cols-2 gap-4">
+        <div>
+          <Form.Label className="tw-text-sm">Default email length:</Form.Label>
+
+          <Form.Select size="sm">
+            <option>Brief</option>
+            <option>Standard</option>
+            <option>Thorough</option>
+          </Form.Select>
+        </div>
+        <div>
+          <Form.Label className="tw-text-sm">Default email style:</Form.Label>
+
+          <Form.Select size="sm">
+            <option>Formal</option>
+            <option>Standard</option>
+            <option>Casual</option>
+          </Form.Select>
+        </div>
+        <div>
+          <Form.Label className="tw-text-sm">Default urgency:</Form.Label>
+
+          <Form.Select size="sm">
+            <option>Urgent</option>
+            <option>Standard</option>
+            <option>Non-urgent</option>
+          </Form.Select>
+        </div>
+        <div>
+          <Form.Label className="tw-text-sm">Default email tone:</Form.Label>
+
+          <Form.Select size="sm">
+            <option>Appreciative</option>
+            <option>Assertive</option>
+            <option>Cheerful</option>
+            <option>Critical</option>
+            <option>Dry</option>
+            <option>Friendly</option>
+            <option>Humorous</option>
+            <option>Inspirational</option>
+            <option>Lighthearted</option>
+            <option>Negative</option>
+            <option>Persuasive</option>
+            <option>Polite</option>
+            <option>Positive</option>
+            <option>Professional</option>
+            <option>Serious</option>
+            <option>Thankful</option>
+          </Form.Select>
+        </div>
+      </div>
+    </>
+  );
+
   return (
     <div className="tw-p-8 tw-flex tw-flex-col tw-items-stretch tw-gap-8">
-      <Form>
+      <Form className="tw-flex tw-flex-col tw-gap-2">
+        <div className="tw-opacity-75 tw-text-xl tw-text-sky-400">General</div>
+
+        <Form.Check
+          type="switch"
+          label="Automatically refresh my ChatGPT session"
+          checked={localSettings[ChatGptSettingsKey.AUTO_REFRESH_SESSION]}
+          onChange={(e) =>
+            updateSettingsKey(
+              ChatGptSettingsKey.AUTO_REFRESH_SESSION,
+              e.target.checked
+            )
+          }
+        />
+
+        <hr></hr>
+
+        <div className="tw-opacity-75 tw-text-xl tw-text-sky-400">
+          Search Engines
+        </div>
+
         <Form.Check
           type="switch"
           label="Show ChatGPT Assistant when using search engines"
@@ -88,31 +164,32 @@ export default function Settings() {
             updateSettingsKey(ChatGptSettingsKey.IFRAME_POPUP, e.target.checked)
           }
         /> */}
+
+        <hr></hr>
+
+        <div className="tw-opacity-75 tw-text-xl tw-text-sky-400">
+          Email Tool (beta)
+        </div>
+
+        <div className="tw-text-sm tw-text-gray-300">
+          Only available for GMail
+        </div>
+
         <Form.Check
           type="switch"
-          label="Automatically refresh my ChatGPT session"
-          checked={localSettings[ChatGptSettingsKey.AUTO_REFRESH_SESSION]}
-          onChange={(e) =>
-            updateSettingsKey(
-              ChatGptSettingsKey.AUTO_REFRESH_SESSION,
-              e.target.checked
-            )
-          }
-        />
-        <Form.Check
-          type="switch"
-          label="Enable email generation tool"
+          label="Enable email tool"
           checked={localSettings[ChatGptSettingsKey.ENABLE_EMAIL]}
           onChange={(e) =>
             updateSettingsKey(ChatGptSettingsKey.ENABLE_EMAIL, e.target.checked)
           }
         />
 
-        <Form.Select size="sm">
-          <option>Small select</option>
-        </Form.Select>
+        {localSettings[ChatGptSettingsKey.ENABLE_EMAIL] && emailFormControls}
 
         <hr></hr>
+
+        <div className="tw-opacity-75 tw-text-xl tw-text-sky-400">Debug</div>
+
         <Form.Check
           type="switch"
           label="Enable debug mode"

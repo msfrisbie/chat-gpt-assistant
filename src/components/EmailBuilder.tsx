@@ -46,7 +46,6 @@ export default function EmailBuilder() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log({ widgetId });
     const debouncedHandler = _.debounce(
       () => {
         const parentContext: HTMLElement | null = document.querySelector(
@@ -152,6 +151,12 @@ export default function EmailBuilder() {
       ? `Write an email reply.`
       : `Write an email.`;
 
+    const languageClause = emailToReplyTo
+      ? `Reply in the same language.`
+      : `Reply in the following language: ${
+          document.documentElement.lang || "en"
+        }`;
+
     const toClause = emailTo
       ? `The email should be addressed to the following people: ${emailTo}`
       : "";
@@ -173,6 +178,7 @@ export default function EmailBuilder() {
         Place the subject at the end of the email. 
         Separate the body from the subject with #####.
         Only append the subject text, don't add a prefix to the subject.
+        ${languageClause}
         ${fromClause}
         ${toClause}
         ${replyClause}
