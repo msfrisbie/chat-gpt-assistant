@@ -11,6 +11,8 @@ export interface ISettings {
   [ChatGptSettingsKey.AUTO_REFRESH_SESSION]: boolean;
   [ChatGptSettingsKey.DEBUG]: boolean;
   [ChatGptSettingsKey.RESPONSE_BEHAVIOR_TYPE]: ResponseBehaviorType;
+  [ChatGptSettingsKey.ENABLE_EMAIL]: boolean;
+  [ChatGptSettingsKey.EMAIL_ADJECTIVES]: string[];
 }
 
 export interface IChatGptPostMessage {

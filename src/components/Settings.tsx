@@ -99,6 +99,14 @@ export default function Settings() {
             )
           }
         />
+        <Form.Check
+          type="switch"
+          label="Enable email generation tool"
+          checked={localSettings[ChatGptSettingsKey.ENABLE_EMAIL]}
+          onChange={(e) =>
+            updateSettingsKey(ChatGptSettingsKey.ENABLE_EMAIL, e.target.checked)
+          }
+        />
         <hr></hr>
         <Form.Check
           type="switch"

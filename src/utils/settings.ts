@@ -12,6 +12,8 @@ export const defaultSettings: ISettings = {
   [ChatGptSettingsKey.AUTO_REFRESH_SESSION]: true,
   [ChatGptSettingsKey.DEBUG]: false,
   [ChatGptSettingsKey.RESPONSE_BEHAVIOR_TYPE]: ResponseBehaviorType.DEFAULT,
+  [ChatGptSettingsKey.ENABLE_EMAIL]: true,
+  [ChatGptSettingsKey.EMAIL_ADJECTIVES]: [],
 };
 
 export async function updateSetting(key: ChatGptSettingsKey, value: any) {

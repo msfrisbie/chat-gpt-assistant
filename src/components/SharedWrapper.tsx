@@ -1,29 +1,45 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { IRootState } from "../features/interfaces";
 import { setTheme, setWidgetId } from "../features/shared/sharedSlice";
 
 export default function SharedWrapper(props: any) {
+  const theme = useSelector((state: IRootState) => state.shared.theme);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(props);
     if (props.widgetId) {
       dispatch(setWidgetId({ widgetId: props.widgetId }));
     }
 
-    if (
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-    ) {
-      dispatch(setTheme({ theme: "dark" }));
-    }
+    const colorScheme = document.querySelector(`meta[name="color-scheme"]`);
 
-    window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", (event) => {
-        dispatch(setTheme({ theme: event.matches ? "dark" : "light" }));
-      });
+    if (colorScheme) {
+      // Color scheme is explicitly set by meta tag
+      const theme: "dark" | "light" | null = colorScheme.getAttribute(
+        "content"
+      ) as any;
+
+      if (theme && ["dark", "light"].includes(theme)) {
+        dispatch(setTheme({ theme }));
+      }
+    } else {
+      // Color scheme should match system preference
+      if (
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+      ) {
+        dispatch(setTheme({ theme: "dark" }));
+      }
+
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", (event) => {
+          dispatch(setTheme({ theme: event.matches ? "dark" : "light" }));
+        });
+    }
   }, []);
 
-  return props.children;
+  return <div className={`tw-${theme}`}>{props.children}</div>;
 }
