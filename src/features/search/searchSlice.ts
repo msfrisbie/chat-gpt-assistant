@@ -6,6 +6,8 @@ const initialState: ISearchState = {
   chatGptResultState: ChatGptThreadState.INITIAL,
   inputValue: "",
   query: "",
+  hiddenPrefix: "",
+  hiddenSuffix: "",
   history: [],
 };
 
@@ -13,7 +15,7 @@ const searchSlice = createSlice({
   name: "search",
   initialState,
   reducers: {
-    executeSearch(state, action: { payload: { prompt: string } }) {
+    executeSearch(state, action: { payload: { prompt: string, hiddenPrefix?: string, hiddenSuffix?: string } }) {
       const updatedHistory = [
         action.payload.prompt,
         ...state.history.filter((x) => x !== action.payload.prompt),
@@ -26,6 +28,8 @@ const searchSlice = createSlice({
 
       state.inputValue = action.payload.prompt;
       state.query = action.payload.prompt;
+      state.hiddenPrefix = action.payload.hiddenPrefix;
+      state.hiddenSuffix = action.payload.hiddenSuffix;
       state.chatGptResultState = ChatGptThreadState.LOADING;
       state.history = updatedHistory;
     },
@@ -47,6 +51,8 @@ const searchSlice = createSlice({
     resetSearch(state, action) {
       state.inputValue = "";
       state.query = "";
+      state.hiddenPrefix = "";
+      state.hiddenSuffix = "";
       state.chatGptResultState = ChatGptThreadState.INITIAL;
     },
     searchSuccessInflight(state, action) {

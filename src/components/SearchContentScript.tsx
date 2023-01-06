@@ -16,7 +16,7 @@ import {
 } from "../consts";
 import { IRootState } from "../features/interfaces";
 import { executeSearch, setInputValue } from "../features/search/searchSlice";
-import { getAllSettings } from "../utils/settings";
+import { getAllSettings, getSetting } from "../utils/settings";
 import ChatGptResult from "./ChatGptResult";
 
 export default function SearchContentScript() {
@@ -50,8 +50,20 @@ export default function SearchContentScript() {
     });
   }, []);
 
-  const search = () => {
-    dispatch(executeSearch({ prompt: q }));
+  const search = async () => {
+    let prompt = q;
+
+    const search = {
+      prompt: q,
+      hiddenPrefix: "",
+      hiddenSuffix: "",
+    };
+
+    if (await getSetting(ChatGptSettingsKey.SHORT_SEARCH_RESPONSES)) {
+      search.hiddenSuffix = `The response must be short.`;
+    }
+
+    dispatch(executeSearch(search));
   };
 
   const openSettings = () => {

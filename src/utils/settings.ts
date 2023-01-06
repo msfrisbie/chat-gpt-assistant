@@ -8,6 +8,7 @@ import { ISettings } from "../interfaces/settings";
 export const defaultSettings: ISettings = {
   [ChatGptSettingsKey.ENABLE_CONTENT_SCRIPT]: true,
   [ChatGptSettingsKey.EAGER_SEARCH]: false,
+  [ChatGptSettingsKey.SHORT_SEARCH_RESPONSES]: true,
   [ChatGptSettingsKey.IFRAME_POPUP]: false,
   [ChatGptSettingsKey.AUTO_REFRESH_SESSION]: true,
   [ChatGptSettingsKey.DEBUG]: false,

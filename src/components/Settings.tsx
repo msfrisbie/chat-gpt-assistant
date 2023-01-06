@@ -175,6 +175,17 @@ export default function Settings() {
             updateSettingsKey(ChatGptSettingsKey.EAGER_SEARCH, e.target.checked)
           }
         />
+        <Form.Check
+          type="switch"
+          label="Ask ChatGPT to keep search engine responses short"
+          checked={localSettings[ChatGptSettingsKey.SHORT_SEARCH_RESPONSES]}
+          onChange={(e) =>
+            updateSettingsKey(
+              ChatGptSettingsKey.SHORT_SEARCH_RESPONSES,
+              e.target.checked
+            )
+          }
+        />
         {/* <Form.Check
           type="switch"
           label="Show OpenAI chat interface in popup"

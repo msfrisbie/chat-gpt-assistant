@@ -30,6 +30,12 @@ export default function ChatGptResult() {
   const [show, setShow] = useState(false);
 
   const query = useSelector((state: IRootState) => state.search.query);
+  const hiddenPrefix = useSelector(
+    (state: IRootState) => state.search.hiddenPrefix
+  );
+  const hiddenSuffix = useSelector(
+    (state: IRootState) => state.search.hiddenSuffix
+  );
   const chatGptResultState = useSelector(
     (state: IRootState) => state.search.chatGptResultState
   );
@@ -38,7 +44,18 @@ export default function ChatGptResult() {
   useEffect(() => {
     console.log("Sending", query.slice(0, 20));
 
-    sendPromptFromContentScript(query, (message: IChatGptPostMessage) => {
+    let prompt = query;
+
+    if (hiddenPrefix) {
+      prompt = hiddenPrefix + "\n\n" + prompt;
+    }
+    if (hiddenSuffix) {
+      prompt = prompt + "\n\n" + hiddenSuffix;
+    }
+
+    console.log({ prompt });
+
+    sendPromptFromContentScript(prompt, (message: IChatGptPostMessage) => {
       switch (message.messageType) {
         case ChatGptMessageType.ANSWER_TEXT_FROM_BG:
           const conversationResponse: ConversationResponseEvent =

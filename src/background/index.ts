@@ -269,7 +269,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       trackEvent(message.data.eventName, message.data.eventProperties);
       break;
     default:
-      console.error(message);
+      console.error(message, JSON.stringify(message));
       throw new Error("Bad message type");
   }
 });

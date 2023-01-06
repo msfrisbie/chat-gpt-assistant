@@ -253,8 +253,6 @@ export default function EmailBuilder() {
 
           const [body, subject] = answer.split("#####") as string[];
 
-          console.log({ body, subject });
-
           const subjectbox = document.querySelector(
             `input[name="subjectbox"]`
           ) as HTMLInputElement;
