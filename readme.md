@@ -21,9 +21,9 @@ Browser Extension to integrate ChatGPT everywhere:
 | :----------------------------------------------------------------: |
 |    _Select text and right click to send it as a ChatGPT prompt_    |
 
-| <img src="static/options.png" alt="Google" width="500"/> |
-| :------------------------------------------------------: |
-|        _Use ChatGPT in a dedicated extension tab_        |
+| <img src="static/email.png" alt="Google" width="500"/> |
+| :----------------------------------------------------: |
+|      _Use ChatGPT to compose and reply to email_       |
 
 | <img src="static/google.png" alt="Options" width="500"/> |
 | :------------------------------------------------------: |
