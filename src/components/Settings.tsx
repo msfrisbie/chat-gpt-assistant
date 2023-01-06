@@ -138,6 +138,11 @@ export default function Settings() {
 
   return (
     <div className="tw-p-8 tw-flex tw-flex-col tw-items-stretch tw-gap-8">
+      <div className="tw-text-gray-500 tw-text-xs">
+        <span className="tw-font-bold">Tip:</span> to get back here, right click
+        on any page and select "ChatGPT Assistant Settings"
+      </div>
+
       <Form className="tw-flex tw-flex-col tw-gap-2">
         <div className="tw-opacity-75 tw-text-xl tw-text-sky-400">General</div>
 
