@@ -5,6 +5,7 @@ import contextMenuImage from "../assets/images/contextmenu.png";
 import googleImage from "../assets/images/google.png";
 import omniboxImage from "../assets/images/omnibox.png";
 import popupImage from "../assets/images/popup.png";
+import emailImage from "../assets/images/email.png";
 import { IRootState } from "../features/interfaces";
 
 export default function Help() {
@@ -66,16 +67,18 @@ export default function Help() {
         </Card.Body>
       </Card>
 
-      {/* 
       <Card variant={theme} className="dark:tw-bg-dark">
-        <Card.Img src={optionsImage} />
+        <Card.Img src={emailImage} />
         <Card.Body>
           <Card.Title className="tw-text-xl tw-font-semibold">
-            Dedicated ChatGPT tab
+            AI Email Generation (beta)
           </Card.Title>
-          <Card.Text>Use ChatGPT in a dedicated extension tab.</Card.Text>
+          <Card.Text>
+            Use ChatGPT to componse and reply to emails. Enable this in
+            settings.
+          </Card.Text>
         </Card.Body>
-      </Card> */}
+      </Card>
 
       <Card bg={theme}>
         <Card.Img src={googleImage} />

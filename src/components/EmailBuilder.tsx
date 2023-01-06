@@ -7,7 +7,7 @@ import { Button } from "react-bootstrap";
 import Toast from "react-bootstrap/Toast";
 import { useDispatch, useSelector } from "react-redux";
 import TextareaAutosize from "react-textarea-autosize";
-import ai from "../assets/images/ai.png";
+import ai_translucent from "../assets/images/ai_translucent.png";
 import {
   ChatGptMessageType,
   ChatGptSettingsKey,
@@ -308,7 +308,7 @@ export default function EmailBuilder() {
             onChange={(e) => setEmailBody(e.target.value)}
             className="tw-p-2 tw-w-full tw-text-sm tw-text-gray-900 tw-bg-neutral-50 tw-rounded-lg tw-border tw-border-gray-300 focus:tw-ring-blue-500 focus:tw-border-blue-500 dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-placeholder-gray-400 dark:tw-text-white dark:focus:tw-ring-blue-500 dark:focus:tw-border-blue-500 tw-bg-center tw-bg-contain tw-bg-no-repeat tw-opacity-75"
             style={{
-              backgroundImage: `url(${ai})`,
+              backgroundImage: `url(${ai_translucent})`,
               backgroundSize: "50px 50px",
             }}
             placeholder={replyEmail ? "Reply summary" : "Email summary"}

@@ -14,7 +14,7 @@ export const defaultSettings: ISettings = {
   [ChatGptSettingsKey.KEEP_CHATGPT_PINNED]: false,
   [ChatGptSettingsKey.DEBUG]: false,
   [ChatGptSettingsKey.RESPONSE_BEHAVIOR_TYPE]: ResponseBehaviorType.DEFAULT,
-  [ChatGptSettingsKey.ENABLE_EMAIL]: true,
+  [ChatGptSettingsKey.ENABLE_EMAIL]: false,
   [ChatGptSettingsKey.EMAIL_LENGTH]: "Brief",
   [ChatGptSettingsKey.EMAIL_STYLE]: "Formal",
   [ChatGptSettingsKey.EMAIL_URGENCY]: "Non-urgent",
