@@ -13,29 +13,35 @@ export default function SharedWrapper(props: any) {
       dispatch(setWidgetId({ widgetId: props.widgetId }));
     }
 
-    const colorScheme = document.querySelector(`meta[name="color-scheme"]`);
-    // Color scheme is explicitly set by meta tag
-    const metaTheme: string | null =
-      colorScheme?.getAttribute("content") || null;
+    if (window.location.hostname !== "mail.google.com") {
+      const colorScheme = document.querySelector(`meta[name="color-scheme"]`);
+      // Color scheme is explicitly set by meta tag
+      const metaTheme: string | null =
+        colorScheme?.getAttribute("content") || null;
 
-    if (metaTheme && ["dark", "light"].includes(metaTheme)) {
-      dispatch(setTheme({ theme: metaTheme as "dark" | "light" }));
-    } else {
-      // Color scheme should match system preference
-      if (
-        window.matchMedia &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches
-      ) {
-        dispatch(setTheme({ theme: "dark" }));
+      if (metaTheme && ["dark", "light"].includes(metaTheme)) {
+        dispatch(setTheme({ theme: metaTheme as "dark" | "light" }));
+      } else {
+        // Color scheme should match system preference
+        if (
+          window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches
+        ) {
+          dispatch(setTheme({ theme: "dark" }));
+        }
+
+        window
+          .matchMedia("(prefers-color-scheme: dark)")
+          .addEventListener("change", (event) => {
+            dispatch(setTheme({ theme: event.matches ? "dark" : "light" }));
+          });
       }
-
-      window
-        .matchMedia("(prefers-color-scheme: dark)")
-        .addEventListener("change", (event) => {
-          dispatch(setTheme({ theme: event.matches ? "dark" : "light" }));
-        });
     }
   }, []);
 
-  return <div className={`tw-w-full tw-${theme}`}>{props.children}</div>;
+  return (
+    <div className={`tw-w-full tw-grid tw-place-items-stretch tw-${theme}`}>
+      {props.children}
+    </div>
+  );
 }

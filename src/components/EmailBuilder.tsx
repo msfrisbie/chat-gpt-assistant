@@ -3,18 +3,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ConversationResponseEvent } from "chatgpt/build/browser";
 import _ from "lodash";
 import React, { useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Dropdown, DropdownButton } from "react-bootstrap";
 import Toast from "react-bootstrap/Toast";
 import { useDispatch, useSelector } from "react-redux";
 import TextareaAutosize from "react-textarea-autosize";
+import ai from "../assets/images/ai.png";
 import {
   ChatGptMessageType,
   ChatGptSettingsKey,
   ChatGptThreadState,
-  EMAIL_LENGTH_OPTIONS,
-  EMAIL_STYLE_OPTIONS,
-  EMAIL_TONE_OPTIONS,
-  EMAIL_URGENCY_OPTIONS,
+  QUICK_REPLY_SUMMARIES,
+  QUICK_SUMMARIES,
 } from "../consts";
 import {
   setEmailLength,
@@ -32,6 +31,7 @@ import {
 import { IChatGptPostMessage } from "../interfaces/settings";
 import { sendPromptFromContentScript } from "../utils/messaging";
 import { getAllSettings } from "../utils/settings";
+import EmailBuilderExpand from "./EmailBuilderExpand";
 
 interface Email {
   messageId: string;
@@ -40,13 +40,10 @@ interface Email {
 
 export default function EmailBuilder() {
   const theme = useSelector((state: IRootState) => state.shared.theme);
-  const email = useSelector((state: IRootState) => state.email);
+  const emailState = useSelector((state: IRootState) => state.email);
 
   const [activeMessageId, setActiveMessageId] = useState<string | null>(null);
-  const [emails, setEmails] = useState<Email[]>([]);
-  const [contextContainer, setContextContainer] = useState<Element | null>(
-    null
-  );
+  const [replyEmail, setReplyEmail] = useState<Email | null>(null);
   const [editable, setEditable] = useState<HTMLElement | null>(null);
   const [emailFrom, setEmailFrom] = useState<string | null>(null);
   const [emailTo, setEmailTo] = useState<string | null>(null);
@@ -94,14 +91,19 @@ export default function EmailBuilder() {
         }
 
         if (parentContext) {
-          setEmails(
-            [...parentContext.querySelectorAll(`[data-message-id]`)].map(
-              (el: any) => ({
-                messageId: el.getAttribute(`data-message-id`),
-                messageContent: el.innerText,
-              })
-            )
-          );
+          const emailMatches = [
+            ...parentContext.querySelectorAll(`[data-message-id]`),
+          ];
+
+          if (emailMatches.length > 0) {
+            const replyEmailEl: HTMLElement = emailMatches[
+              emailMatches.length - 1
+            ] as HTMLElement;
+            setReplyEmail({
+              messageId: replyEmailEl.getAttribute(`data-message-id`) as string,
+              messageContent: replyEmailEl.innerText,
+            });
+          }
         }
         setEditable(composeContext.querySelector(`.editable`) as HTMLElement);
         setEmailTo(
@@ -131,26 +133,26 @@ export default function EmailBuilder() {
     debouncedHandler();
   }, []);
 
-  //   useEffect(() => {
-  //     let newActiveMessageId: string | null = activeMessageId;
-  //     if (!emails.length) {
-  //       newActiveMessageId = null;
-  //     } else if (!emails.find((email) => email.messageId === activeMessageId)) {
-  //       newActiveMessageId = emails[emails.length - 1].messageId;
-  //     }
+  // useEffect(() => {
+  //   let newActiveMessageId: string | null = activeMessageId;
+  //   if (!replyEmail) {
+  //     newActiveMessageId = null;
+  //   } else if (!emails.find((email) => email.messageId === activeMessageId)) {
+  //     newActiveMessageId = emails[emails.length - 1].messageId;
+  //   }
 
-  //     setActiveMessageId(newActiveMessageId);
+  //   setActiveMessageId(newActiveMessageId);
 
-  //     for (const el of [...document.querySelectorAll("[data-message-id]")]) {
-  //       if (el.getAttribute("data-message-id") === activeMessageId) {
-  //         // @ts-ignore
-  //         el.style.border = "1px solid rgba(56,189,248,100)";
-  //       } else {
-  //         // @ts-ignore
-  //         el.style.border = "0px";
-  //       }
+  //   for (const el of [...document.querySelectorAll("[data-message-id]")]) {
+  //     if (el.getAttribute("data-message-id") === activeMessageId) {
+  //       // @ts-ignore
+  //       el.style.border = "1px solid rgba(56,189,248,100)";
+  //     } else {
+  //       // @ts-ignore
+  //       el.style.border = "0px";
   //     }
-  //   }, [activeMessageId, emails]);
+  //   }
+  // }, [activeMessageId, emails]);
 
   //   const shiftActiveMessage = (offset: number) => {
   //     let idx = emails.findIndex((email) => email.messageId === activeMessageId);
@@ -177,24 +179,20 @@ export default function EmailBuilder() {
   //   };
 
   const writeEmail = () => {
-    const emailToReplyTo: string | null =
-      emails.find((email) => email.messageId === activeMessageId)
-        ?.messageContent || null;
-
-    const mainInstruction = emailToReplyTo
+    const mainInstruction = replyEmail
       ? `Write an email reply.`
       : `Write an email.`;
 
-    const languageClause = emailToReplyTo
+    const languageClause = replyEmail
       ? `Reply in the same language.`
       : `Reply in the following language: ${
           document.documentElement.lang || "en"
         }`;
 
-    const lengthClause = `The email length should be ${email.emailLength}.`;
-    const styleClause = `The email style should be ${email.emailStyle}.`;
-    const urgencyClause = `The email urgency should be ${email.emailUrgency}.`;
-    const toneClause = `The email tone should be ${email.emailTone}.`;
+    const lengthClause = `The email length should be ${emailState.emailLength}.`;
+    const styleClause = `The email style should be ${emailState.emailStyle}.`;
+    const urgencyClause = `The email urgency should be ${emailState.emailUrgency}.`;
+    const toneClause = `The email tone should be ${emailState.emailTone}.`;
 
     const toClause = emailTo
       ? `The email should be addressed to the following people: ${emailTo}`
@@ -204,15 +202,24 @@ export default function EmailBuilder() {
       ? `The email signature should be from: ${emailFrom}`
       : "The email signature should not be included.";
 
-    const replyClause = emailToReplyTo
+    const replyClause = replyEmail
       ? `Reply to the following email:
 
-    ${emailToReplyTo}`
+    ${replyEmail.messageContent}`
       : "";
+
+    let summary = emailBody;
+    if (!summary) {
+      if (replyEmail) {
+        summary = "Acknowledge the email";
+      } else {
+        summary = "I wanted to reach out to see if I could be of help";
+      }
+    }
 
     const prompt = `
         ${mainInstruction} 
-        The email should accomplish the following: ${emailBody}. 
+        The email should have the following summary: ${emailBody}. 
         Only respond with the email body. 
         Place the subject at the end of the email. 
         Separate the body from the subject with #####.
@@ -252,6 +259,10 @@ export default function EmailBuilder() {
 
           if (editable) {
             editable.innerHTML = body.replaceAll("\n", "\n<br />") as string;
+
+            setTimeout(() => {
+              editable?.focus();
+            }, 0);
           } else {
             console.error("Editable is not set");
           }
@@ -259,7 +270,12 @@ export default function EmailBuilder() {
           break;
         case ChatGptMessageType.ANSWER_DONE_FROM_BG:
           dispatch(searchSuccessComplete({}));
-          editable?.click();
+          setTimeout(() => {
+            editable?.click();
+            editable?.focus();
+            editable?.dispatchEvent(new Event("click"));
+            editable?.dispatchEvent(new Event("focus"));
+          }, 0);
           break;
         case ChatGptMessageType.ANSWER_ERROR_FROM_BG:
           if (message.data.error === "UNAUTHORIZED") {
@@ -274,92 +290,37 @@ export default function EmailBuilder() {
     });
   };
 
-  const emailFormControls = (
-    <>
-      <div className="tw-grid tw-grid-cols-4 tw-gap-4">
-        <div>
-          <Form.Label className="tw-text-sm">Length:</Form.Label>
-
-          <Form.Select
-            size="sm"
-            value={email.emailLength}
-            onChange={(e) =>
-              dispatch(setEmailLength({ emailLength: e.target.value }))
-            }
-          >
-            {EMAIL_LENGTH_OPTIONS.map((x) => (
-              <option key={x}>{x}</option>
-            ))}
-          </Form.Select>
-        </div>
-        <div>
-          <Form.Label className="tw-text-sm">Style:</Form.Label>
-
-          <Form.Select
-            size="sm"
-            value={email.emailStyle}
-            onChange={(e) =>
-              dispatch(setEmailStyle({ emailStyle: e.target.value }))
-            }
-          >
-            {EMAIL_STYLE_OPTIONS.map((x) => (
-              <option key={x}>{x}</option>
-            ))}
-          </Form.Select>
-        </div>
-        <div>
-          <Form.Label className="tw-text-sm">Urgency:</Form.Label>
-
-          <Form.Select
-            size="sm"
-            value={email.emailUrgency}
-            onChange={(e) =>
-              dispatch(setEmailUrgency({ emailUrgency: e.target.value }))
-            }
-          >
-            {EMAIL_URGENCY_OPTIONS.map((x) => (
-              <option key={x}>{x}</option>
-            ))}
-          </Form.Select>
-        </div>
-        <div>
-          <Form.Label className="tw-text-sm">Tone:</Form.Label>
-
-          <Form.Select
-            size="sm"
-            value={email.emailTone}
-            onChange={(e) =>
-              dispatch(setEmailTone({ emailTone: e.target.value }))
-            }
-          >
-            {EMAIL_TONE_OPTIONS.map((x) => (
-              <option key={x}>{x}</option>
-            ))}
-          </Form.Select>
-        </div>
-      </div>
-    </>
-  );
-
   return (
     <div className="tw-my-2 tw-mx-1 tw-py-2 tw-border-b border-neutral-100">
       <div className="tw-flex tw-flex-nowrap tw-flex-row tw-items-stretch tw-gap-2">
         <div className="tw-relative tw-grow">
+          {/* {replyEmail && (
+            <div className="tw-text-gray-400">{`Replying to ${
+              replyEmail.messageContent.split("\n")[0]
+            }`}</div>
+          )} */}
           <TextareaAutosize
             disabled={[
               ChatGptThreadState.SUCCESS_INFLIGHT,
               ChatGptThreadState.LOADING,
             ].includes(chatGptResultState)}
-            minRows={2}
+            maxRows={8}
+            minRows={3}
+            value={emailBody}
             onChange={(e) => setEmailBody(e.target.value)}
-            className="tw-p-2 tw-w-full tw-text-sm tw-text-gray-900 tw-bg-neutral-50 tw-rounded-lg tw-border tw-border-gray-300 focus:tw-ring-blue-500 focus:tw-border-blue-500 dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-placeholder-gray-400 dark:tw-text-white dark:focus:tw-ring-blue-500 dark:focus:tw-border-blue-500"
-            placeholder="Email summary"
+            className="tw-p-2 tw-w-full tw-text-sm tw-text-gray-900 tw-bg-neutral-50 tw-rounded-lg tw-border tw-border-gray-300 focus:tw-ring-blue-500 focus:tw-border-blue-500 dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-placeholder-gray-400 dark:tw-text-white dark:focus:tw-ring-blue-500 dark:focus:tw-border-blue-500 tw-bg-center tw-bg-contain tw-bg-no-repeat tw-opacity-75"
+            style={{
+              backgroundImage: `url(${ai})`,
+              backgroundSize: "50px 50px",
+            }}
+            placeholder={replyEmail ? "Reply summary" : "Email summary"}
           />
           <Button
             className="tw-absolute tw-bottom-2 tw-right-2"
             variant={theme}
             onClick={writeEmail}
             size="sm"
+            title="Generate email"
             disabled={[
               ChatGptThreadState.SUCCESS_INFLIGHT,
               ChatGptThreadState.LOADING,
@@ -369,21 +330,36 @@ export default function EmailBuilder() {
           </Button>
         </div>
 
-        {/* <div className="tw-flex tw-flex-col tw-justify-start"> */}
-        <Button
-          variant={theme}
-          onClick={() => setShowSettings(!showSettings)}
-          size="sm"
-        >
-          <FontAwesomeIcon
-            className="tw-h-3"
-            icon={faSliders}
-          ></FontAwesomeIcon>
-        </Button>
-        {/* </div> */}
+        <div className="tw-grid tw-grid-rows-2 gap-2">
+          <DropdownButton size="sm" variant={theme} title="">
+            {(replyEmail ? QUICK_REPLY_SUMMARIES : QUICK_SUMMARIES).map(
+              (summary) => (
+                <Dropdown.Item
+                  key={summary}
+                  eventKey={summary}
+                  onClick={() => setEmailBody(summary)}
+                >
+                  {summary}
+                </Dropdown.Item>
+              )
+            )}
+          </DropdownButton>
+
+          <Button
+            variant={theme}
+            onClick={() => setShowSettings(!showSettings)}
+            size="sm"
+            className="tw-mb-1"
+          >
+            <FontAwesomeIcon
+              className="tw-h-3"
+              icon={faSliders}
+            ></FontAwesomeIcon>
+          </Button>
+        </div>
       </div>
 
-      {showSettings && emailFormControls}
+      {showSettings && <EmailBuilderExpand></EmailBuilderExpand>}
 
       <div>
         {chatGptResultState === ChatGptThreadState.INITIAL && <></>}

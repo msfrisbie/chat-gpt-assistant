@@ -1,11 +1,16 @@
+import "bootstrap/dist/js/bootstrap.bundle.min";
 import cssText from "bundle-text:../styles/content-script.scss";
+import $ from "jquery";
 import _ from "lodash";
+import Popper from "popper.js";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { v4 as uuidv4 } from "uuid";
 import EmailContentScriptApp from "../components/EmailContentScriptApp";
 import OpenAIContentScriptApp from "../components/OpenAIContentScriptApp";
 import SearchContentScriptApp from "../components/SearchContentScriptApp";
+
+[Popper, $];
 
 console.log("ChatGPT Assistant content script loaded");
 

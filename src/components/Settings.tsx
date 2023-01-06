@@ -154,13 +154,11 @@ export default function Settings() {
 
         <hr></hr>
 
-        <div className="tw-opacity-75 tw-text-xl tw-text-sky-400">
-          Search Engines
-        </div>
+        <div className="tw-opacity-75 tw-text-xl tw-text-sky-400">Search</div>
 
         <Form.Check
           type="switch"
-          label="Show ChatGPT Assistant when using search engines"
+          label="Enable ChatGPT Assistant for Search"
           checked={localSettings[ChatGptSettingsKey.ENABLE_CONTENT_SCRIPT]}
           onChange={(e) =>
             updateSettingsKey(
@@ -189,7 +187,7 @@ export default function Settings() {
         <hr></hr>
 
         <div className="tw-opacity-75 tw-text-xl tw-text-sky-400">
-          Email Tool (beta)
+          Email (beta)
         </div>
 
         <div className="tw-text-sm tw-text-gray-300">
@@ -198,7 +196,7 @@ export default function Settings() {
 
         <Form.Check
           type="switch"
-          label="Enable email tool"
+          label="Enable ChatGPT for Email"
           checked={localSettings[ChatGptSettingsKey.ENABLE_EMAIL]}
           onChange={(e) =>
             updateSettingsKey(ChatGptSettingsKey.ENABLE_EMAIL, e.target.checked)

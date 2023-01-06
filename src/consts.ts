@@ -82,3 +82,11 @@ export const EMAIL_TONE_OPTIONS = [
   "Serious",
   "Thankful",
 ];
+
+export const QUICK_SUMMARIES: string[] = ["It was nice meeting you"];
+
+export const QUICK_REPLY_SUMMARIES: string[] = [
+  "Acknowledge the email and say thank you",
+  "I'll look into it",
+  "I don't understand, can you clarify?",
+];

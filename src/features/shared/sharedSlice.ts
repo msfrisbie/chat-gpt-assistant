@@ -1,17 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ISharedState } from "./interfaces";
 
-let defaultTheme: "light" | "dark" = "light";
-if (
-  window.matchMedia &&
-  window.matchMedia("(prefers-color-scheme: dark)").matches
-) {
-  defaultTheme = "dark";
-}
-
 const initialState: ISharedState = {
-  theme: defaultTheme,
-  widgetId: null
+  theme: "light",
+  widgetId: null,
 };
 
 const sharedSlice = createSlice({
