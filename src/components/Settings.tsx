@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import {
+  ChatGptMessageType,
   ChatGptSettingsKey,
   EMAIL_LENGTH_OPTIONS,
   EMAIL_STYLE_OPTIONS,
@@ -150,6 +151,23 @@ export default function Settings() {
               e.target.checked
             )
           }
+        />
+        <Form.Check
+          type="switch"
+          label="Always keep a ChatGPT tab pinned"
+          checked={localSettings[ChatGptSettingsKey.KEEP_CHATGPT_PINNED]}
+          onChange={(e) => {
+            updateSettingsKey(
+              ChatGptSettingsKey.KEEP_CHATGPT_PINNED,
+              e.target.checked
+            );
+
+            if (e.target.checked) {
+              chrome.runtime.sendMessage({
+                type: ChatGptMessageType.PIN_CHATGPT_TAB,
+              });
+            }
+          }}
         />
 
         <hr></hr>

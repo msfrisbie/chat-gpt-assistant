@@ -13,7 +13,11 @@ import { trackEvent } from "../utils/analytics";
 import { cache, getAccessToken } from "../utils/chatgpt";
 import { sendMessage } from "../utils/messaging";
 import { getSetting } from "../utils/settings";
-import { openSettings } from "../utils/tabs";
+import {
+  maybeOpenAndCloseChatGptTab,
+  maybePinChatGptTab,
+  openSettings,
+} from "../utils/tabs";
 
 console.log("Initialized background", Date.now());
 
@@ -218,35 +222,43 @@ chrome.alarms.create("authCheck", {
   periodInMinutes: 5,
 });
 
+chrome.alarms.create("tabCheck", {
+  periodInMinutes: 1,
+});
+
 chrome.alarms.onAlarm.addListener(async (alarm) => {
-  if (alarm.name === "authCheck") {
-    if (!(await getSetting(ChatGptSettingsKey.AUTO_REFRESH_SESSION))) {
-      return;
-    }
+  console.log("Alarm " + alarm.name);
 
-    let api: ChatGPTAPI;
+  switch (alarm.name) {
+    case "authCheck":
+      if (!(await getSetting(ChatGptSettingsKey.AUTO_REFRESH_SESSION))) {
+        return;
+      }
 
-    try {
-      const sessionToken = await getAccessToken();
+      let api: ChatGPTAPI;
 
-      api = new ChatGPTAPI({
-        sessionToken,
-      });
+      try {
+        const sessionToken = await getAccessToken();
 
-      await api.ensureAuth();
-    } catch (e) {
-      chrome.tabs.create(
-        {
-          active: false,
-          url: "https://chat.openai.com/chat",
-        },
-        (tab) => {
-          setTimeout(() => {
-            tab.id && chrome.tabs.remove(tab.id);
-          }, 10000);
-        }
-      );
-    }
+        api = new ChatGPTAPI({
+          sessionToken,
+        });
+
+        await api.ensureAuth();
+      } catch (e) {
+        maybeOpenAndCloseChatGptTab();
+      }
+      break;
+    case "tabCheck":
+      if (!(await getSetting(ChatGptSettingsKey.KEEP_CHATGPT_PINNED))) {
+        return;
+      }
+
+      maybePinChatGptTab();
+
+      break;
+    default:
+      throw new Error("Bad alarm name:" + alarm.name);
   }
 });
 
@@ -268,8 +280,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case ChatGptMessageType.TRACK_EVENT:
       trackEvent(message.data.eventName, message.data.eventProperties);
       break;
+    case ChatGptMessageType.PIN_CHATGPT_TAB:
+      maybePinChatGptTab();
+      break;
     default:
       console.error(message, JSON.stringify(message));
       throw new Error("Bad message type");
   }
 });
+
+chrome.runtime.setUninstallURL("https://docs.google.com/forms/d/e/1FAIpQLSe37ktf8czx15EqEkBaBH4NT6b0K8QzlhC9zTMJFZOHh-k7fQ/viewform?usp=sf_link")

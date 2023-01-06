@@ -11,6 +11,7 @@ export const defaultSettings: ISettings = {
   [ChatGptSettingsKey.SHORT_SEARCH_RESPONSES]: true,
   [ChatGptSettingsKey.IFRAME_POPUP]: false,
   [ChatGptSettingsKey.AUTO_REFRESH_SESSION]: true,
+  [ChatGptSettingsKey.KEEP_CHATGPT_PINNED]: false,
   [ChatGptSettingsKey.DEBUG]: false,
   [ChatGptSettingsKey.RESPONSE_BEHAVIOR_TYPE]: ResponseBehaviorType.DEFAULT,
   [ChatGptSettingsKey.ENABLE_EMAIL]: true,
