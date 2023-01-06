@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ConversationResponseEvent } from "chatgpt/build/browser";
 import _ from "lodash";
 import React, { useEffect, useState } from "react";
-import { Button, Dropdown, DropdownButton } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import Toast from "react-bootstrap/Toast";
 import { useDispatch, useSelector } from "react-redux";
 import TextareaAutosize from "react-textarea-autosize";
@@ -12,8 +12,6 @@ import {
   ChatGptMessageType,
   ChatGptSettingsKey,
   ChatGptThreadState,
-  QUICK_REPLY_SUMMARIES,
-  QUICK_SUMMARIES,
 } from "../consts";
 import {
   setEmailLength,
@@ -179,6 +177,13 @@ export default function EmailBuilder() {
   //   };
 
   const writeEmail = () => {
+    chrome.runtime.sendMessage({
+      type: ChatGptMessageType.TRACK_EVENT,
+      data: {
+        eventName: "Generated email",
+      },
+    });
+
     const mainInstruction = replyEmail
       ? `Write an email reply.`
       : `Write an email.`;
@@ -294,11 +299,6 @@ export default function EmailBuilder() {
     <div className="tw-my-2 tw-mx-1 tw-py-2 tw-border-b border-neutral-100">
       <div className="tw-flex tw-flex-nowrap tw-flex-row tw-items-stretch tw-gap-2">
         <div className="tw-relative tw-grow">
-          {/* {replyEmail && (
-            <div className="tw-text-gray-400">{`Replying to ${
-              replyEmail.messageContent.split("\n")[0]
-            }`}</div>
-          )} */}
           <TextareaAutosize
             disabled={[
               ChatGptThreadState.SUCCESS_INFLIGHT,
@@ -330,7 +330,7 @@ export default function EmailBuilder() {
           </Button>
         </div>
 
-        <div className="tw-grid tw-grid-rows-2 gap-2">
+        {/* <div className="tw-grid tw-grid-rows-2 gap-2">
           <DropdownButton size="sm" variant={theme} title="">
             {(replyEmail ? QUICK_REPLY_SUMMARIES : QUICK_SUMMARIES).map(
               (summary) => (
@@ -343,20 +343,20 @@ export default function EmailBuilder() {
                 </Dropdown.Item>
               )
             )}
-          </DropdownButton>
+          </DropdownButton> */}
 
-          <Button
-            variant={theme}
-            onClick={() => setShowSettings(!showSettings)}
-            size="sm"
-            className="tw-mb-1"
-          >
-            <FontAwesomeIcon
-              className="tw-h-3"
-              icon={faSliders}
-            ></FontAwesomeIcon>
-          </Button>
-        </div>
+        <Button
+          variant={theme}
+          onClick={() => setShowSettings(!showSettings)}
+          size="sm"
+          className="tw-mb-1"
+        >
+          <FontAwesomeIcon
+            className="tw-h-3"
+            icon={faSliders}
+          ></FontAwesomeIcon>
+        </Button>
+        {/* </div> */}
       </div>
 
       {showSettings && <EmailBuilderExpand></EmailBuilderExpand>}
