@@ -49,3 +49,12 @@ https://chrome.google.com/webstore/detail/chatgpt-assistant/kldepdcdedfibmjnggmo
 2. Install dependencies with `yarn`
 3. Run `npm run start`
 4. Load the `dist` directory to your browser
+
+
+#### Browser Install (for 2023 patch)
+
+1.You need to disable the fingerprinting 
+
+## For Brave 
+Disable "Prevent sites from fingerprinting me based on my language preferences" in brave://settings/shields
+
