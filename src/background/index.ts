@@ -6,7 +6,7 @@ import {
   CHAT_GPT_HISTORY_KEY,
   KEY_ACCESS_TOKEN,
   ResponseBehaviorType,
-  STUB_RESPONSE,
+  STUB_RESPONSE
 } from "../consts";
 import { IChatGptPostMessage } from "../interfaces/settings";
 import { trackEvent } from "../utils/analytics";
@@ -14,9 +14,10 @@ import { cache, getAccessToken } from "../utils/chatgpt";
 import { sendMessage } from "../utils/messaging";
 import { getSetting } from "../utils/settings";
 import {
+  countSearchEngineTabs,
   maybeOpenAndCloseChatGptTab,
   maybePinChatGptTab,
-  openSettings,
+  openSettings
 } from "../utils/tabs";
 
 console.log("Initialized background", Date.now());
@@ -66,6 +67,20 @@ chrome.runtime.onConnect.addListener((port) => {
           break;
       }
     }
+
+    try {
+      const tabCount =
+        (await chrome.storage.local
+          .get("SEARCH_ENGINE_TAB_COUNT")
+          .then((result) => result["SEARCH_ENGINE_TAB_COUNT"])) ?? 0;
+      // Cap open connections
+      if (tabCount > 25) {
+        sendMessage(port, ChatGptMessageType.ANSWER_ERROR_FROM_BG, {
+          error: "MAX_CONNECTIONS",
+        });
+        return;
+      }
+    } catch {}
 
     let api: ChatGPTAPI;
 
@@ -256,6 +271,8 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 
       maybePinChatGptTab();
 
+      countSearchEngineTabs();
+
       break;
     default:
       throw new Error("Bad alarm name:" + alarm.name);
@@ -289,4 +306,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-chrome.runtime.setUninstallURL("https://docs.google.com/forms/d/e/1FAIpQLSe37ktf8czx15EqEkBaBH4NT6b0K8QzlhC9zTMJFZOHh-k7fQ/viewform?usp=sf_link")
+chrome.runtime.setUninstallURL(
+  "https://docs.google.com/forms/d/e/1FAIpQLSe37ktf8czx15EqEkBaBH4NT6b0K8QzlhC9zTMJFZOHh-k7fQ/viewform?usp=sf_link"
+);
+
+countSearchEngineTabs();

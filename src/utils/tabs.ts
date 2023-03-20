@@ -52,3 +52,19 @@ export async function maybePinChatGptTab() {
     chrome.tabs.reload(tabs[0].id as number);
   }
 }
+
+export async function countSearchEngineTabs() {
+  const tabs = await chrome.tabs.query({});
+
+  const searchEngineTabs = tabs.filter((tab) => {
+    if (!tab.url) {
+      return false;
+    }
+
+    return new URL(tab.url).hostname.includes("google.com");
+  });
+
+  chrome.storage.local.set({
+    SEARCH_ENGINE_TAB_COUNT: searchEngineTabs.length,
+  });
+}
