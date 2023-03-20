@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "ChatGPT Assistant - Use AI Everywhere",
   "description": "Use ChatGPT in search engines, to write emails, and on any website",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "action": {
     "default_popup": "popup/index.html",
     "default_icon": {
